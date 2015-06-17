@@ -12,6 +12,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import dg.shenm233.wechatmod.hooks.ui.LauncherUI;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
@@ -63,6 +64,8 @@ public class MainHook extends XC_MethodHook implements IXposedHookZygoteInit, IX
                     Common.MOD_Context = Common.LauncherUI_INSTANCE.createPackageContext(MOD_PACKAGENAME, Context.CONTEXT_IGNORE_SECURITY);
                 }
             });
+
+            LauncherUI.init(lpparam);
         } catch (Throwable l) {
             XposedBridge.log(l);
         }
