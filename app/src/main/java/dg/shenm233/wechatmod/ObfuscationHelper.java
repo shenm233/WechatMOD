@@ -1,8 +1,19 @@
 package dg.shenm233.wechatmod;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 import static de.robv.android.xposed.XposedHelpers.findClass;
+import static de.robv.android.xposed.XposedHelpers.getStaticIntField;
 
 public class ObfuscationHelper {
     public static final int MM_6_2_0_50 = 524;
@@ -21,6 +32,7 @@ public class ObfuscationHelper {
         MM_Classes.initClasses(versionIndex, lpparam);
         MM_Methods.initMethods(versionIndex);
         MM_Fields.initFields(versionIndex);
+        MM_Res.initRes(versionIndex, lpparam);
         return true;
     }
 
@@ -50,5 +62,45 @@ public class ObfuscationHelper {
             customViewPager = new String[]{"imA"}[idx];
             tabView = new String[]{"imz"}[idx];
         }
+    }
+
+    //this class is used for get resource(such as layout,drawable..) id
+    public static class MM_Res {
+        public static int main_tab;
+
+        private static void initRes(int idx, LoadPackageParam lpparam) throws Throwable {
+            String R = "com.tencent.mm.a";
+            String main_tabInClazz = new String[]{"$k"}[idx];
+            main_tab = getStaticIntField(findClass(R + main_tabInClazz, lpparam.classLoader), "main_tab");
+        }
+    }
+
+    //a tool for analysis,because obfuscation is toooo crazy.
+    public static void getRawXml(int resid, Context context) {
+        try {
+            XmlResourceParser xml = context.getResources().getXml(resid);
+
+            // check state
+            int eventType = xml.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if (eventType == XmlPullParser.START_DOCUMENT) {
+                    XposedBridge.log("Start document resid:" + Integer.toString(resid));
+                } else if (eventType == XmlPullParser.START_TAG) {
+                    XposedBridge.log("Start tag : " + xml.getName());
+                } else if (eventType == XmlPullParser.END_TAG) {
+                    XposedBridge.log("End tag : " + xml.getName());
+                } else if (eventType == XmlPullParser.TEXT) {
+                    XposedBridge.log("Text : " + xml.getText());
+                }
+                eventType = xml.next();
+            }
+            // indicate app done reading the resource.
+            xml.close();
+        } catch (Resources.NotFoundException e) {
+            XposedBridge.log(e);
+        } catch (IOException | XmlPullParserException e) {
+            e.printStackTrace();
+        }
+
     }
 }

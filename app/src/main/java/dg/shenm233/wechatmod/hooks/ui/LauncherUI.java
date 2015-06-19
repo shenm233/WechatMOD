@@ -5,6 +5,8 @@ import android.view.ViewGroup;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import dg.shenm233.wechatmod.Common;
+import dg.shenm233.wechatmod.ObfuscationHelper;
 
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
@@ -12,6 +14,8 @@ import static de.robv.android.xposed.XposedHelpers.getObjectField;
 import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Classes;
 import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Methods;
 import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Fields;
+import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Res;
+import static dg.shenm233.wechatmod.BuildConfig.DEBUG;
 
 
 public class LauncherUI {
@@ -23,6 +27,7 @@ public class LauncherUI {
                 ViewGroup customViewPager = (ViewGroup) getObjectField(param.thisObject, MM_Fields.customViewPager);
                 Object tabView = getObjectField(param.thisObject, MM_Fields.tabView);
                 ((ViewGroup) customViewPager.getParent()).removeView((View) tabView);
+                if (DEBUG) ObfuscationHelper.getRawXml(MM_Res.main_tab, Common.MM_Context);
             }
         });
     }
