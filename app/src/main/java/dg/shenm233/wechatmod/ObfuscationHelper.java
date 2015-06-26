@@ -57,10 +57,12 @@ public class ObfuscationHelper {
     public static class MM_Fields {
         public static String customViewPager;
         public static String tabView;
+        public static String main_tab; //this is main_tab that including customViewPager,tabView...
 
         private static void initFields(int idx) throws Throwable {
             customViewPager = new String[]{"imA"}[idx];
             tabView = new String[]{"imz"}[idx];
+            main_tab = new String[]{"cuW"}[idx];
         }
     }
 

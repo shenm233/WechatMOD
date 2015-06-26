@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">WechatMOD</string>
+
+    <string name="main_chat">Chatting</string>
+    <string name="main_contact">Contact</string>
+    <string name="main_addcontact">Discovery</string>
+    <string name="main_more">Me</string>
+
+    <string name="sns_moments">Moments</string>
+    <string name="sns_scan">Scan QR Code</string>
+    <string name="sns_shake">Shake</string>
+    <string name="sns_people_nearby">People Nearby</string>
+    <string name="sns_drift_bottle">Drift Bottle</string>
+    <string name="sns_games">Games</string>
+    <string name="sns_shopping">Shopping</string>
+
+    <string name="me_posts">My Posts</string>
+    <string name="me_favorites">Favorites</string>
+    <string name="me_wallet">Wallet</string>
+    <string name="me_settings">Settings</string>
 </resources>

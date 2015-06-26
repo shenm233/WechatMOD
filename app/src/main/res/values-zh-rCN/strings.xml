@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WechatMOD</string>
+    <string name="main_addcontact">发现</string>
+    <string name="main_chat">聊天 </string>
+    <string name="main_contact">联系人</string>
+    <string name="main_more">我</string>
+    <string name="me_favorites">收藏</string>
+    <string name="me_posts">相册</string>
+    <string name="me_settings">设置</string>
+    <string name="me_wallet">钱包</string>
+    <string name="sns_drift_bottle">漂流瓶</string>
+    <string name="sns_games">游戏 </string>
+    <string name="sns_moments">朋友圈</string>
+    <string name="sns_people_nearby">附近的人</string>
+    <string name="sns_scan">扫一扫</string>
+    <string name="sns_shake">摇一摇</string>
+    <string name="sns_shopping">购物</string>
+</resources>

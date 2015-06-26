@@ -1,25 +1,37 @@
 package dg.shenm233.wechatmod.hooks.ui;
 
+import android.app.Activity;
+import android.content.Context;
+import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.TreeSet;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import dg.shenm233.wechatmod.Common;
 import dg.shenm233.wechatmod.ObfuscationHelper;
+import dg.shenm233.wechatmod.R;
 
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
-
-import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Classes;
-import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Methods;
-import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Fields;
-import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Res;
 import static dg.shenm233.wechatmod.BuildConfig.DEBUG;
+import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Classes;
+import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Fields;
+import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Methods;
+import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Res;
 
 
 public class LauncherUI {
-    public static void init(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
+    public void init(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         //remove tabview :P
         findAndHookMethod(MM_Classes.LauncherUI, MM_Methods.CreateTabView, new XC_MethodHook() {
             @Override
@@ -28,7 +40,193 @@ public class LauncherUI {
                 Object tabView = getObjectField(param.thisObject, MM_Fields.tabView);
                 ((ViewGroup) customViewPager.getParent()).removeView((View) tabView);
                 if (DEBUG) ObfuscationHelper.getRawXml(MM_Res.main_tab, Common.MM_Context);
+                addNavigationDrawer((Activity) param.thisObject);
             }
         });
+    }
+
+    View mDrawer;
+    ListView mDrawerList;
+
+    private void addNavigationDrawer(Activity activity) throws Throwable {
+        DrawerLayout drawerLayout = new DrawerLayout(activity);
+        drawerLayout.setFitsSystemWindows(true);
+
+        //Create Drawer
+        mDrawer = View.inflate(Common.MOD_Context, R.layout.drawer, null);
+        DrawerLayout.LayoutParams lp =
+                new DrawerLayout.LayoutParams(DrawerLayout.LayoutParams.MATCH_PARENT, DrawerLayout.LayoutParams.MATCH_PARENT);
+        lp.gravity = Gravity.START;
+        mDrawer.setLayoutParams(lp);
+
+        //Drawer List
+        mDrawerList = (ListView) mDrawer.findViewById(R.id.drawer_list);
+        DrawerListAdapter drawerListAdapter = new DrawerListAdapter(Common.MOD_Context);
+        mDrawerList.setAdapter(drawerListAdapter);
+        initDrawerList(drawerListAdapter);
+        mDrawerList.setItemsCanFocus(true);
+
+        //remove orginal frameLayout that including customViewPager,tabView...
+        View main_tab = (View) getObjectField(activity, MM_Fields.main_tab);
+        ((ViewGroup) main_tab.getParent()).removeView(main_tab);
+        drawerLayout.addView(main_tab);
+        drawerLayout.addView(mDrawer);
+
+        //go go go
+        activity.addContentView(drawerLayout,
+                new DrawerLayout.LayoutParams(DrawerLayout.LayoutParams.MATCH_PARENT, DrawerLayout.LayoutParams.MATCH_PARENT));
+        //don't use activity.addContentView(drawerLayout);  because it causes activity exit.
+
+        //Load avatar,etc
+        refreshDrawerInfo();
+    }
+
+    private void initDrawerList(DrawerListAdapter drawerListAdapter) {
+        //chatting
+        drawerListAdapter.addItem(R.drawable.main_chat, R.string.main_chat);
+        //contact
+        drawerListAdapter.addItem(R.drawable.main_contact, R.string.main_contact);
+        //Discovery
+        drawerListAdapter.addSectionHeaderItem(R.string.main_addcontact);
+
+        //
+        drawerListAdapter.addItem(R.drawable.sns_moments, R.string.sns_moments);
+        drawerListAdapter.addItem(R.drawable.sns_scan, R.string.sns_scan);
+        drawerListAdapter.addItem(R.drawable.sns_shake, R.string.sns_shake);
+        drawerListAdapter.addItem(R.drawable.sns_people_nearby, R.string.sns_people_nearby);
+        drawerListAdapter.addItem(R.drawable.sns_drift_bottle, R.string.sns_drift_bottle);
+        drawerListAdapter.addItem(R.drawable.sns_shopping, R.string.sns_shopping);
+        drawerListAdapter.addItem(R.drawable.sns_games, R.string.sns_games);
+
+        //Me
+        drawerListAdapter.addSectionHeaderItem(R.string.main_more);
+
+        //
+        drawerListAdapter.addItem(R.drawable.me_posts, R.string.me_posts);
+        drawerListAdapter.addItem(R.drawable.me_favorites, R.string.me_favorites);
+        drawerListAdapter.addItem(R.drawable.me_wallet, R.string.me_wallet);
+        drawerListAdapter.addItem(R.drawable.me_settings, R.string.me_settings);
+    }
+
+    private void refreshDrawerInfo() {
+        //background image
+        ImageView bg_image = (ImageView) mDrawer.findViewById(R.id.bg_image);
+        bg_image.setImageDrawable(Common.MOD_RES.getDrawable(R.drawable.bg_test));
+
+        //avatar image
+        ImageView user_avatar = (ImageView) mDrawer.findViewById(R.id.user_avatar);
+        user_avatar.setImageDrawable(Common.MOD_RES.getDrawable(R.drawable.avatar_test));
+
+        //username,wechat name
+        TextView username = (TextView) mDrawer.findViewById(R.id.username);
+        username.setText("233");
+    }
+
+    private class DrawerListAdapter extends BaseAdapter {
+        private Context mContext;
+        private ArrayList<DrawerListItem> mDrawerListItems = new ArrayList<DrawerListItem>();
+        private TreeSet<Integer> sectionHeader = new TreeSet<Integer>();
+
+        private final int TYPE_ITEM = 0;
+        private final int TYPE_SEPARATOR = 1;
+
+        public DrawerListAdapter(Context context) {
+            mContext = context;
+        }
+
+        public void addItem(int IconResid, int TextResid) {
+            mDrawerListItems.add(new DrawerListItem(IconResid, TextResid));
+            notifyDataSetChanged();
+        }
+
+        public void addSectionHeaderItem(int TextResid) {
+            mDrawerListItems.add(new DrawerListItem(TextResid));
+            sectionHeader.add(mDrawerListItems.size() - 1);
+            notifyDataSetChanged();
+        }
+
+        private class ViewHolder {
+            ImageView icon;
+            TextView text;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            DrawerListItem drawerListItem = mDrawerListItems.get(position);
+            int ItemType = getItemViewType(position);
+            ViewHolder viewHolder;
+            if (convertView == null) {
+                viewHolder = new ViewHolder();
+                switch (ItemType) {
+                    case TYPE_SEPARATOR:
+                        convertView = LayoutInflater.from(mContext).inflate(R.layout.header, parent, false);
+                        convertView.setEnabled(false);
+                        viewHolder.text = (TextView) convertView.findViewById(R.id.header_text);
+                        break;
+                    default:
+                    case TYPE_ITEM:
+                        convertView = LayoutInflater.from(mContext).inflate(R.layout.drawer_list_item, parent, false);
+                        viewHolder.text = (TextView) convertView.findViewById(R.id.drawerlist_text);
+                        viewHolder.icon = (ImageView) convertView.findViewById(R.id.drawerlist_icon);
+                        break;
+                }
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            viewHolder.text.setText(Common.MOD_RES.getText(drawerListItem.TEXT_ID));
+            if (ItemType == TYPE_ITEM)
+                viewHolder.icon.setImageDrawable(Common.MOD_RES.getDrawable(drawerListItem.ICON_ID));
+
+            return convertView;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return sectionHeader.contains(position) ? TYPE_SEPARATOR : TYPE_ITEM;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 2;
+        }
+
+        @Override
+        public int getCount() {
+            return mDrawerListItems.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mDrawerListItems.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+    }
+
+    private class DrawerListItem {
+        int ICON_ID;
+        int TEXT_ID;
+
+        public DrawerListItem(int TextResid) {
+            TEXT_ID = TextResid;
+        }
+
+        public DrawerListItem(int IconResid, int TextResid) {
+            ICON_ID = IconResid;
+            TEXT_ID = TextResid;
+        }
+
+        public void setIcon(int resId) {
+            ICON_ID = resId;
+        }
+
+        public void setText(int resId) {
+            TEXT_ID = resId;
+        }
     }
 }

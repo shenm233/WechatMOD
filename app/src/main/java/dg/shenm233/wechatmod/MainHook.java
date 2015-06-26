@@ -18,16 +18,14 @@ import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
-
-import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Classes;
-import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Methods;
-
-import static dg.shenm233.wechatmod.Common.Wechat_PACKAGENAME;
-import static dg.shenm233.wechatmod.Common.MOD_PACKAGENAME;
 import static dg.shenm233.wechatmod.BuildConfig.DEBUG;
+import static dg.shenm233.wechatmod.Common.MOD_PACKAGENAME;
+import static dg.shenm233.wechatmod.Common.Wechat_PACKAGENAME;
+import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Classes;
 
 public class MainHook extends XC_MethodHook implements IXposedHookZygoteInit, IXposedHookLoadPackage, IXposedHookInitPackageResources {
     private static String MODULE_PATH = null;
+    private LauncherUI launcherUI;
 
     @Override
     public void initZygote(IXposedHookZygoteInit.StartupParam startupParam) throws Throwable {
@@ -65,7 +63,8 @@ public class MainHook extends XC_MethodHook implements IXposedHookZygoteInit, IX
                 }
             });
 
-            LauncherUI.init(lpparam);
+            launcherUI = new LauncherUI();
+            launcherUI.init(lpparam);
         } catch (Throwable l) {
             XposedBridge.log(l);
         }
@@ -74,6 +73,7 @@ public class MainHook extends XC_MethodHook implements IXposedHookZygoteInit, IX
     @Override
     public void handleInitPackageResources(XC_InitPackageResources.InitPackageResourcesParam resparam) throws Throwable {
         if (!resparam.packageName.equals(Wechat_PACKAGENAME)) return;
-        Common.MOD_RES = XModuleResources.createInstance(MODULE_PATH, resparam.res);
+        if (Common.MOD_RES == null)
+            Common.MOD_RES = XModuleResources.createInstance(MODULE_PATH, resparam.res);
     }
 }
