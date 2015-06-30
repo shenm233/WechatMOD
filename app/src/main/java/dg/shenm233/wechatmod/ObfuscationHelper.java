@@ -9,14 +9,19 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import static de.robv.android.xposed.XposedHelpers.getStaticIntField;
+import static dg.shenm233.wechatmod.BuildConfig.DEBUG;
 
 public class ObfuscationHelper {
     public static final int MM_6_2_0_50 = 524;
+
+    //a helper for analyzing StackTrace,I want to know who called method.
+    public static XC_MethodHook getStackTraceHelper;
 
     /*init ObfuscationHelper according to versionname and versioncode
     * if it is supported,return true,otherwise return false
@@ -33,36 +38,79 @@ public class ObfuscationHelper {
         MM_Methods.initMethods(versionIndex);
         MM_Fields.initFields(versionIndex);
         MM_Res.initRes(versionIndex, lpparam);
+
+        if (DEBUG) {
+            getStackTraceHelper = new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    XposedBridge.log("********");
+                    StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+                    for (int i = 0; i < stackTraceElements.length; i++) {
+                        StackTraceElement stackTraceElement = stackTraceElements[i];
+                        XposedBridge.log(i + ": " + stackTraceElement.getClassName() + "." + stackTraceElement.getMethodName() + "\n");
+                    }
+                    XposedBridge.log("********");
+                }
+            };
+        }
         return true;
     }
 
     public static class MM_Classes {
         public static Class<?> LauncherUI;
+        //public static Class<?> MainAddContactFragment;  //discovery Fragment
+        //public static Class<?> MainMoreFragment;        //me Fragment
+        public static Class<?> Preference;
 
         private static void initClasses(int idx, LoadPackageParam lpparam) throws Throwable {
+            String MM_UI_PACKAGENAME = "com.tencent.mm.ui.";
+//            String mainAddContactFragment = MM_UI_PACKAGENAME + new String[]{"v"}[idx];
+//            String mainMoreFragment = MM_UI_PACKAGENAME + new String[]{"em"}[idx];
+
             LauncherUI = findClass("com.tencent.mm.ui.LauncherUI", lpparam.classLoader);
+            Preference = findClass(MM_UI_PACKAGENAME + "base.preference.Preference", lpparam.classLoader);
+//            MainAddContactFragment = findClass(mainAddContactFragment, lpparam.classLoader);
+//            MainMoreFragment = findClass(mainMoreFragment, lpparam.classLoader);
         }
     }
 
     public static class MM_Methods {
+        //methods in LauncherUI class:
         public static String MainUI;
         public static String CreateTabView;
+        public static String setCurrentPagerItem;
+        public static String getFragment;
+
+        //methods in MainAddContactFragment class;
+        //methods in MainMoreFragment class;
+        public static String startMMActivity;  //abstract method
 
         private static void initMethods(int idx) throws Throwable {
             MainUI = new String[]{"aKw"}[idx];
             CreateTabView = new String[]{"aKC"}[idx];
+            setCurrentPagerItem = new String[]{"nc"}[idx];
+            getFragment = new String[]{"nd"}[idx];
+            startMMActivity = new String[]{"a"}[idx];
         }
     }
 
     public static class MM_Fields {
+        //fields in LauncherUI class:
         public static String customViewPager;
         public static String tabView;
         public static String main_tab; //this is main_tab that including customViewPager,tabView...
+
+        //fields in MainAddContactFragment class;
+        public static String discovery_preferenceInterface; //Type:com.tencent.mm.ui.base.preference.?
+        //fields in MainMoreFragment class;
+        public static String me_preferenceInterface;        //Type:com.tencent.mm.ui.base.preference.?
 
         private static void initFields(int idx) throws Throwable {
             customViewPager = new String[]{"imA"}[idx];
             tabView = new String[]{"imz"}[idx];
             main_tab = new String[]{"cuW"}[idx];
+            discovery_preferenceInterface = new String[]{"bXk"}[idx];
+            me_preferenceInterface = new String[]{"bXk"}[idx];
         }
     }
 

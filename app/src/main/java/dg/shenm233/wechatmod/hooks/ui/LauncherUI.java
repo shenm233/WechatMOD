@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -63,6 +64,7 @@ public class LauncherUI {
         mDrawerList = (ListView) mDrawer.findViewById(R.id.drawer_list);
         DrawerListAdapter drawerListAdapter = new DrawerListAdapter(Common.MOD_Context);
         mDrawerList.setAdapter(drawerListAdapter);
+        mDrawerList.setOnItemClickListener(drawerListAdapter);
         initDrawerList(drawerListAdapter);
         mDrawerList.setItemsCanFocus(true);
 
@@ -119,10 +121,9 @@ public class LauncherUI {
 
         //username,wechat name
         TextView username = (TextView) mDrawer.findViewById(R.id.username);
-        username.setText("233");
     }
 
-    private class DrawerListAdapter extends BaseAdapter {
+    private class DrawerListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
         private Context mContext;
         private ArrayList<DrawerListItem> mDrawerListItems = new ArrayList<DrawerListItem>();
         private TreeSet<Integer> sectionHeader = new TreeSet<Integer>();
@@ -205,6 +206,63 @@ public class LauncherUI {
         @Override
         public long getItemId(int position) {
             return position;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            DrawerListItem drawerListItem = mDrawerListItems.get(position);
+            int text_id = drawerListItem.TEXT_ID;
+            callMMFeature(text_id);
+        }
+    }
+
+    private void callMMFeature(int StrResid) {
+        switch (StrResid) {
+            case R.string.main_chat:
+                MainFragments.switchMMFragment(0);
+                break;
+            case R.string.main_contact:
+                MainFragments.switchMMFragment(1);
+                break;
+            case R.string.main_addcontact:
+                MainFragments.switchMMFragment(2);
+                break;
+            case R.string.main_more:
+                MainFragments.switchMMFragment(3);
+                break;
+            case R.string.sns_moments:
+                MainFragments.callMMFragmentFeature(2, "album_dyna_photo_ui_title");
+                break;
+            case R.string.sns_scan:
+                MainFragments.callMMFragmentFeature(2, "find_friends_by_qrcode");
+                break;
+            case R.string.sns_shake:
+                MainFragments.callMMFragmentFeature(2, "find_friends_by_shake");
+                break;
+            case R.string.sns_people_nearby:
+                MainFragments.callMMFragmentFeature(2, "find_friends_by_near");
+                break;
+            case R.string.sns_drift_bottle:
+                MainFragments.callMMFragmentFeature(2, "voice_bottle");
+                break;
+            case R.string.sns_shopping:
+                MainFragments.callMMFragmentFeature(2, "jd_market_entrance");
+                break;
+            case R.string.sns_games:
+                MainFragments.callMMFragmentFeature(2, "more_tab_game_recommend");
+                break;
+            case R.string.me_posts:
+                MainFragments.callMMFragmentFeature(3, "settings_my_album");
+                break;
+            case R.string.me_favorites:
+                MainFragments.callMMFragmentFeature(3, "settings_mm_favorite");
+                break;
+            case R.string.me_wallet:
+                MainFragments.callMMFragmentFeature(3, "settings_mm_wallet");
+                break;
+            case R.string.me_settings:
+                MainFragments.callMMFragmentFeature(3, "more_setting");
+                break;
         }
     }
 
