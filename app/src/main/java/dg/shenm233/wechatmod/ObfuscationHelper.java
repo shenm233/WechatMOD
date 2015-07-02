@@ -61,14 +61,28 @@ public class ObfuscationHelper {
         //public static Class<?> MainAddContactFragment;  //discovery Fragment
         //public static Class<?> MainMoreFragment;        //me Fragment
         public static Class<?> Preference;
+        public static Class<?> UserInfo;
+        public static Class<?> UserNickName;
+        public static Class<?> Avatar;
+        public static Class<?> AccountStorage;
 
         private static void initClasses(int idx, LoadPackageParam lpparam) throws Throwable {
             String MM_UI_PACKAGENAME = "com.tencent.mm.ui.";
+            String MM_PLUGINSDK_UI_PACKNAME = "com.tencent.mm.pluginsdk.ui.";
+            String MM_MODEL_PACKAGENAME = "com.tencent.mm.model.";
 //            String mainAddContactFragment = MM_UI_PACKAGENAME + new String[]{"v"}[idx];
 //            String mainMoreFragment = MM_UI_PACKAGENAME + new String[]{"em"}[idx];
 
             LauncherUI = findClass("com.tencent.mm.ui.LauncherUI", lpparam.classLoader);
             Preference = findClass(MM_UI_PACKAGENAME + "base.preference.Preference", lpparam.classLoader);
+            UserInfo = findClass(MM_MODEL_PACKAGENAME +
+                    new String[]{"v"}[idx], lpparam.classLoader);
+            UserNickName = findClass(MM_PLUGINSDK_UI_PACKNAME +
+                    new String[]{"d.i"}[idx], lpparam.classLoader);
+            Avatar = findClass(MM_PLUGINSDK_UI_PACKNAME +
+                    new String[]{"a$b"}[idx], lpparam.classLoader);
+            AccountStorage = findClass(MM_MODEL_PACKAGENAME +
+                    new String[]{"ax"}[idx], lpparam.classLoader);
 //            MainAddContactFragment = findClass(mainAddContactFragment, lpparam.classLoader);
 //            MainMoreFragment = findClass(mainMoreFragment, lpparam.classLoader);
         }
@@ -85,12 +99,33 @@ public class ObfuscationHelper {
         //methods in MainMoreFragment class;
         public static String startMMActivity;  //abstract method
 
+        //methods in UserInfo class:
+        public static String getUsername;
+        public static String getOrigUsername;
+
+        //methods in UserNickName class:
+        public static String getNickname;
+
+        //methods in Avatar class:
+        public static String setAvatarByOrigUsername;
+
+        //methods in AccountStorage class:
+        public static String getAccStg;
+
+        public static String getUserInfoFromDB;
+
         private static void initMethods(int idx) throws Throwable {
             MainUI = new String[]{"aKw"}[idx];
             CreateTabView = new String[]{"aKC"}[idx];
             setCurrentPagerItem = new String[]{"nc"}[idx];
             getFragment = new String[]{"nd"}[idx];
             startMMActivity = new String[]{"a"}[idx];
+            getUsername = new String[]{"rO"}[idx];
+            getOrigUsername = new String[]{"rN"}[idx];
+            getNickname = new String[]{"a"}[idx];
+            setAvatarByOrigUsername = new String[]{"b"}[idx];
+            getAccStg = new String[]{"tg"}[idx];
+            getUserInfoFromDB = new String[]{"ra"}[idx];
         }
     }
 

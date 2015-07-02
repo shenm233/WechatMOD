@@ -22,6 +22,8 @@ import dg.shenm233.wechatmod.Common;
 import dg.shenm233.wechatmod.ObfuscationHelper;
 import dg.shenm233.wechatmod.R;
 
+import static de.robv.android.xposed.XposedHelpers.callMethod;
+import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
 import static dg.shenm233.wechatmod.BuildConfig.DEBUG;
@@ -79,6 +81,14 @@ public class LauncherUI {
                 new DrawerLayout.LayoutParams(DrawerLayout.LayoutParams.MATCH_PARENT, DrawerLayout.LayoutParams.MATCH_PARENT));
         //don't use activity.addContentView(drawerLayout);  because it causes activity exit.
 
+        ImageView user_avatar = (ImageView) mDrawer.findViewById(R.id.user_avatar);
+        user_avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainFragments.callMMFragmentFeature(3, "more_tab_setting_personal_info");
+            }
+        });
+
         //Load avatar,etc
         refreshDrawerInfo();
     }
@@ -117,10 +127,36 @@ public class LauncherUI {
 
         //avatar image
         ImageView user_avatar = (ImageView) mDrawer.findViewById(R.id.user_avatar);
-        user_avatar.setImageDrawable(Common.MOD_RES.getDrawable(R.drawable.avatar_test));
+//        user_avatar.setImageDrawable(Common.MOD_RES.getDrawable(R.drawable.avatar_test));
+        setAvatar(user_avatar);
 
         //username,wechat name
         TextView username = (TextView) mDrawer.findViewById(R.id.username);
+        CharSequence str = getNickname();
+        if (str != null)
+            username.setText(str);
+        username.append("\n" + Common.MOD_RES.getText(R.string.username) + getUsername());
+    }
+
+    private CharSequence getNickname() {
+        Object object = callStaticMethod(MM_Classes.AccountStorage, MM_Methods.getAccStg);
+        Object obj = callMethod(callMethod(object, MM_Methods.getUserInfoFromDB), "get", 4, null);
+        if (obj != null && ((String) obj).length() > 0)
+            return (CharSequence) callStaticMethod(MM_Classes.UserNickName, MM_Methods.getNickname, Common.MM_Context, (CharSequence) obj);
+        else
+            return null;
+    }
+
+    private String getUsername() {
+        String str = (String) callStaticMethod(MM_Classes.UserInfo, MM_Methods.getUsername);
+        if (str == null)
+            str = (String) callStaticMethod(MM_Classes.UserInfo, MM_Methods.getOrigUsername);
+        return str;
+    }
+
+    private void setAvatar(ImageView imageView) {
+        String str = (String) callStaticMethod(MM_Classes.UserInfo, MM_Methods.getOrigUsername);
+        callStaticMethod(MM_Classes.Avatar, MM_Methods.setAvatarByOrigUsername, imageView, str);
     }
 
     private class DrawerListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {

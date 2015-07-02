@@ -16,4 +16,5 @@
     <string name="sns_scan">扫一扫</string>
     <string name="sns_shake">摇一摇</string>
     <string name="sns_shopping">购物</string>
+    <string name="username">微信号： </string>
 </resources>
