@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,14 +48,29 @@ public class LauncherUI {
                 callMethod(customViewPager, "setCanSlide", false);
             }
         });
+
+        findAndHookMethod(MM_Classes.LauncherUI, "dispatchKeyEvent", KeyEvent.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                if (mDrawer != null && ((KeyEvent) param.args[0]).getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                    if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
+                        drawerLayout.closeDrawers();
+                        param.setResult(true);
+                    }
+                }
+            }
+        });
     }
 
+    DrawerLayout drawerLayout;
     View mDrawer;
     ListView mDrawerList;
 
     private void addNavigationDrawer(Activity activity) throws Throwable {
-        DrawerLayout drawerLayout = new DrawerLayout(activity);
+        drawerLayout = new DrawerLayout(activity);
         drawerLayout.setFitsSystemWindows(true);
+        drawerLayout.setFocusable(true);
+        drawerLayout.setFocusableInTouchMode(true);
 
         //Create Drawer
         mDrawer = View.inflate(Common.MOD_Context, R.layout.drawer, null);
