@@ -6,7 +6,7 @@ import android.content.res.XModuleResources;
 
 public class Common {
     public static final String MOD_PACKAGENAME = Common.class.getPackage().getName();
-    public static final String Wechat_PACKAGENAME = "com.tencent.mm";
+    public static final String WECHAT_PACKAGENAME = "com.tencent.mm";
 
     public static Context MM_Context;
     public static Context MOD_Context;

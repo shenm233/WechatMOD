@@ -21,7 +21,7 @@ import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import static dg.shenm233.wechatmod.BuildConfig.DEBUG;
 import static dg.shenm233.wechatmod.Common.MOD_PACKAGENAME;
-import static dg.shenm233.wechatmod.Common.Wechat_PACKAGENAME;
+import static dg.shenm233.wechatmod.Common.WECHAT_PACKAGENAME;
 import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Classes;
 
 public class MainHook extends XC_MethodHook implements IXposedHookZygoteInit, IXposedHookLoadPackage, IXposedHookInitPackageResources {
@@ -35,7 +35,7 @@ public class MainHook extends XC_MethodHook implements IXposedHookZygoteInit, IX
 
     @Override
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        if (!lpparam.packageName.equals(Wechat_PACKAGENAME)) return;
+        if (!lpparam.packageName.equals(WECHAT_PACKAGENAME)) return;
 
         try {
             ////////////////////////////////////////////////////
@@ -45,8 +45,8 @@ public class MainHook extends XC_MethodHook implements IXposedHookZygoteInit, IX
             Context context = (Context) callMethod(activityThread, "getSystemContext");
             ///////////////////////////////////////////////////
 
-            String versionName = context.getPackageManager().getPackageInfo(Wechat_PACKAGENAME, 0).versionName;
-            int versionCode = context.getPackageManager().getPackageInfo(Wechat_PACKAGENAME, 0).versionCode;
+            String versionName = context.getPackageManager().getPackageInfo(WECHAT_PACKAGENAME, 0).versionName;
+            int versionCode = context.getPackageManager().getPackageInfo(WECHAT_PACKAGENAME, 0).versionCode;
             if (DEBUG)
                 XposedBridge.log("Wechat versionName: " + versionName + " versionCode: " + Integer.toString(versionCode));
 
@@ -75,7 +75,7 @@ public class MainHook extends XC_MethodHook implements IXposedHookZygoteInit, IX
 
     @Override
     public void handleInitPackageResources(XC_InitPackageResources.InitPackageResourcesParam resparam) throws Throwable {
-        if (!resparam.packageName.equals(Wechat_PACKAGENAME)) return;
+        if (!resparam.packageName.equals(WECHAT_PACKAGENAME)) return;
         if (Common.MOD_RES == null)
             Common.MOD_RES = XModuleResources.createInstance(MODULE_PATH, resparam.res);
     }

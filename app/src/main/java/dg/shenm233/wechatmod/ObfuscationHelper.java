@@ -34,10 +34,10 @@ public class ObfuscationHelper {
         } else {
             return false;
         }
-        MM_Classes.initClasses(versionIndex, lpparam);
-        MM_Methods.initMethods(versionIndex);
-        MM_Fields.initFields(versionIndex);
-        MM_Res.initRes(versionIndex, lpparam);
+        MM_Classes.init(versionIndex, lpparam);
+        MM_Methods.init(versionIndex);
+        MM_Fields.init(versionIndex);
+        MM_Res.init(versionIndex, lpparam);
 
         if (DEBUG) {
             getStackTraceHelper = new XC_MethodHook() {
@@ -66,7 +66,7 @@ public class ObfuscationHelper {
         public static Class<?> Avatar;
         public static Class<?> AccountStorage;
 
-        private static void initClasses(int idx, LoadPackageParam lpparam) throws Throwable {
+        private static void init(int idx, LoadPackageParam lpparam) throws Throwable {
             String MM_UI_PACKAGENAME = "com.tencent.mm.ui.";
             String MM_PLUGINSDK_UI_PACKNAME = "com.tencent.mm.pluginsdk.ui.";
             String MM_MODEL_PACKAGENAME = "com.tencent.mm.model.";
@@ -90,8 +90,8 @@ public class ObfuscationHelper {
 
     public static class MM_Methods {
         //methods in LauncherUI class:
-        public static String MainUI;
-        public static String CreateTabView;
+        public static String startMainUI;
+        public static String createTabView;
         public static String setCurrentPagerItem;
         public static String getFragment;
 
@@ -114,9 +114,9 @@ public class ObfuscationHelper {
 
         public static String getUserInfoFromDB;
 
-        private static void initMethods(int idx) throws Throwable {
-            MainUI = new String[]{"aKw"}[idx];
-            CreateTabView = new String[]{"aKC"}[idx];
+        private static void init(int idx) throws Throwable {
+            startMainUI = new String[]{"aKw"}[idx];
+            createTabView = new String[]{"aKC"}[idx];
             setCurrentPagerItem = new String[]{"nc"}[idx];
             getFragment = new String[]{"nd"}[idx];
             startMMActivity = new String[]{"a"}[idx];
@@ -140,7 +140,7 @@ public class ObfuscationHelper {
         //fields in MainMoreFragment class;
         public static String me_preferenceInterface;        //Type:com.tencent.mm.ui.base.preference.?
 
-        private static void initFields(int idx) throws Throwable {
+        private static void init(int idx) throws Throwable {
             customViewPager = new String[]{"imA"}[idx];
             tabView = new String[]{"imz"}[idx];
             main_tab = new String[]{"cuW"}[idx];
@@ -153,7 +153,7 @@ public class ObfuscationHelper {
     public static class MM_Res {
         public static int main_tab;
 
-        private static void initRes(int idx, LoadPackageParam lpparam) throws Throwable {
+        private static void init(int idx, LoadPackageParam lpparam) throws Throwable {
             String R = "com.tencent.mm.a";
             String main_tabInClazz = new String[]{"$k"}[idx];
             main_tab = getStaticIntField(findClass(R + main_tabInClazz, lpparam.classLoader), "main_tab");
@@ -186,6 +186,5 @@ public class ObfuscationHelper {
         } catch (IOException | XmlPullParserException e) {
             e.printStackTrace();
         }
-
     }
 }

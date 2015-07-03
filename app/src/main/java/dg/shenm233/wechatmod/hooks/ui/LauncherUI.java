@@ -37,7 +37,7 @@ import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Res;
 public class LauncherUI {
     public void init(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         //remove tabview :P
-        findAndHookMethod(MM_Classes.LauncherUI, MM_Methods.CreateTabView, new XC_MethodHook() {
+        findAndHookMethod(MM_Classes.LauncherUI, MM_Methods.createTabView, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 ViewGroup customViewPager = (ViewGroup) getObjectField(param.thisObject, MM_Fields.customViewPager);
