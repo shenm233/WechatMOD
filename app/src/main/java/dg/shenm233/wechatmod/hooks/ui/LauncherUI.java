@@ -44,6 +44,7 @@ public class LauncherUI {
                 ((ViewGroup) customViewPager.getParent()).removeView((View) tabView);
                 if (DEBUG) ObfuscationHelper.getRawXml(MM_Res.main_tab, Common.MM_Context);
                 addNavigationDrawer((Activity) param.thisObject);
+                callMethod(customViewPager, "setCanSlide", false);
             }
         });
     }
