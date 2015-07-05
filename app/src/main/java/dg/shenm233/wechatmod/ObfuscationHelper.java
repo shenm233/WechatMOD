@@ -65,6 +65,9 @@ public class ObfuscationHelper {
         public static Class<?> UserNickName;
         public static Class<?> Avatar;
         public static Class<?> AccountStorage;
+        public static Class<?> NewFriendMessage;
+        public static Class<?> Bottle;
+        public static Class<?> WTFClazz;                //i don't know WTF it is,i just want to get Moments unread count
 
         private static void init(int idx, LoadPackageParam lpparam) throws Throwable {
             String MM_UI_PACKAGENAME = "com.tencent.mm.ui.";
@@ -83,6 +86,12 @@ public class ObfuscationHelper {
                     new String[]{"a$b"}[idx], lpparam.classLoader);
             AccountStorage = findClass(MM_MODEL_PACKAGENAME +
                     new String[]{"ax"}[idx], lpparam.classLoader);
+            NewFriendMessage = findClass("com.tencent.mm." +
+                    new String[]{"ag.m"}[idx], lpparam.classLoader);
+            Bottle = findClass(MM_MODEL_PACKAGENAME +
+                    new String[]{"x"}[idx], lpparam.classLoader);
+            WTFClazz = findClass("com.tencent.mm.pluginsdk." +
+                    new String[]{"l$ag"}[idx], lpparam.classLoader);
 //            MainAddContactFragment = findClass(mainAddContactFragment, lpparam.classLoader);
 //            MainMoreFragment = findClass(mainMoreFragment, lpparam.classLoader);
         }
@@ -114,6 +123,17 @@ public class ObfuscationHelper {
 
         public static String getUserInfoFromDB;
 
+        //methods in NewFriendMessage class:
+        public static String getLBSVerifyMessage;
+        public static String getShakeVerifyMessage;
+
+        public static String getVerifyMessageCount;
+
+        //methods in Bottle class:
+        public static String getBottleUnreadCount;
+
+        public static String getMomentsUnreadCount;
+
         private static void init(int idx) throws Throwable {
             startMainUI = new String[]{"aKw"}[idx];
             createTabView = new String[]{"aKC"}[idx];
@@ -126,6 +146,11 @@ public class ObfuscationHelper {
             setAvatarByOrigUsername = new String[]{"b"}[idx];
             getAccStg = new String[]{"tg"}[idx];
             getUserInfoFromDB = new String[]{"ra"}[idx];
+            getLBSVerifyMessage = new String[]{"BH"}[idx];
+            getShakeVerifyMessage = new String[]{"BI"}[idx];
+            getVerifyMessageCount = new String[]{"BA"}[idx];
+            getBottleUnreadCount = new String[]{"sA"}[idx];
+            getMomentsUnreadCount = new String[]{"BA"}[idx];
         }
     }
 
@@ -140,12 +165,16 @@ public class ObfuscationHelper {
         //fields in MainMoreFragment class;
         public static String me_preferenceInterface;        //Type:com.tencent.mm.ui.base.preference.?
 
+        //fields in WTFClazz
+        public static String moments_jj;
+
         private static void init(int idx) throws Throwable {
             customViewPager = new String[]{"imA"}[idx];
             tabView = new String[]{"imz"}[idx];
             main_tab = new String[]{"cuW"}[idx];
             discovery_preferenceInterface = new String[]{"bXk"}[idx];
             me_preferenceInterface = new String[]{"bXk"}[idx];
+            moments_jj = new String[]{"gJE"}[idx];
         }
     }
 

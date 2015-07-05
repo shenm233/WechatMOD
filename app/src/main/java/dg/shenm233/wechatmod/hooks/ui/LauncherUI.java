@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.TreeSet;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import dg.shenm233.wechatmod.Common;
 import dg.shenm233.wechatmod.ObfuscationHelper;
@@ -27,6 +28,7 @@ import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
+import static de.robv.android.xposed.XposedHelpers.getStaticObjectField;
 import static dg.shenm233.wechatmod.BuildConfig.DEBUG;
 import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Classes;
 import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Fields;
@@ -35,13 +37,16 @@ import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Res;
 
 
 public class LauncherUI {
+    //save tabview instance for getting unread message
+    Object tabView;
+
     public void init(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         //remove tabview :P
         findAndHookMethod(MM_Classes.LauncherUI, MM_Methods.createTabView, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 ViewGroup customViewPager = (ViewGroup) getObjectField(param.thisObject, MM_Fields.customViewPager);
-                Object tabView = getObjectField(param.thisObject, MM_Fields.tabView);
+                tabView = getObjectField(param.thisObject, MM_Fields.tabView);
                 ((ViewGroup) customViewPager.getParent()).removeView((View) tabView);
                 if (DEBUG) ObfuscationHelper.getRawXml(MM_Res.main_tab, Common.MM_Context);
                 addNavigationDrawer((Activity) param.thisObject);
@@ -65,6 +70,7 @@ public class LauncherUI {
     DrawerLayout drawerLayout;
     View mDrawer;
     ListView mDrawerList;
+    DrawerListAdapter drawerListAdapter;
 
     private void addNavigationDrawer(Activity activity) throws Throwable {
         drawerLayout = new DrawerLayout(activity);
@@ -81,7 +87,7 @@ public class LauncherUI {
 
         //Drawer List
         mDrawerList = (ListView) mDrawer.findViewById(R.id.drawer_list);
-        DrawerListAdapter drawerListAdapter = new DrawerListAdapter(Common.MOD_Context);
+        drawerListAdapter = new DrawerListAdapter(Common.MOD_Context);
         mDrawerList.setAdapter(drawerListAdapter);
         mDrawerList.setOnItemClickListener(drawerListAdapter);
         initDrawerList(drawerListAdapter);
@@ -106,8 +112,27 @@ public class LauncherUI {
             }
         });
 
-        //Load avatar,etc
-        refreshDrawerInfo();
+        drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                refreshDrawerInfo();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
     }
 
     private void initDrawerList(DrawerListAdapter drawerListAdapter) {
@@ -153,6 +178,30 @@ public class LauncherUI {
         if (str != null)
             username.setText(str);
         username.append("\n" + Common.MOD_RES.getText(R.string.username) + getUsername());
+
+        try {
+            //set Unread message
+            int i;
+            i = (int) callMethod(tabView, "getMainTabUnread");
+            drawerListAdapter.setMainChattingUnread(i);
+            i = (int) callMethod(tabView, "getContactTabUnread");
+            drawerListAdapter.setContactUnread(i);
+            Object object = getStaticObjectField(MM_Classes.WTFClazz, MM_Fields.moments_jj);
+            i = object != null ? (int) callMethod(object, MM_Methods.getMomentsUnreadCount) : 0;
+            drawerListAdapter.setMomentsUnread(i);
+            if (i == 0) {
+                boolean showPoint = (boolean) callMethod(tabView, "getShowFriendPoint");
+                drawerListAdapter.setMomentsPoint(showPoint);
+            }
+            i = (int) callMethod(callStaticMethod(MM_Classes.NewFriendMessage, MM_Methods.getShakeVerifyMessage), MM_Methods.getVerifyMessageCount);
+            drawerListAdapter.setShakeUnread(i);
+            i = (int) callMethod(callStaticMethod(MM_Classes.NewFriendMessage, MM_Methods.getLBSVerifyMessage), MM_Methods.getVerifyMessageCount);
+            drawerListAdapter.setNearbyPeopleUnread(i);
+            i = (int) callStaticMethod(MM_Classes.Bottle, MM_Methods.getBottleUnreadCount);
+            drawerListAdapter.setDriftBottleUnread(i);
+        } catch (Throwable l) {
+            if (DEBUG) XposedBridge.log(l);
+        }
     }
 
     private CharSequence getNickname() {
@@ -202,6 +251,7 @@ public class LauncherUI {
         private class ViewHolder {
             ImageView icon;
             TextView text;
+            TextView unread;
         }
 
         @Override
@@ -222,6 +272,7 @@ public class LauncherUI {
                         convertView = LayoutInflater.from(mContext).inflate(R.layout.drawer_list_item, parent, false);
                         viewHolder.text = (TextView) convertView.findViewById(R.id.drawerlist_text);
                         viewHolder.icon = (ImageView) convertView.findViewById(R.id.drawerlist_icon);
+                        viewHolder.unread = (TextView) convertView.findViewById(R.id.drwerlist_unread);
                         break;
                 }
                 convertView.setTag(viewHolder);
@@ -230,8 +281,10 @@ public class LauncherUI {
             }
 
             viewHolder.text.setText(Common.MOD_RES.getText(drawerListItem.TEXT_ID));
-            if (ItemType == TYPE_ITEM)
+            if (ItemType == TYPE_ITEM) {
                 viewHolder.icon.setImageDrawable(Common.MOD_RES.getDrawable(drawerListItem.ICON_ID));
+                viewHolder.unread.setText(drawerListItem.unread);
+            }
 
             return convertView;
         }
@@ -266,6 +319,63 @@ public class LauncherUI {
             DrawerListItem drawerListItem = mDrawerListItems.get(position);
             int text_id = drawerListItem.TEXT_ID;
             callMMFeature(text_id);
+        }
+
+        /*set unread message*/
+        public void setMainChattingUnread(int count) {
+            String text;
+            if (count > 0) text = Integer.toString(count);
+            else text = "";
+            mDrawerListItems.get(0).unread = text;
+            notifyDataSetChanged();
+        }
+
+        public void setContactUnread(int count) {
+            String text;
+            if (count > 0) text = Integer.toString(count);
+            else text = "";
+            mDrawerListItems.get(1).unread = text;
+            notifyDataSetChanged();
+        }
+
+        public void setMomentsUnread(int count) {
+            String text;
+            if (count > 0) text = Integer.toString(count);
+            else text = "";
+            mDrawerListItems.get(3).unread = text;
+            notifyDataSetChanged();
+        }
+
+        public void setMomentsPoint(boolean show) {
+            String text;
+            if (show) text = "new";
+            else text = "";
+            mDrawerListItems.get(3).unread = text;
+            notifyDataSetChanged();
+        }
+
+        public void setNearbyPeopleUnread(int count) {
+            String text;
+            if (count > 0) text = Integer.toString(count);
+            else text = "";
+            mDrawerListItems.get(5).unread = text;
+            notifyDataSetChanged();
+        }
+
+        public void setShakeUnread(int count) {
+            String text;
+            if (count > 0) text = Integer.toString(count);
+            else text = "";
+            mDrawerListItems.get(6).unread = text;
+            notifyDataSetChanged();
+        }
+
+        public void setDriftBottleUnread(int count) {
+            String text;
+            if (count > 0) text = Integer.toString(count);
+            else text = "";
+            mDrawerListItems.get(7).unread = text;
+            notifyDataSetChanged();
         }
     }
 
@@ -322,6 +432,7 @@ public class LauncherUI {
     private class DrawerListItem {
         int ICON_ID;
         int TEXT_ID;
+        String unread = "";
 
         public DrawerListItem(int TextResid) {
             TEXT_ID = TextResid;
