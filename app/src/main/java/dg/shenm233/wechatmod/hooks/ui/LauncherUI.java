@@ -380,6 +380,7 @@ public class LauncherUI {
     }
 
     private void callMMFeature(int StrResid) {
+        drawerLayout.closeDrawers();
         switch (StrResid) {
             case R.string.main_chat:
                 MainFragments.switchMMFragment(0);
