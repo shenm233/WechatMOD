@@ -68,6 +68,7 @@ public class ObfuscationHelper {
         public static Class<?> NewFriendMessage;
         public static Class<?> Bottle;
         public static Class<?> WTFClazz;                //i don't know WTF it is,i just want to get Moments unread count
+        public static Class<?> PluginToolClazz;
 
         private static void init(int idx, LoadPackageParam lpparam) throws Throwable {
             String MM_UI_PACKAGENAME = "com.tencent.mm.ui.";
@@ -92,6 +93,8 @@ public class ObfuscationHelper {
                     new String[]{"x"}[idx], lpparam.classLoader);
             WTFClazz = findClass("com.tencent.mm.pluginsdk." +
                     new String[]{"l$ag"}[idx], lpparam.classLoader);
+            PluginToolClazz = findClass("com.tencent.mm." +
+                    new String[]{"aj.c"}[idx], lpparam.classLoader);
 //            MainAddContactFragment = findClass(mainAddContactFragment, lpparam.classLoader);
 //            MainMoreFragment = findClass(mainMoreFragment, lpparam.classLoader);
         }
@@ -135,6 +138,9 @@ public class ObfuscationHelper {
 
         public static String getMomentsUnreadCount;
 
+        //methods in PluginToolClazz
+        public static String startPluginActivity;
+
         private static void init(int idx) throws Throwable {
             startMainUI = new String[]{"aKw"}[idx];
             createTabView = new String[]{"aKC"}[idx];
@@ -153,6 +159,7 @@ public class ObfuscationHelper {
             getVerifyMessageCount = new String[]{"BA"}[idx];
             getBottleUnreadCount = new String[]{"sA"}[idx];
             getMomentsUnreadCount = new String[]{"BA"}[idx];
+            startPluginActivity = new String[]{"c"}[idx];
         }
     }
 

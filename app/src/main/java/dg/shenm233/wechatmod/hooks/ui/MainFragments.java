@@ -1,5 +1,7 @@
 package dg.shenm233.wechatmod.hooks.ui;
 
+import android.content.Intent;
+
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -7,6 +9,7 @@ import dg.shenm233.wechatmod.Common;
 import dg.shenm233.wechatmod.ObfuscationHelper;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
+import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
 import static de.robv.android.xposed.XposedHelpers.setObjectField;
 import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Classes;
@@ -40,6 +43,12 @@ public class MainFragments {
 
     public static void callMMFragmentFeature(int fragmentIndex, String preferenceKey) {
         try {
+            //Fix NPE when start SettingsUI Activity
+            if ("more_setting".equals(preferenceKey)) {
+                callStaticMethod(MM_Classes.PluginToolClazz, MM_Methods.startPluginActivity,
+                        Common.MM_Context, "setting", ".ui.setting.SettingsUI", new Intent());
+                return;
+            }
             Object fragment = callMethod(Common.LauncherUI_INSTANCE, ObfuscationHelper.MM_Methods.getFragment, fragmentIndex);
             Object preference = XposedHelpers.newInstance(MM_Classes.Preference, Common.MM_Context);
             setObjectField(preference, "bTL", preferenceKey);
