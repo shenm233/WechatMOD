@@ -103,6 +103,7 @@ public class ObfuscationHelper {
         public static String createTabView;
         public static String setCurrentPagerItem;
         public static String getFragment;
+        public static String initActionBar;
 
         //methods in MainAddContactFragment class;
         //methods in MainMoreFragment class;
@@ -139,6 +140,7 @@ public class ObfuscationHelper {
             createTabView = new String[]{"aKC"}[idx];
             setCurrentPagerItem = new String[]{"nc"}[idx];
             getFragment = new String[]{"nd"}[idx];
+            initActionBar = new String[]{"aKD"}[idx];
             startMMActivity = new String[]{"a"}[idx];
             getUsername = new String[]{"rO"}[idx];
             getOrigUsername = new String[]{"rN"}[idx];
@@ -159,6 +161,7 @@ public class ObfuscationHelper {
         public static String customViewPager;
         public static String tabView;
         public static String main_tab; //this is main_tab that including customViewPager,tabView...
+        public static String actionBar;
 
         //fields in MainAddContactFragment class;
         public static String discovery_preferenceInterface; //Type:com.tencent.mm.ui.base.preference.?
@@ -175,17 +178,24 @@ public class ObfuscationHelper {
             discovery_preferenceInterface = new String[]{"bXk"}[idx];
             me_preferenceInterface = new String[]{"bXk"}[idx];
             moments_jj = new String[]{"gJE"}[idx];
+            actionBar = new String[]{"iZ"}[idx];
         }
     }
 
     //this class is used for get resource(such as layout,drawable..) id
     public static class MM_Res {
         public static int main_tab;
+        public static int action_bar_color;
+        public static int app_name;
 
         private static void init(int idx, LoadPackageParam lpparam) throws Throwable {
             String R = "com.tencent.mm.a";
             String main_tabInClazz = new String[]{"$k"}[idx];
+            String action_bar_colorInClazz = new String[]{"$f"}[idx];
+            String app_nameInClazz = new String[]{"$n"}[idx];
             main_tab = getStaticIntField(findClass(R + main_tabInClazz, lpparam.classLoader), "main_tab");
+            action_bar_color = getStaticIntField(findClass(R + action_bar_colorInClazz, lpparam.classLoader), "action_bar_color");
+            app_name = getStaticIntField(findClass(R + app_nameInClazz, lpparam.classLoader), "app_name");
         }
     }
 

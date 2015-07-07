@@ -2,6 +2,7 @@ package dg.shenm233.wechatmod.hooks.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
+import chrisrenke.drawerarrowdrawable.DrawerArrowDrawable;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -65,12 +67,50 @@ public class LauncherUI {
                 }
             }
         });
+
+        findAndHookMethod(MM_Classes.LauncherUI, MM_Methods.initActionBar, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                initNewActionBar((Activity) param.thisObject);
+            }
+        });
     }
 
     DrawerLayout drawerLayout;
     View mDrawer;
     ListView mDrawerList;
     DrawerListAdapter drawerListAdapter;
+    DrawerArrowDrawable drawerArrowDrawable;
+
+    private void initNewActionBar(Activity activity) throws Throwable {
+        Object actionBar = getObjectField(activity, MM_Fields.actionBar);
+        View actionBarView = (View) callMethod(actionBar, "getCustomView");
+
+        //add DrawerArrowDrawable to ActionBar
+        ViewGroup newActionBarView = (ViewGroup) View.inflate(Common.MOD_Context, R.layout.actionbar_container, null);
+        ImageView iv = (ImageView) newActionBarView.findViewById(R.id.drawer_indicator);
+
+        //create DrawerArrowDrawable
+        drawerArrowDrawable = new DrawerArrowDrawable((Resources) callMethod(activity, "getResources"));
+        drawerArrowDrawable.setStrokeColor(Common.MOD_RES.getColor(R.color.drawer_indicator_color));
+        iv.setImageDrawable(drawerArrowDrawable);
+
+        //remove original view,and then add again
+        ((ViewGroup) actionBarView.getParent()).removeView(actionBarView);
+        newActionBarView.addView(actionBarView);
+        callMethod(actionBar, "setCustomView", newActionBarView);
+
+        iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
+                    drawerLayout.closeDrawers();
+                } else {
+                    drawerLayout.openDrawer(Gravity.LEFT);
+                }
+            }
+        });
+    }
 
     private void addNavigationDrawer(Activity activity) throws Throwable {
         drawerLayout = new DrawerLayout(activity);
@@ -115,7 +155,14 @@ public class LauncherUI {
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
+                // Sometimes slideOffset ends up so close to but not quite 1 or 0.
+                if (slideOffset >= .995) {
+                    drawerArrowDrawable.setFlip(true);
+                } else if (slideOffset <= .005) {
+                    drawerArrowDrawable.setFlip(false);
+                }
 
+                drawerArrowDrawable.setParameter(slideOffset);
             }
 
             @Override

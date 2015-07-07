@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="drawer_bg">#FFFFFF</color>
+    <color name="wechat_action_bar_color">#3F51B5</color>
+    <color name="drawer_indicator_color">#FFFFFF</color>
 </resources>
