@@ -74,6 +74,19 @@ public class LauncherUI {
                 initNewActionBar((Activity) param.thisObject);
             }
         });
+
+        findAndHookMethod(MM_Classes.LauncherUI, "onResume", new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                try {
+                    if (drawerLayout != null) {
+                        refreshDrawerInfo();
+                    }
+                } catch (Throwable l) {
+
+                }
+            }
+        });
     }
 
     DrawerLayout drawerLayout;
@@ -427,18 +440,21 @@ public class LauncherUI {
     }
 
     private void callMMFeature(int StrResid) {
-        drawerLayout.closeDrawers();
         switch (StrResid) {
             case R.string.main_chat:
+                drawerLayout.closeDrawers();
                 MainFragments.switchMMFragment(0);
                 break;
             case R.string.main_contact:
+                drawerLayout.closeDrawers();
                 MainFragments.switchMMFragment(1);
                 break;
             case R.string.main_addcontact:
+                drawerLayout.closeDrawers();
                 MainFragments.switchMMFragment(2);
                 break;
             case R.string.main_more:
+                drawerLayout.closeDrawers();
                 MainFragments.switchMMFragment(3);
                 break;
             case R.string.sns_moments:
