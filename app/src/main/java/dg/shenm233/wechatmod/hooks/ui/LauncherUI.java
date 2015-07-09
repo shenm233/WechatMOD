@@ -87,6 +87,14 @@ public class LauncherUI {
                 }
             }
         });
+
+        findAndHookMethod(MM_Classes.LauncherUI, "onDestroy", new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                Common.LauncherUI_INSTANCE = null;
+                tabView = null;
+            }
+        });
     }
 
     DrawerLayout drawerLayout;

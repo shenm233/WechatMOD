@@ -64,8 +64,10 @@ public class MainHook extends XC_MethodHook implements IXposedHookZygoteInit, IX
                 }
             });
 
-            launcherUI = new LauncherUI();
-            launcherUI.init(lpparam);
+            if (launcherUI == null) {
+                launcherUI = new LauncherUI();
+                launcherUI.init(lpparam);
+            }
             MainFragments mainFragments = new MainFragments();
             mainFragments.init(lpparam);
         } catch (Throwable l) {
