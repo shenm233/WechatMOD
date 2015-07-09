@@ -19,6 +19,7 @@ import static dg.shenm233.wechatmod.BuildConfig.DEBUG;
 
 public class ObfuscationHelper {
     public static final int MM_6_2_0_50 = 524;
+    public static final int MM_6_2_2_54 = 563;
 
     //a helper for analyzing StackTrace,I want to know who called method.
     public static XC_MethodHook getStackTraceHelper;
@@ -30,7 +31,8 @@ public class ObfuscationHelper {
         int versionIndex;
         if (versioncode == MM_6_2_0_50) {
             versionIndex = 0;
-
+        } else if (versioncode == MM_6_2_2_54) {
+            versionIndex = 1;
         } else {
             return false;
         }
@@ -74,27 +76,27 @@ public class ObfuscationHelper {
             String MM_UI_PACKAGENAME = "com.tencent.mm.ui.";
             String MM_PLUGINSDK_UI_PACKNAME = "com.tencent.mm.pluginsdk.ui.";
             String MM_MODEL_PACKAGENAME = "com.tencent.mm.model.";
-//            String mainAddContactFragment = MM_UI_PACKAGENAME + new String[]{"v"}[idx];
-//            String mainMoreFragment = MM_UI_PACKAGENAME + new String[]{"em"}[idx];
+//            String mainAddContactFragment = MM_UI_PACKAGENAME + new String[]{"v","v"}[idx];
+//            String mainMoreFragment = MM_UI_PACKAGENAME + new String[]{"em","en"}[idx];
 
             LauncherUI = findClass("com.tencent.mm.ui.LauncherUI", lpparam.classLoader);
             Preference = findClass(MM_UI_PACKAGENAME + "base.preference.Preference", lpparam.classLoader);
             UserInfo = findClass(MM_MODEL_PACKAGENAME +
-                    new String[]{"v"}[idx], lpparam.classLoader);
+                    new String[]{"v", "v"}[idx], lpparam.classLoader);
             UserNickName = findClass(MM_PLUGINSDK_UI_PACKNAME +
-                    new String[]{"d.i"}[idx], lpparam.classLoader);
+                    new String[]{"d.i", "d.e"}[idx], lpparam.classLoader);
             Avatar = findClass(MM_PLUGINSDK_UI_PACKNAME +
-                    new String[]{"a$b"}[idx], lpparam.classLoader);
+                    new String[]{"a$b", "a$b"}[idx], lpparam.classLoader);
             AccountStorage = findClass(MM_MODEL_PACKAGENAME +
-                    new String[]{"ax"}[idx], lpparam.classLoader);
+                    new String[]{"ax", "ax"}[idx], lpparam.classLoader);
             NewFriendMessage = findClass("com.tencent.mm." +
-                    new String[]{"ag.m"}[idx], lpparam.classLoader);
+                    new String[]{"ag.m", "ag.m"}[idx], lpparam.classLoader);
             Bottle = findClass(MM_MODEL_PACKAGENAME +
-                    new String[]{"x"}[idx], lpparam.classLoader);
+                    new String[]{"x", "x"}[idx], lpparam.classLoader);
             WTFClazz = findClass("com.tencent.mm.pluginsdk." +
-                    new String[]{"l$ag"}[idx], lpparam.classLoader);
+                    new String[]{"l$ag", "l$ag"}[idx], lpparam.classLoader);
             PluginToolClazz = findClass("com.tencent.mm." +
-                    new String[]{"aj.c"}[idx], lpparam.classLoader);
+                    new String[]{"aj.c", "aj.c"}[idx], lpparam.classLoader);
 //            MainAddContactFragment = findClass(mainAddContactFragment, lpparam.classLoader);
 //            MainMoreFragment = findClass(mainMoreFragment, lpparam.classLoader);
         }
@@ -142,24 +144,24 @@ public class ObfuscationHelper {
         public static String startPluginActivity;
 
         private static void init(int idx) throws Throwable {
-            startMainUI = new String[]{"aKw"}[idx];
-            createTabView = new String[]{"aKC"}[idx];
-            setCurrentPagerItem = new String[]{"nc"}[idx];
-            getFragment = new String[]{"nd"}[idx];
-            initActionBar = new String[]{"aKD"}[idx];
-            startMMActivity = new String[]{"a"}[idx];
-            getUsername = new String[]{"rO"}[idx];
-            getOrigUsername = new String[]{"rN"}[idx];
-            getNickname = new String[]{"a"}[idx];
-            setAvatarByOrigUsername = new String[]{"b"}[idx];
-            getAccStg = new String[]{"tg"}[idx];
-            getUserInfoFromDB = new String[]{"ra"}[idx];
-            getLBSVerifyMessage = new String[]{"BH"}[idx];
-            getShakeVerifyMessage = new String[]{"BI"}[idx];
-            getVerifyMessageCount = new String[]{"BA"}[idx];
-            getBottleUnreadCount = new String[]{"sA"}[idx];
-            getMomentsUnreadCount = new String[]{"BA"}[idx];
-            startPluginActivity = new String[]{"c"}[idx];
+            startMainUI = new String[]{"aKw", "aLJ"}[idx];
+            createTabView = new String[]{"aKC"}[0]; //above 6.2.2 never has this method :(
+            setCurrentPagerItem = new String[]{"nc", "nx"}[idx];
+            getFragment = new String[]{"nd", "ny"}[idx];
+            initActionBar = new String[]{"aKD", "aLP"}[idx];
+            startMMActivity = new String[]{"a", "a"}[idx];
+            getUsername = new String[]{"rO", "rW"}[idx];
+            getOrigUsername = new String[]{"rN", "rV"}[idx];
+            getNickname = new String[]{"a", "a"}[idx];
+            setAvatarByOrigUsername = new String[]{"b", "b"}[idx];
+            getAccStg = new String[]{"tg", "to"}[idx];
+            getUserInfoFromDB = new String[]{"ra", "ri"}[idx];
+            getLBSVerifyMessage = new String[]{"BH", "Cl"}[idx];
+            getShakeVerifyMessage = new String[]{"BI", "Cm"}[idx];
+            getVerifyMessageCount = new String[]{"BA", "Ce"}[idx];
+            getBottleUnreadCount = new String[]{"sA", "sI"}[idx];
+            getMomentsUnreadCount = new String[]{"BA", "Ce"}[idx];
+            startPluginActivity = new String[]{"c", "c"}[idx];
         }
     }
 
@@ -178,14 +180,18 @@ public class ObfuscationHelper {
         //fields in WTFClazz
         public static String moments_jj;
 
+        //fields in Preference
+        public static String preferenceKey;
+
         private static void init(int idx) throws Throwable {
-            customViewPager = new String[]{"imA"}[idx];
-            tabView = new String[]{"imz"}[idx];
-            main_tab = new String[]{"cuW"}[idx];
-            discovery_preferenceInterface = new String[]{"bXk"}[idx];
-            me_preferenceInterface = new String[]{"bXk"}[idx];
-            moments_jj = new String[]{"gJE"}[idx];
-            actionBar = new String[]{"iZ"}[idx];
+            customViewPager = new String[]{"imA", "iwF"}[idx];
+            tabView = new String[]{"imz", "iwE"}[idx];
+            main_tab = new String[]{"cuW", "czt"}[idx];
+            actionBar = new String[]{"iZ", "jA"}[idx];
+            discovery_preferenceInterface = new String[]{"bXk", "cbC"}[idx];
+            me_preferenceInterface = new String[]{"bXk", "cbC"}[idx];
+            moments_jj = new String[]{"gJE", "gTe"}[idx];
+            preferenceKey = new String[]{"bTL", "bXW"}[idx];
         }
     }
 
@@ -197,6 +203,7 @@ public class ObfuscationHelper {
 
         private static void init(int idx, LoadPackageParam lpparam) throws Throwable {
             String R = "com.tencent.mm.a";
+            if (idx < 2) idx = 0;  //For 6.2.x,these name may be same
             String main_tabInClazz = new String[]{"$k"}[idx];
             String action_bar_colorInClazz = new String[]{"$f"}[idx];
             String app_nameInClazz = new String[]{"$n"}[idx];

@@ -51,7 +51,7 @@ public class MainFragments {
             }
             Object fragment = callMethod(Common.LauncherUI_INSTANCE, ObfuscationHelper.MM_Methods.getFragment, fragmentIndex);
             Object preference = XposedHelpers.newInstance(MM_Classes.Preference, Common.MM_Context);
-            setObjectField(preference, "bTL", preferenceKey);
+            setObjectField(preference, MM_Fields.preferenceKey, preferenceKey);
             Object tempObject = new Object();
             //从Fragment获取类型为com.tencent.mm.ui.base.preference.?（接口）的成员变量，用于寻找需要的函数（接口不能实例化）
             if (fragmentIndex == 2) {
