@@ -40,21 +40,32 @@ import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Res;
 
 public class LauncherUI {
     //save tabview instance for getting unread message
-    Object tabView;
+    private Object tabView;
+    private Activity LauncherUI_INSTANCE;
+    private boolean isMainTabCreated;
 
     public void init(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        //remove tabview :P
         findAndHookMethod(MM_Classes.LauncherUI, MM_Methods.startMainUI, new XC_MethodHook() {
             @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                isMainTabCreated = (boolean) getObjectField(param.thisObject, MM_Fields.isMainTabCreated);
+                LauncherUI_INSTANCE = (Activity) param.thisObject;
+            }
+
+            @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                //do it for once,unless onDestroy make tabView=null
-                if (tabView == null) {
-                    ViewGroup customViewPager = (ViewGroup) getObjectField(param.thisObject, MM_Fields.customViewPager);
-                    tabView = getObjectField(param.thisObject, MM_Fields.tabView);
-                    ((ViewGroup) customViewPager.getParent()).removeView((View) tabView);
-                    if (DEBUG) ObfuscationHelper.getRawXml(MM_Res.main_tab, Common.MM_Context);
-                    addNavigationDrawer((Activity) param.thisObject);
-                    callMethod(customViewPager, "setCanSlide", false);
+                if (!isMainTabCreated) {
+                    if (DEBUG) XposedBridge.log("on maintab create");
+                    if ((boolean) callStaticMethod(MM_Classes.AccountStorage, MM_Methods.isMMcoreReady)) {
+                        ViewGroup customViewPager = (ViewGroup) getObjectField(param.thisObject, MM_Fields.customViewPager);
+                        tabView = getObjectField(param.thisObject, MM_Fields.tabView);
+                        ((ViewGroup) customViewPager.getParent()).removeView((View) tabView);
+                        if (DEBUG) ObfuscationHelper.getRawXml(MM_Res.main_tab, Common.MM_Context);
+                        addNavigationDrawer((Activity) param.thisObject);
+                        callMethod(customViewPager, "setCanSlide", false);
+                    } else {
+                        if (DEBUG) XposedBridge.log("mmcore has not ready, finish LauncherUI hook");
+                    }
                 }
             }
         });
@@ -94,8 +105,11 @@ public class LauncherUI {
         findAndHookMethod(MM_Classes.LauncherUI, "onDestroy", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Common.LauncherUI_INSTANCE = null;
-                tabView = null;
+                if (isMainTabCreated) {
+                    LauncherUI_INSTANCE = null;
+                    tabView = null;
+                    XposedBridge.log("onDestroy,remove custom view");
+                }
             }
         });
     }
@@ -172,7 +186,7 @@ public class LauncherUI {
         user_avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainFragments.callMMFragmentFeature(3, "more_tab_setting_personal_info");
+                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "more_tab_setting_personal_info");
             }
         });
 
@@ -454,52 +468,52 @@ public class LauncherUI {
         switch (StrResid) {
             case R.string.main_chat:
                 drawerLayout.closeDrawers();
-                MainFragments.switchMMFragment(0);
+                MainFragments.switchMMFragment(LauncherUI_INSTANCE, 0);
                 break;
             case R.string.main_contact:
                 drawerLayout.closeDrawers();
-                MainFragments.switchMMFragment(1);
+                MainFragments.switchMMFragment(LauncherUI_INSTANCE, 1);
                 break;
             case R.string.main_addcontact:
                 drawerLayout.closeDrawers();
-                MainFragments.switchMMFragment(2);
+                MainFragments.switchMMFragment(LauncherUI_INSTANCE, 2);
                 break;
             case R.string.main_more:
                 drawerLayout.closeDrawers();
-                MainFragments.switchMMFragment(3);
+                MainFragments.switchMMFragment(LauncherUI_INSTANCE, 3);
                 break;
             case R.string.sns_moments:
-                MainFragments.callMMFragmentFeature(2, "album_dyna_photo_ui_title");
+                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "album_dyna_photo_ui_title");
                 break;
             case R.string.sns_scan:
-                MainFragments.callMMFragmentFeature(2, "find_friends_by_qrcode");
+                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_qrcode");
                 break;
             case R.string.sns_shake:
-                MainFragments.callMMFragmentFeature(2, "find_friends_by_shake");
+                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_shake");
                 break;
             case R.string.sns_people_nearby:
-                MainFragments.callMMFragmentFeature(2, "find_friends_by_near");
+                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_near");
                 break;
             case R.string.sns_drift_bottle:
-                MainFragments.callMMFragmentFeature(2, "voice_bottle");
+                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "voice_bottle");
                 break;
             case R.string.sns_shopping:
-                MainFragments.callMMFragmentFeature(2, "jd_market_entrance");
+                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "jd_market_entrance");
                 break;
             case R.string.sns_games:
-                MainFragments.callMMFragmentFeature(2, "more_tab_game_recommend");
+                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "more_tab_game_recommend");
                 break;
             case R.string.me_posts:
-                MainFragments.callMMFragmentFeature(3, "settings_my_album");
+                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_my_album");
                 break;
             case R.string.me_favorites:
-                MainFragments.callMMFragmentFeature(3, "settings_mm_favorite");
+                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_mm_favorite");
                 break;
             case R.string.me_wallet:
-                MainFragments.callMMFragmentFeature(3, "settings_mm_wallet");
+                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_mm_wallet");
                 break;
             case R.string.me_settings:
-                MainFragments.callMMFragmentFeature(3, "more_setting");
+                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "more_setting");
                 break;
         }
     }

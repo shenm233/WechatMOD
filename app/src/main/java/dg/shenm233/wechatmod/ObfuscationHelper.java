@@ -126,6 +126,7 @@ public class ObfuscationHelper {
 
         //methods in AccountStorage class:
         public static String getAccStg;
+        public static String isMMcoreReady;
 
         public static String getUserInfoFromDB;
 
@@ -155,6 +156,7 @@ public class ObfuscationHelper {
             getNickname = new String[]{"a", "a"}[idx];
             setAvatarByOrigUsername = new String[]{"b", "b"}[idx];
             getAccStg = new String[]{"tg", "to"}[idx];
+            isMMcoreReady = new String[]{"qU", "rc"}[idx];
             getUserInfoFromDB = new String[]{"ra", "ri"}[idx];
             getLBSVerifyMessage = new String[]{"BH", "Cl"}[idx];
             getShakeVerifyMessage = new String[]{"BI", "Cm"}[idx];
@@ -171,6 +173,7 @@ public class ObfuscationHelper {
         public static String tabView;
         public static String main_tab; //this is main_tab that including customViewPager,tabView...
         public static String actionBar;
+        public static String isMainTabCreated;
 
         //fields in MainAddContactFragment class;
         public static String discovery_preferenceInterface; //Type:com.tencent.mm.ui.base.preference.?
@@ -188,6 +191,7 @@ public class ObfuscationHelper {
             tabView = new String[]{"imz", "iwE"}[idx];
             main_tab = new String[]{"cuW", "czt"}[idx];
             actionBar = new String[]{"iZ", "jA"}[idx];
+            isMainTabCreated = new String[]{"imr", "iwv"}[idx];
             discovery_preferenceInterface = new String[]{"bXk", "cbC"}[idx];
             me_preferenceInterface = new String[]{"bXk", "cbC"}[idx];
             moments_jj = new String[]{"gJE", "gTe"}[idx];

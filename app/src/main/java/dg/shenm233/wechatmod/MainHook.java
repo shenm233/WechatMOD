@@ -58,9 +58,9 @@ public class MainHook extends XC_MethodHook implements IXposedHookZygoteInit, IX
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     if (DEBUG) XposedBridge.log("wechat onCreate hook!");
-                    Common.LauncherUI_INSTANCE = (Activity) param.thisObject;
-                    Common.MM_Context = (Context) callMethod(Common.LauncherUI_INSTANCE, "getApplicationContext");
-                    Common.MOD_Context = Common.LauncherUI_INSTANCE.createPackageContext(MOD_PACKAGENAME, Context.CONTEXT_IGNORE_SECURITY);
+                    Activity LauncherUI_INSTANCE = (Activity) param.thisObject;
+                    Common.MM_Context = (Context) callMethod(LauncherUI_INSTANCE, "getApplicationContext");
+                    Common.MOD_Context = LauncherUI_INSTANCE.createPackageContext(MOD_PACKAGENAME, Context.CONTEXT_IGNORE_SECURITY);
                 }
             });
 

@@ -1,5 +1,6 @@
 package dg.shenm233.wechatmod.hooks.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 
 import de.robv.android.xposed.XposedBridge;
@@ -30,18 +31,18 @@ public class MainFragments {
 //        }
     }
 
-    public static void switchMMFragment(int i) {
+    public static void switchMMFragment(Activity activity, int i) {
         if (i < 4) {
             //switch PagerView.
             // 0 for main_chatting,
             // 1 for contact,
             // 2 for discovery,
             // 3 for me
-            callMethod(Common.LauncherUI_INSTANCE, ObfuscationHelper.MM_Methods.setCurrentPagerItem, i);
+            callMethod(activity, ObfuscationHelper.MM_Methods.setCurrentPagerItem, i);
         }
     }
 
-    public static void callMMFragmentFeature(int fragmentIndex, String preferenceKey) {
+    public static void callMMFragmentFeature(Activity activity, int fragmentIndex, String preferenceKey) {
         try {
             //Fix NPE when start SettingsUI Activity
             if ("more_setting".equals(preferenceKey)) {
@@ -49,7 +50,7 @@ public class MainFragments {
                         Common.MM_Context, "setting", ".ui.setting.SettingsUI", new Intent());
                 return;
             }
-            Object fragment = callMethod(Common.LauncherUI_INSTANCE, ObfuscationHelper.MM_Methods.getFragment, fragmentIndex);
+            Object fragment = callMethod(activity, ObfuscationHelper.MM_Methods.getFragment, fragmentIndex);
             Object preference = XposedHelpers.newInstance(MM_Classes.Preference, Common.MM_Context);
             setObjectField(preference, MM_Fields.preferenceKey, preferenceKey);
             Object tempObject = new Object();
