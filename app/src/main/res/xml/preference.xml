@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/preference_title">
+    <PreferenceScreen
+        android:summary="@string/preference_note_summary"
+        android:title="@string/preference_note" />
+    <ListPreference
+        android:dialogTitle="@string/preference_setnav"
+        android:entries="@array/preference_setnav_entries"
+        android:entryValues="@array/preference_setnav_entries_values"
+        android:key="setnav"
+        android:title="@string/preference_setnav" />
+    <PreferenceCategory android:title="@string/preference_about">
+        <PreferenceScreen
+            android:key="version"
+            android:title="@string/preference_version" />
+        <PreferenceScreen
+            android:key="dev"
+            android:title="@string/preference_dev" />
+        <PreferenceScreen
+            android:key="license"
+            android:title="@string/preference_license" />
+    </PreferenceCategory>
+</PreferenceScreen>

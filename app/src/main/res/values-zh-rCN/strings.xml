@@ -17,4 +17,17 @@
     <string name="sns_shake">摇一摇</string>
     <string name="sns_shopping">购物</string>
     <string name="username">微信号： </string>
+    <string name="preference_about">关于</string>
+    <string name="preference_dev">作者</string>
+    <string name="preference_license">开源协议</string>
+    <string name="preference_note">注意</string>
+    <string name="preference_setnav">选择微信导航方式</string>
+    <string-array name="preference_setnav_entries">
+        <item>默认(iOS tabs)</item>
+        <item>无tabs</item>
+        <item>导航抽屉</item>
+    </string-array>
+    <string name="preference_title">微信_模块设置</string>
+    <string name="preference_version">版本</string>
+    <string name="preference_note_summary">使用本修改模块代表你要承担一切后果，如隐私泄露、财产损失等，与本模块无关！\n请从可信的位置下载并安装本模块。</string>
 </resources>
