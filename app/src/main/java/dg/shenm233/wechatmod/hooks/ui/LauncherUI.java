@@ -1,22 +1,15 @@
 package dg.shenm233.wechatmod.hooks.ui;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.TreeSet;
 
 import chrisrenke.drawerarrowdrawable.DrawerArrowDrawable;
 import de.robv.android.xposed.XC_MethodHook;
@@ -41,7 +34,7 @@ import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Res;
 public class LauncherUI {
     //save tabview instance for getting unread message
     private Object tabView;
-    private Activity LauncherUI_INSTANCE;
+    private static Activity LauncherUI_INSTANCE;
     private boolean isMainTabCreated;
 
     private String navMode;
@@ -135,11 +128,11 @@ public class LauncherUI {
         callMethod(customViewPager, "setCanSlide", keepCanSlide);
     }
 
-    DrawerLayout drawerLayout;
-    View mDrawer;
-    ListView mDrawerList;
-    DrawerListAdapter drawerListAdapter;
-    DrawerArrowDrawable drawerArrowDrawable;
+    private static DrawerLayout drawerLayout;
+    private View mDrawer;
+    private ListView mDrawerList;
+    private DrawerListAdapter drawerListAdapter;
+    private DrawerArrowDrawable drawerArrowDrawable;
 
     private void initNewActionBar(Activity activity) throws Throwable {
         Object actionBar = getObjectField(activity, MM_Fields.actionBar);
@@ -243,29 +236,29 @@ public class LauncherUI {
 
     private void initDrawerList(DrawerListAdapter drawerListAdapter) {
         //chatting
-        drawerListAdapter.addItem(R.drawable.main_chat, R.string.main_chat);
+        drawerListAdapter.addItem(Common.item_main_chat, R.drawable.main_chat, R.string.main_chat);
         //contact
-        drawerListAdapter.addItem(R.drawable.main_contact, R.string.main_contact);
+        drawerListAdapter.addItem(Common.item_main_contact, R.drawable.main_contact, R.string.main_contact);
         //Discovery
-        drawerListAdapter.addSectionHeaderItem(R.string.main_addcontact);
+        drawerListAdapter.addSectionHeaderItem(Common.item_main_addcontact, R.string.main_addcontact);
 
         //
-        drawerListAdapter.addItem(R.drawable.sns_moments, R.string.sns_moments);
-        drawerListAdapter.addItem(R.drawable.sns_scan, R.string.sns_scan);
-        drawerListAdapter.addItem(R.drawable.sns_shake, R.string.sns_shake);
-        drawerListAdapter.addItem(R.drawable.sns_people_nearby, R.string.sns_people_nearby);
-        drawerListAdapter.addItem(R.drawable.sns_drift_bottle, R.string.sns_drift_bottle);
-        drawerListAdapter.addItem(R.drawable.sns_shopping, R.string.sns_shopping);
-        drawerListAdapter.addItem(R.drawable.sns_games, R.string.sns_games);
+        drawerListAdapter.addItem(Common.item_sns_moments, R.drawable.sns_moments, R.string.sns_moments);
+        drawerListAdapter.addItem(Common.item_sns_scan, R.drawable.sns_scan, R.string.sns_scan);
+        drawerListAdapter.addItem(Common.item_sns_shake, R.drawable.sns_shake, R.string.sns_shake);
+        drawerListAdapter.addItem(Common.item_sns_people_nearby, R.drawable.sns_people_nearby, R.string.sns_people_nearby);
+        drawerListAdapter.addItem(Common.item_sns_drift_bottle, R.drawable.sns_drift_bottle, R.string.sns_drift_bottle);
+        drawerListAdapter.addItem(Common.item_sns_shopping, R.drawable.sns_shopping, R.string.sns_shopping);
+        drawerListAdapter.addItem(Common.item_sns_games, R.drawable.sns_games, R.string.sns_games);
 
         //Me
-        drawerListAdapter.addSectionHeaderItem(R.string.main_more);
+        drawerListAdapter.addSectionHeaderItem(Common.item_main_more, R.string.main_more);
 
         //
-        drawerListAdapter.addItem(R.drawable.me_posts, R.string.me_posts);
-        drawerListAdapter.addItem(R.drawable.me_favorites, R.string.me_favorites);
-        drawerListAdapter.addItem(R.drawable.me_wallet, R.string.me_wallet);
-        drawerListAdapter.addItem(R.drawable.me_settings, R.string.me_settings);
+        drawerListAdapter.addItem(Common.item_me_posts, R.drawable.me_posts, R.string.me_posts);
+        drawerListAdapter.addItem(Common.item_me_favorites, R.drawable.me_favorites, R.string.me_favorites);
+        drawerListAdapter.addItem(Common.item_me_wallet, R.drawable.me_wallet, R.string.me_wallet);
+        drawerListAdapter.addItem(Common.item_me_settings, R.drawable.me_settings, R.string.me_settings);
     }
 
     private void refreshDrawerInfo() {
@@ -331,234 +324,58 @@ public class LauncherUI {
         callStaticMethod(MM_Classes.Avatar, MM_Methods.setAvatarByOrigUsername, imageView, str);
     }
 
-    private class DrawerListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
-        private Context mContext;
-        private ArrayList<DrawerListItem> mDrawerListItems = new ArrayList<DrawerListItem>();
-        private TreeSet<Integer> sectionHeader = new TreeSet<Integer>();
-
-        private final int TYPE_ITEM = 0;
-        private final int TYPE_SEPARATOR = 1;
-
-        public DrawerListAdapter(Context context) {
-            mContext = context;
-        }
-
-        public void addItem(int IconResid, int TextResid) {
-            mDrawerListItems.add(new DrawerListItem(IconResid, TextResid));
-            notifyDataSetChanged();
-        }
-
-        public void addSectionHeaderItem(int TextResid) {
-            mDrawerListItems.add(new DrawerListItem(TextResid));
-            sectionHeader.add(mDrawerListItems.size() - 1);
-            notifyDataSetChanged();
-        }
-
-        private class ViewHolder {
-            ImageView icon;
-            TextView text;
-            TextView unread;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            DrawerListItem drawerListItem = mDrawerListItems.get(position);
-            int ItemType = getItemViewType(position);
-            ViewHolder viewHolder;
-            if (convertView == null) {
-                viewHolder = new ViewHolder();
-                switch (ItemType) {
-                    case TYPE_SEPARATOR:
-                        convertView = LayoutInflater.from(mContext).inflate(R.layout.header, parent, false);
-                        convertView.setEnabled(false);
-                        viewHolder.text = (TextView) convertView.findViewById(R.id.header_text);
-                        break;
-                    default:
-                    case TYPE_ITEM:
-                        convertView = LayoutInflater.from(mContext).inflate(R.layout.drawer_list_item, parent, false);
-                        viewHolder.text = (TextView) convertView.findViewById(R.id.drawerlist_text);
-                        viewHolder.icon = (ImageView) convertView.findViewById(R.id.drawerlist_icon);
-                        viewHolder.unread = (TextView) convertView.findViewById(R.id.drwerlist_unread);
-                        break;
-                }
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-
-            viewHolder.text.setText(Common.MOD_RES.getText(drawerListItem.TEXT_ID));
-            if (ItemType == TYPE_ITEM) {
-                viewHolder.icon.setImageDrawable(Common.MOD_RES.getDrawable(drawerListItem.ICON_ID));
-                viewHolder.unread.setText(drawerListItem.unread);
-            }
-
-            return convertView;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return sectionHeader.contains(position) ? TYPE_SEPARATOR : TYPE_ITEM;
-        }
-
-        @Override
-        public int getViewTypeCount() {
-            return 2;
-        }
-
-        @Override
-        public int getCount() {
-            return mDrawerListItems.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mDrawerListItems.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            DrawerListItem drawerListItem = mDrawerListItems.get(position);
-            int text_id = drawerListItem.TEXT_ID;
-            callMMFeature(text_id);
-        }
-
-        /*set unread message*/
-        public void setMainChattingUnread(int count) {
-            String text;
-            if (count > 0) text = Integer.toString(count);
-            else text = "";
-            mDrawerListItems.get(0).unread = text;
-            notifyDataSetChanged();
-        }
-
-        public void setContactUnread(int count) {
-            String text;
-            if (count > 0) text = Integer.toString(count);
-            else text = "";
-            mDrawerListItems.get(1).unread = text;
-            notifyDataSetChanged();
-        }
-
-        public void setMomentsUnread(int count) {
-            String text;
-            if (count > 0) text = Integer.toString(count);
-            else text = "";
-            mDrawerListItems.get(3).unread = text;
-            notifyDataSetChanged();
-        }
-
-        public void setMomentsPoint(boolean show) {
-            String text;
-            if (show) text = "new";
-            else text = "";
-            mDrawerListItems.get(3).unread = text;
-            notifyDataSetChanged();
-        }
-
-        public void setNearbyPeopleUnread(int count) {
-            String text;
-            if (count > 0) text = Integer.toString(count);
-            else text = "";
-            mDrawerListItems.get(5).unread = text;
-            notifyDataSetChanged();
-        }
-
-        public void setShakeUnread(int count) {
-            String text;
-            if (count > 0) text = Integer.toString(count);
-            else text = "";
-            mDrawerListItems.get(6).unread = text;
-            notifyDataSetChanged();
-        }
-
-        public void setDriftBottleUnread(int count) {
-            String text;
-            if (count > 0) text = Integer.toString(count);
-            else text = "";
-            mDrawerListItems.get(7).unread = text;
-            notifyDataSetChanged();
-        }
-    }
-
-    private void callMMFeature(int StrResid) {
-        switch (StrResid) {
-            case R.string.main_chat:
+    protected static void callMMFeature(int key) {
+        if (drawerLayout == null || LauncherUI_INSTANCE == null) return;
+        switch (key) {
+            case Common.item_main_chat:
                 drawerLayout.closeDrawers();
                 MainFragments.switchMMFragment(LauncherUI_INSTANCE, 0);
                 break;
-            case R.string.main_contact:
+            case Common.item_main_contact:
                 drawerLayout.closeDrawers();
                 MainFragments.switchMMFragment(LauncherUI_INSTANCE, 1);
                 break;
-            case R.string.main_addcontact:
+            case Common.item_main_addcontact:
                 drawerLayout.closeDrawers();
                 MainFragments.switchMMFragment(LauncherUI_INSTANCE, 2);
                 break;
-            case R.string.main_more:
+            case Common.item_main_more:
                 drawerLayout.closeDrawers();
                 MainFragments.switchMMFragment(LauncherUI_INSTANCE, 3);
                 break;
-            case R.string.sns_moments:
+            case Common.item_sns_moments:
                 MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "album_dyna_photo_ui_title");
                 break;
-            case R.string.sns_scan:
+            case Common.item_sns_scan:
                 MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_qrcode");
                 break;
-            case R.string.sns_shake:
+            case Common.item_sns_shake:
                 MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_shake");
                 break;
-            case R.string.sns_people_nearby:
+            case Common.item_sns_people_nearby:
                 MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_near");
                 break;
-            case R.string.sns_drift_bottle:
+            case Common.item_sns_drift_bottle:
                 MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "voice_bottle");
                 break;
-            case R.string.sns_shopping:
+            case Common.item_sns_shopping:
                 MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "jd_market_entrance");
                 break;
-            case R.string.sns_games:
+            case Common.item_sns_games:
                 MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "more_tab_game_recommend");
                 break;
-            case R.string.me_posts:
+            case Common.item_me_posts:
                 MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_my_album");
                 break;
-            case R.string.me_favorites:
+            case Common.item_me_favorites:
                 MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_mm_favorite");
                 break;
-            case R.string.me_wallet:
+            case Common.item_me_wallet:
                 MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_mm_wallet");
                 break;
-            case R.string.me_settings:
+            case Common.item_me_settings:
                 MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "more_setting");
                 break;
-        }
-    }
-
-    private class DrawerListItem {
-        int ICON_ID;
-        int TEXT_ID;
-        String unread = "";
-
-        public DrawerListItem(int TextResid) {
-            TEXT_ID = TextResid;
-        }
-
-        public DrawerListItem(int IconResid, int TextResid) {
-            ICON_ID = IconResid;
-            TEXT_ID = TextResid;
-        }
-
-        public void setIcon(int resId) {
-            ICON_ID = resId;
-        }
-
-        public void setText(int resId) {
-            TEXT_ID = resId;
         }
     }
 }
