@@ -30,4 +30,5 @@
     <string name="preference_title">微信_模块设置</string>
     <string name="preference_version">版本</string>
     <string name="preference_note_summary">使用本修改模块代表你要承担一切后果，如隐私泄露、财产损失等，与本模块无关！\n请从可信的位置下载并安装本模块。</string>
+    <string name="preference_reboot_note">请重新启动微信使设置生效\n（提示：可以将微信从最近任务列表删除来重启微信）</string>
 </resources>

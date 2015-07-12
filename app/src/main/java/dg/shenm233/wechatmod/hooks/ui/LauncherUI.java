@@ -44,12 +44,21 @@ public class LauncherUI {
     private Activity LauncherUI_INSTANCE;
     private boolean isMainTabCreated;
 
+    private String navMode;
+
+
     public void init(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         findAndHookMethod(MM_Classes.LauncherUI, MM_Methods.startMainUI, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 isMainTabCreated = (boolean) getObjectField(param.thisObject, MM_Fields.isMainTabCreated);
                 LauncherUI_INSTANCE = (Activity) param.thisObject;
+                Common.XMOD_PREFS.reload();
+                if (Common.XMOD_PREFS.getAll().size() > 0) {
+                    navMode = Common.XMOD_PREFS.getString(Common.KEY_SETNAV, "default");
+                } else {
+                    navMode = "default";
+                }
             }
 
             @Override
@@ -57,12 +66,12 @@ public class LauncherUI {
                 if (!isMainTabCreated) {
                     if (DEBUG) XposedBridge.log("on maintab create");
                     if ((boolean) callStaticMethod(MM_Classes.AccountStorage, MM_Methods.isMMcoreReady)) {
-                        ViewGroup customViewPager = (ViewGroup) getObjectField(param.thisObject, MM_Fields.customViewPager);
-                        tabView = getObjectField(param.thisObject, MM_Fields.tabView);
-                        ((ViewGroup) customViewPager.getParent()).removeView((View) tabView);
-                        if (DEBUG) ObfuscationHelper.getRawXml(MM_Res.main_tab, Common.MM_Context);
-                        addNavigationDrawer((Activity) param.thisObject);
-                        callMethod(customViewPager, "setCanSlide", false);
+                        if ("navidrawer".equals(navMode)) {
+                            removeMMtabs((Activity) param.thisObject, false);
+                            addNavigationDrawer((Activity) param.thisObject);
+                        } else if ("notabs".equals(navMode)) {
+                            removeMMtabs((Activity) param.thisObject, true);
+                        }
                     } else {
                         if (DEBUG) XposedBridge.log("mmcore has not ready, finish LauncherUI hook");
                     }
@@ -73,10 +82,12 @@ public class LauncherUI {
         findAndHookMethod(MM_Classes.LauncherUI, "dispatchKeyEvent", KeyEvent.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                if (mDrawer != null && ((KeyEvent) param.args[0]).getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                    if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
-                        drawerLayout.closeDrawers();
-                        param.setResult(true);
+                if ("navidrawer".equals(navMode)) {
+                    if (mDrawer != null && ((KeyEvent) param.args[0]).getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                        if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
+                            drawerLayout.closeDrawers();
+                            param.setResult(true);
+                        }
                     }
                 }
             }
@@ -85,7 +96,9 @@ public class LauncherUI {
         findAndHookMethod(MM_Classes.LauncherUI, MM_Methods.initActionBar, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                initNewActionBar((Activity) param.thisObject);
+                if ("navidrawer".equals(navMode)) {
+                    initNewActionBar((Activity) param.thisObject);
+                }
             }
         });
 
@@ -93,7 +106,7 @@ public class LauncherUI {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 try {
-                    if (drawerLayout != null) {
+                    if ("navidrawer".equals(navMode) && drawerLayout != null) {
                         refreshDrawerInfo();
                     }
                 } catch (Throwable l) {
@@ -105,13 +118,21 @@ public class LauncherUI {
         findAndHookMethod(MM_Classes.LauncherUI, "onDestroy", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                if (isMainTabCreated) {
+                if ("navidrawer".equals(navMode)) {
                     LauncherUI_INSTANCE = null;
                     tabView = null;
                     XposedBridge.log("onDestroy,remove custom view");
                 }
             }
         });
+    }
+
+    private void removeMMtabs(Activity activity, boolean keepCanSlide) {
+        ViewGroup customViewPager = (ViewGroup) getObjectField(activity, MM_Fields.customViewPager);
+        tabView = getObjectField(activity, MM_Fields.tabView);
+        ((ViewGroup) customViewPager.getParent()).removeView((View) tabView);
+        if (DEBUG) ObfuscationHelper.getRawXml(MM_Res.main_tab, Common.MM_Context);
+        callMethod(customViewPager, "setCanSlide", keepCanSlide);
     }
 
     DrawerLayout drawerLayout;

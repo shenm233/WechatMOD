@@ -36,4 +36,6 @@
     <string name="preference_version">Version</string>
     <string name="preference_dev">Dev</string>
     <string name="preference_license">Open source licenses</string>
+
+    <string name="preference_reboot_note">Please reboot Wechat to take effect.</string>
 </resources>

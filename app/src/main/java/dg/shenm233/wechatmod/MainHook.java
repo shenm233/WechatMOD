@@ -9,6 +9,7 @@ import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -31,6 +32,8 @@ public class MainHook extends XC_MethodHook implements IXposedHookZygoteInit, IX
     @Override
     public void initZygote(IXposedHookZygoteInit.StartupParam startupParam) throws Throwable {
         MODULE_PATH = startupParam.modulePath;
+        Common.XMOD_PREFS = new XSharedPreferences(Common.MOD_PACKAGENAME, Common.MOD_PREFS);
+        Common.XMOD_PREFS.makeWorldReadable();
     }
 
     @Override

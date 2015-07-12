@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.widget.Toast;
 
 @SuppressLint("WorldReadableFiles")
 public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
@@ -69,6 +70,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(Common.KEY_SETNAV, key);
             editor.commit();
+            Toast.makeText(this, R.string.preference_reboot_note, Toast.LENGTH_SHORT).show();
             return true;
         }
         return false;
