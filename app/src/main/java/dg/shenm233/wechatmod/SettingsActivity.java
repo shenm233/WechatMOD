@@ -7,9 +7,12 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.widget.Toast;
+
+import java.util.Set;
 
 @SuppressLint("WorldReadableFiles")
 public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
@@ -17,6 +20,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
     private Preference mLicense;
     private ListPreference mSetNav;
+    private MultiSelectListPreference mDisabledItems;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,8 +44,10 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
         mLicense = findPreference("license");
         mSetNav = (ListPreference) findPreference(Common.KEY_SETNAV);
+        mDisabledItems = (MultiSelectListPreference) findPreference(Common.KEY_DISABLED_ITEMS);
         mLicense.setOnPreferenceClickListener(this);
         mSetNav.setOnPreferenceChangeListener(this);
+        mDisabledItems.setOnPreferenceChangeListener(this);
     }
 
     @Override
@@ -69,6 +75,13 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
             mSetNav.setSummary(entries[index]);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(Common.KEY_SETNAV, key);
+            editor.commit();
+            Toast.makeText(this, R.string.preference_reboot_note, Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (preference == mDisabledItems) {
+            Set<String> strs = (Set<String>) newValue;
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putStringSet(Common.KEY_DISABLED_ITEMS, strs);
             editor.commit();
             Toast.makeText(this, R.string.preference_reboot_note, Toast.LENGTH_SHORT).show();
             return true;

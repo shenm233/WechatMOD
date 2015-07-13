@@ -31,6 +31,8 @@
         <item>No any tabs</item>
         <item>Navigation Drawer</item>
     </string-array>
+    <string name="preference_navidrawer_disable_items">Disable items in drawer</string>
+    <string name="preference_navidrawer_disable_items_note">Select to disable</string>
 
     <string name="preference_about">About</string>
     <string name="preference_version">Version</string>

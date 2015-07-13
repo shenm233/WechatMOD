@@ -10,6 +10,12 @@
         android:entryValues="@array/preference_setnav_entries_values"
         android:key="setnav"
         android:title="@string/preference_setnav" />
+    <MultiSelectListPreference
+        android:dialogTitle="@string/preference_navidrawer_disable_items_note"
+        android:entries="@array/preference_navidrawer_disabled_entries"
+        android:entryValues="@array/preference_navidrawer_disabled_entries_values"
+        android:key="disabled_items"
+        android:title="@string/preference_navidrawer_disable_items" />
     <PreferenceCategory android:title="@string/preference_about">
         <PreferenceScreen
             android:key="version"

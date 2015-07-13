@@ -16,7 +16,8 @@ public class Common {
     public static XModuleResources MOD_RES;
     public static XSharedPreferences XMOD_PREFS;
 
-    public static String KEY_SETNAV = "setnav";
+    public static final String KEY_SETNAV = "setnav";
+    public static final String KEY_DISABLED_ITEMS = "disabled_items";
 
     //**************************************************************************
     public static final int item_main_chat = 0;

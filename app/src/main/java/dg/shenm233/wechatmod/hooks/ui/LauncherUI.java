@@ -11,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import chrisrenke.drawerarrowdrawable.DrawerArrowDrawable;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -234,7 +237,40 @@ public class LauncherUI {
         });
     }
 
+    private boolean item_sns_moments_enabled;
+    private boolean item_sns_shake_enabled;
+    private boolean item_sns_people_nearby_enabled;
+    private boolean item_sns_drift_bottle_enabled;
+    private boolean item_sns_shopping_enabled;
+    private boolean item_sns_games_enabled;
+
     private void initDrawerList(DrawerListAdapter drawerListAdapter) {
+        item_sns_moments_enabled = true;
+        item_sns_shake_enabled = true;
+        item_sns_people_nearby_enabled = true;
+        item_sns_drift_bottle_enabled = true;
+        item_sns_shopping_enabled = true;
+        item_sns_games_enabled = true;
+        Set<String> defstrs = new HashSet<String>();
+        Set<String> strs = Common.XMOD_PREFS.getStringSet(Common.KEY_DISABLED_ITEMS, defstrs);
+        if (strs != null) {
+            for (String str : strs) {
+                if ("item_sns_moments".equals(str)) {
+                    item_sns_moments_enabled = false;
+                } else if ("item_sns_shake".equals(str)) {
+                    item_sns_shake_enabled = false;
+                } else if ("item_sns_people_nearby".equals(str)) {
+                    item_sns_people_nearby_enabled = false;
+                } else if ("item_sns_drift_bottle".equals(str)) {
+                    item_sns_drift_bottle_enabled = false;
+                } else if ("item_sns_shopping".equals(str)) {
+                    item_sns_shopping_enabled = false;
+                } else if ("item_sns_games".equals(str)) {
+                    item_sns_games_enabled = false;
+                }
+            }
+        }
+
         //chatting
         drawerListAdapter.addItem(Common.item_main_chat, R.drawable.main_chat, R.string.main_chat);
         //contact
@@ -243,13 +279,25 @@ public class LauncherUI {
         drawerListAdapter.addSectionHeaderItem(Common.item_main_addcontact, R.string.main_addcontact);
 
         //
-        drawerListAdapter.addItem(Common.item_sns_moments, R.drawable.sns_moments, R.string.sns_moments);
+        if (item_sns_moments_enabled) {
+            drawerListAdapter.addItem(Common.item_sns_moments, R.drawable.sns_moments, R.string.sns_moments);
+        }
         drawerListAdapter.addItem(Common.item_sns_scan, R.drawable.sns_scan, R.string.sns_scan);
-        drawerListAdapter.addItem(Common.item_sns_shake, R.drawable.sns_shake, R.string.sns_shake);
-        drawerListAdapter.addItem(Common.item_sns_people_nearby, R.drawable.sns_people_nearby, R.string.sns_people_nearby);
-        drawerListAdapter.addItem(Common.item_sns_drift_bottle, R.drawable.sns_drift_bottle, R.string.sns_drift_bottle);
-        drawerListAdapter.addItem(Common.item_sns_shopping, R.drawable.sns_shopping, R.string.sns_shopping);
-        drawerListAdapter.addItem(Common.item_sns_games, R.drawable.sns_games, R.string.sns_games);
+        if (item_sns_shake_enabled) {
+            drawerListAdapter.addItem(Common.item_sns_shake, R.drawable.sns_shake, R.string.sns_shake);
+        }
+        if (item_sns_people_nearby_enabled) {
+            drawerListAdapter.addItem(Common.item_sns_people_nearby, R.drawable.sns_people_nearby, R.string.sns_people_nearby);
+        }
+        if (item_sns_drift_bottle_enabled) {
+            drawerListAdapter.addItem(Common.item_sns_drift_bottle, R.drawable.sns_drift_bottle, R.string.sns_drift_bottle);
+        }
+        if (item_sns_shopping_enabled) {
+            drawerListAdapter.addItem(Common.item_sns_shopping, R.drawable.sns_shopping, R.string.sns_shopping);
+        }
+        if (item_sns_games_enabled) {
+            drawerListAdapter.addItem(Common.item_sns_games, R.drawable.sns_games, R.string.sns_games);
+        }
 
         //Me
         drawerListAdapter.addSectionHeaderItem(Common.item_main_more, R.string.main_more);
@@ -285,19 +333,27 @@ public class LauncherUI {
             drawerListAdapter.setMainChattingUnread(i);
             i = (int) callMethod(tabView, "getContactTabUnread");
             drawerListAdapter.setContactUnread(i);
-            Object object = getStaticObjectField(MM_Classes.WTFClazz, MM_Fields.moments_jj);
-            i = object != null ? (int) callMethod(object, MM_Methods.getMomentsUnreadCount) : 0;
-            drawerListAdapter.setMomentsUnread(i);
-            if (i == 0) {
-                boolean showPoint = (boolean) callMethod(tabView, "getShowFriendPoint");
-                drawerListAdapter.setMomentsPoint(showPoint);
+            if (item_sns_moments_enabled) {
+                Object object = getStaticObjectField(MM_Classes.WTFClazz, MM_Fields.moments_jj);
+                i = object != null ? (int) callMethod(object, MM_Methods.getMomentsUnreadCount) : 0;
+                drawerListAdapter.setMomentsUnread(i);
+                if (i == 0) {
+                    boolean showPoint = (boolean) callMethod(tabView, "getShowFriendPoint");
+                    drawerListAdapter.setMomentsPoint(showPoint);
+                }
             }
-            i = (int) callMethod(callStaticMethod(MM_Classes.NewFriendMessage, MM_Methods.getShakeVerifyMessage), MM_Methods.getVerifyMessageCount);
-            drawerListAdapter.setShakeUnread(i);
-            i = (int) callMethod(callStaticMethod(MM_Classes.NewFriendMessage, MM_Methods.getLBSVerifyMessage), MM_Methods.getVerifyMessageCount);
-            drawerListAdapter.setNearbyPeopleUnread(i);
-            i = (int) callStaticMethod(MM_Classes.Bottle, MM_Methods.getBottleUnreadCount);
-            drawerListAdapter.setDriftBottleUnread(i);
+            if (item_sns_shake_enabled) {
+                i = (int) callMethod(callStaticMethod(MM_Classes.NewFriendMessage, MM_Methods.getShakeVerifyMessage), MM_Methods.getVerifyMessageCount);
+                drawerListAdapter.setShakeUnread(i);
+            }
+            if (item_sns_people_nearby_enabled) {
+                i = (int) callMethod(callStaticMethod(MM_Classes.NewFriendMessage, MM_Methods.getLBSVerifyMessage), MM_Methods.getVerifyMessageCount);
+                drawerListAdapter.setNearbyPeopleUnread(i);
+            }
+            if (item_sns_drift_bottle_enabled) {
+                i = (int) callStaticMethod(MM_Classes.Bottle, MM_Methods.getBottleUnreadCount);
+                drawerListAdapter.setDriftBottleUnread(i);
+            }
         } catch (Throwable l) {
             if (DEBUG) XposedBridge.log(l);
         }

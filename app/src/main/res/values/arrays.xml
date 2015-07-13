@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="preference_setnav_entries_values">
+    <string-array name="preference_setnav_entries_values" translatable="false">
         <item>default</item>
         <item>notabs</item>
         <item>navidrawer</item>
+    </string-array>
+    <string-array name="preference_navidrawer_disabled_entries">
+        <item>@string/sns_moments</item>
+        <item>@string/sns_shake</item>
+        <item>@string/sns_people_nearby</item>
+        <item>@string/sns_drift_bottle</item>
+        <item>@string/sns_shopping</item>
+        <item>@string/sns_games</item>
+    </string-array>
+    <string-array name="preference_navidrawer_disabled_entries_values" translatable="false">
+        <item>item_sns_moments</item>
+        <item>item_sns_shake</item>
+        <item>item_sns_people_nearby</item>
+        <item>item_sns_drift_bottle</item>
+        <item>item_sns_shopping</item>
+        <item>item_sns_games</item>
     </string-array>
 </resources>
