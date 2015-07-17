@@ -20,6 +20,7 @@ import static dg.shenm233.wechatmod.BuildConfig.DEBUG;
 public class ObfuscationHelper {
     public static final int MM_6_2_0_50 = 524;
     public static final int MM_6_2_2_54 = 563;
+    public static final int MM_6_2_2_54_nonplay = 581; //6.2.2.54_rec1912d 国内版
 
     //a helper for analyzing StackTrace,I want to know who called method.
     public static XC_MethodHook getStackTraceHelper;
@@ -32,6 +33,8 @@ public class ObfuscationHelper {
         if (versioncode == MM_6_2_0_50) {
             versionIndex = 0;
         } else if (versioncode == MM_6_2_2_54) {
+            versionIndex = 1;
+        } else if (versioncode == MM_6_2_2_54_nonplay) {
             versionIndex = 1;
         } else {
             return false;
