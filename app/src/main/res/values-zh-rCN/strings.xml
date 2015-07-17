@@ -24,7 +24,7 @@
     <string name="preference_setnav">选择微信导航方式</string>
     <string-array name="preference_setnav_entries">
         <item>默认(iOS tabs)</item>
-        <item>无tabs</item>
+        <item>无tabs(保留左右滑动)</item>
         <item>导航抽屉</item>
     </string-array>
     <string name="preference_navidrawer_disable_items">关闭抽屉里的部分功能</string>
