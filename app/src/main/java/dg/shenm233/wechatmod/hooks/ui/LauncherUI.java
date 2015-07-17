@@ -2,6 +2,8 @@ package dg.shenm233.wechatmod.hooks.ui;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -11,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -136,6 +140,7 @@ public class LauncherUI {
     private ListView mDrawerList;
     private DrawerListAdapter drawerListAdapter;
     private DrawerArrowDrawable drawerArrowDrawable;
+    private Bitmap mDrawerBgBitmap;
 
     private void initNewActionBar(Activity activity) throws Throwable {
         Object actionBar = getObjectField(activity, MM_Fields.actionBar);
@@ -311,8 +316,18 @@ public class LauncherUI {
 
     private void refreshDrawerInfo() {
         //background image
+        if (mDrawerBgBitmap != null) {
+            mDrawerBgBitmap.recycle();
+        }
         ImageView bg_image = (ImageView) mDrawer.findViewById(R.id.bg_image);
-        bg_image.setImageDrawable(Common.MOD_RES.getDrawable(R.drawable.bg_test));
+        try {
+            InputStream inputStream = Common.MOD_Context.openFileInput(Common.DRAWER_BG_PNG);
+            mDrawerBgBitmap = BitmapFactory.decodeStream(inputStream);
+            bg_image.setImageBitmap(mDrawerBgBitmap);
+            inputStream.close();
+        } catch (IOException e) {
+            bg_image.setImageDrawable(Common.MOD_RES.getDrawable(R.drawable.bg_test));
+        }
 
         //avatar image
         ImageView user_avatar = (ImageView) mDrawer.findViewById(R.id.user_avatar);

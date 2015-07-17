@@ -1,26 +1,45 @@
 package dg.shenm233.wechatmod;
 
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Set;
+
+import de.robv.android.xposed.XposedBridge;
+
+import static dg.shenm233.wechatmod.Common.dipTopx;
 
 @SuppressLint("WorldReadableFiles")
 public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
     private SharedPreferences prefs;
 
+    private int PICK_BG = 0;
+
     private Preference mLicense;
     private ListPreference mSetNav;
     private MultiSelectListPreference mDisabledItems;
+    private Preference mPickBg;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,9 +64,11 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         mLicense = findPreference("license");
         mSetNav = (ListPreference) findPreference(Common.KEY_SETNAV);
         mDisabledItems = (MultiSelectListPreference) findPreference(Common.KEY_DISABLED_ITEMS);
+        mPickBg = findPreference("pickup_bg");
         mLicense.setOnPreferenceClickListener(this);
         mSetNav.setOnPreferenceChangeListener(this);
         mDisabledItems.setOnPreferenceChangeListener(this);
+        mPickBg.setOnPreferenceClickListener(this);
     }
 
     @Override
@@ -64,6 +85,10 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     public void onDestroy() {
         super.onDestroy();
         prefs = null;
+        mLicense.setOnPreferenceClickListener(null);
+        mSetNav.setOnPreferenceChangeListener(null);
+        mDisabledItems.setOnPreferenceChangeListener(null);
+        mPickBg.setOnPreferenceClickListener(null);
     }
 
     @Override
@@ -97,7 +122,75 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
             intent.setClass(this, LicenseActivity.class);
             startActivity(intent);
             return true;
+        } else if (preference == mPickBg) {
+            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.setType("image/*")
+                    .putExtra("crop", "true")
+                    .putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString())
+                    .putExtra("outputX", dipTopx(this, 296L)).putExtra("outputY", dipTopx(this, 160L))
+                    .putExtra("aspectX", 2).putExtra("aspectY", 1)
+                    .putExtra("scale", 1)
+                    .putExtra(MediaStore.EXTRA_OUTPUT, getUriFromFile(getFile(Common.DRAWER_BG_PNG)));
+//                    .putExtra("return-data", true);
+            try {
+                startActivityForResult(intent, PICK_BG);
+            } catch (ActivityNotFoundException e) {
+                Log.e("WechatMOD", "can not pick pic");
+            }
         }
         return false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_BG) {
+            compressBitmapFileAndcopyToFilesDir(getFile(Common.DRAWER_BG_PNG));
+            Toast.makeText(this, "Done!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private File getFile(String path) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            File file = new File(this.getExternalFilesDir(null), "/" + path);
+            return file;
+        }
+        return null;
+    }
+
+    private Uri getUriFromFile(File file) {
+        if (file != null) {
+            return Uri.fromFile(file);
+        } else {
+            return null;
+        }
+    }
+
+    private void compressBitmapFileAndcopyToFilesDir(File file) {
+        if (file != null) {
+            FileInputStream fileInputStream = null;
+            FileOutputStream fileOutputStream = null;
+            try {
+                fileInputStream = new FileInputStream(file);
+                fileOutputStream = this.openFileOutput(file.getName(), Context.MODE_WORLD_READABLE);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                Bitmap bitmap = BitmapFactory.decodeStream(fileInputStream, null, options);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fileOutputStream);
+                bitmap.recycle();
+                fileInputStream.close();
+                fileOutputStream.flush();
+                fileOutputStream.close();
+            } catch (FileNotFoundException e) {
+                XposedBridge.log(e);
+            } catch (IOException e) {
+                XposedBridge.log(e);
+            }
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    XposedBridge.log(e);
+                }
+            }
+        }
     }
 }

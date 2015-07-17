@@ -18,6 +18,7 @@ public class Common {
 
     public static final String KEY_SETNAV = "setnav";
     public static final String KEY_DISABLED_ITEMS = "disabled_items";
+    public static final String DRAWER_BG_PNG = "drawer_bg.jpg";
 
     //**************************************************************************
     public static final int item_main_chat = 0;
@@ -52,5 +53,10 @@ public class Common {
             ICON_ID = IconResid;
             TEXT_ID = TextResid;
         }
+    }
+
+    public static int dipTopx(Context context, long dip) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return (int) (dip * density + 0.5f);
     }
 }

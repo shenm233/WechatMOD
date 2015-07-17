@@ -16,6 +16,9 @@
         android:entryValues="@array/preference_navidrawer_disabled_entries_values"
         android:key="disabled_items"
         android:title="@string/preference_navidrawer_disable_items" />
+    <Preference
+        android:key="pickup_bg"
+        android:title="@string/preference_navidrawer_pickup_background" />
     <PreferenceCategory android:title="@string/preference_about">
         <PreferenceScreen
             android:key="version"
