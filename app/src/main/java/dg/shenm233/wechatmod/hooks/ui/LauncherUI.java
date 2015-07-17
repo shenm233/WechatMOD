@@ -119,10 +119,12 @@ public class LauncherUI {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 if ("navidrawer".equals(navMode)) {
-                    LauncherUI_INSTANCE = null;
-                    tabView = null;
+                    onDestroyDrawer();
+                    onDestroyCustomActionBar((Activity) param.thisObject);
                     XposedBridge.log("onDestroy,remove custom view");
                 }
+                LauncherUI_INSTANCE = null;
+                tabView = null;
             }
         });
     }
@@ -141,6 +143,9 @@ public class LauncherUI {
     private DrawerListAdapter drawerListAdapter;
     private DrawerArrowDrawable drawerArrowDrawable;
     private Bitmap mDrawerBgBitmap;
+    private ImageView bg_image;
+    public ImageView user_avatar;
+    private TextView username;
 
     private void initNewActionBar(Activity activity) throws Throwable {
         Object actionBar = getObjectField(activity, MM_Fields.actionBar);
@@ -170,6 +175,15 @@ public class LauncherUI {
                 }
             }
         });
+    }
+
+    private void onDestroyCustomActionBar(Activity activity) {
+        Object actionBar = getObjectField(activity, MM_Fields.actionBar);
+        ViewGroup actionBarView = (ViewGroup) callMethod(actionBar, "getCustomView");
+        ImageView iv = (ImageView) actionBarView.findViewById(R.id.drawer_indicator);
+        iv.setImageDrawable(null);
+        iv.setOnKeyListener(null);
+        actionBarView.removeAllViews();
     }
 
     private void addNavigationDrawer(Activity activity) throws Throwable {
@@ -204,7 +218,9 @@ public class LauncherUI {
                 new DrawerLayout.LayoutParams(DrawerLayout.LayoutParams.MATCH_PARENT, DrawerLayout.LayoutParams.MATCH_PARENT));
         //don't use activity.addContentView(drawerLayout);  because it causes activity exit.
 
-        ImageView user_avatar = (ImageView) mDrawer.findViewById(R.id.user_avatar);
+        bg_image = (ImageView) mDrawer.findViewById(R.id.bg_image);
+        username = (TextView) mDrawer.findViewById(R.id.username);
+        user_avatar = (ImageView) mDrawer.findViewById(R.id.user_avatar);
         user_avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -240,6 +256,21 @@ public class LauncherUI {
 
             }
         });
+    }
+
+    private void onDestroyDrawer() {
+        bg_image.setImageBitmap(null);
+        if (mDrawerBgBitmap != null) {
+            mDrawerBgBitmap.recycle();
+            mDrawerBgBitmap = null;
+        }
+        user_avatar.setImageBitmap(null);
+        user_avatar.setOnClickListener(null);
+        mDrawerList.setAdapter(null);
+        mDrawerList.setOnItemClickListener(null);
+        drawerListAdapter = null;
+        drawerLayout.removeAllViews();
+        drawerLayout.setDrawerListener(null);
     }
 
     private boolean item_sns_moments_enabled;
@@ -319,7 +350,6 @@ public class LauncherUI {
         if (mDrawerBgBitmap != null) {
             mDrawerBgBitmap.recycle();
         }
-        ImageView bg_image = (ImageView) mDrawer.findViewById(R.id.bg_image);
         try {
             InputStream inputStream = Common.MOD_Context.openFileInput(Common.DRAWER_BG_PNG);
             mDrawerBgBitmap = BitmapFactory.decodeStream(inputStream);
@@ -330,12 +360,10 @@ public class LauncherUI {
         }
 
         //avatar image
-        ImageView user_avatar = (ImageView) mDrawer.findViewById(R.id.user_avatar);
 //        user_avatar.setImageDrawable(Common.MOD_RES.getDrawable(R.drawable.avatar_test));
         setAvatar(user_avatar);
 
         //username,wechat name
-        TextView username = (TextView) mDrawer.findViewById(R.id.username);
         CharSequence str = getNickname();
         if (str != null)
             username.setText(str);
