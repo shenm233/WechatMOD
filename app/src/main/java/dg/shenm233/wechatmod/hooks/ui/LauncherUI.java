@@ -220,6 +220,12 @@ public class LauncherUI {
         //don't use activity.addContentView(drawerLayout);  because it causes activity exit.
 
         bg_image = (ImageView) mDrawer.findViewById(R.id.bg_image);
+        bg_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Do nothing now,maybe will have more interesting things.
+            }
+        });
         username = (TextView) mDrawer.findViewById(R.id.username);
         user_avatar = (ImageView) mDrawer.findViewById(R.id.user_avatar);
         user_avatar.setOnClickListener(new View.OnClickListener() {
