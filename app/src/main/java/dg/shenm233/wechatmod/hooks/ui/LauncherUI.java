@@ -138,6 +138,7 @@ public class LauncherUI {
     }
 
     private static DrawerLayout drawerLayout;
+    private static MyDrawerListener myDrawerListener;
     private View mDrawer;
     private ListView mDrawerList;
     private DrawerListAdapter drawerListAdapter;
@@ -228,34 +229,45 @@ public class LauncherUI {
             }
         });
 
-        drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                // Sometimes slideOffset ends up so close to but not quite 1 or 0.
-                if (slideOffset >= .995) {
-                    drawerArrowDrawable.setFlip(true);
-                } else if (slideOffset <= .005) {
-                    drawerArrowDrawable.setFlip(false);
-                }
+        myDrawerListener = new MyDrawerListener();
+        drawerLayout.setDrawerListener(myDrawerListener);
+    }
 
-                drawerArrowDrawable.setParameter(slideOffset);
+    private class MyDrawerListener implements DrawerLayout.DrawerListener {
+        private Runnable runnable;
+
+        @Override
+        public void onDrawerSlide(View drawerView, float slideOffset) {
+            // Sometimes slideOffset ends up so close to but not quite 1 or 0.
+            if (slideOffset >= .995) {
+                drawerArrowDrawable.setFlip(true);
+            } else if (slideOffset <= .005) {
+                drawerArrowDrawable.setFlip(false);
             }
+            drawerArrowDrawable.setParameter(slideOffset);
+        }
 
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                refreshDrawerInfo();
+        @Override
+        public void onDrawerOpened(View drawerView) {
+            refreshDrawerInfo();
+        }
+
+        @Override
+        public void onDrawerClosed(View drawerView) {
+
+        }
+
+        @Override
+        public void onDrawerStateChanged(int newState) {
+            if (runnable != null && newState == DrawerLayout.STATE_IDLE) {
+                runnable.run();
+                runnable = null;
             }
+        }
 
-            @Override
-            public void onDrawerClosed(View drawerView) {
-
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
-        });
+        public void runOnIdle(Runnable runnable) {
+            this.runnable = runnable;
+        }
     }
 
     private void onDestroyDrawer() {
@@ -425,56 +437,66 @@ public class LauncherUI {
 
     protected static void callMMFeature(int key) {
         if (drawerLayout == null || LauncherUI_INSTANCE == null) return;
-        switch (key) {
-            case Common.item_main_chat:
-                drawerLayout.closeDrawers();
-                MainFragments.switchMMFragment(LauncherUI_INSTANCE, 0);
-                break;
-            case Common.item_main_contact:
-                drawerLayout.closeDrawers();
-                MainFragments.switchMMFragment(LauncherUI_INSTANCE, 1);
-                break;
-            case Common.item_main_addcontact:
-                drawerLayout.closeDrawers();
-                MainFragments.switchMMFragment(LauncherUI_INSTANCE, 2);
-                break;
-            case Common.item_main_more:
-                drawerLayout.closeDrawers();
-                MainFragments.switchMMFragment(LauncherUI_INSTANCE, 3);
-                break;
-            case Common.item_sns_moments:
-                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "album_dyna_photo_ui_title");
-                break;
-            case Common.item_sns_scan:
-                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_qrcode");
-                break;
-            case Common.item_sns_shake:
-                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_shake");
-                break;
-            case Common.item_sns_people_nearby:
-                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_near");
-                break;
-            case Common.item_sns_drift_bottle:
-                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "voice_bottle");
-                break;
-            case Common.item_sns_shopping:
-                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "jd_market_entrance");
-                break;
-            case Common.item_sns_games:
-                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "more_tab_game_recommend");
-                break;
-            case Common.item_me_posts:
-                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_my_album");
-                break;
-            case Common.item_me_favorites:
-                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_mm_favorite");
-                break;
-            case Common.item_me_wallet:
-                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_mm_wallet");
-                break;
-            case Common.item_me_settings:
-                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "more_setting");
-                break;
+        myDrawerListener.runOnIdle(new callMMFragmentFeatureRunnable(key));
+        drawerLayout.closeDrawers();
+    }
+
+    private static class callMMFragmentFeatureRunnable implements Runnable {
+        private final int key;
+
+        public callMMFragmentFeatureRunnable(int key) {
+            this.key = key;
+        }
+
+        @Override
+        public void run() {
+            switch (key) {
+                case Common.item_main_chat:
+                    MainFragments.switchMMFragment(LauncherUI_INSTANCE, 0);
+                    break;
+                case Common.item_main_contact:
+                    MainFragments.switchMMFragment(LauncherUI_INSTANCE, 1);
+                    break;
+                case Common.item_main_addcontact:
+                    MainFragments.switchMMFragment(LauncherUI_INSTANCE, 2);
+                    break;
+                case Common.item_main_more:
+                    MainFragments.switchMMFragment(LauncherUI_INSTANCE, 3);
+                    break;
+                case Common.item_sns_moments:
+                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "album_dyna_photo_ui_title");
+                    break;
+                case Common.item_sns_scan:
+                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_qrcode");
+                    break;
+                case Common.item_sns_shake:
+                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_shake");
+                    break;
+                case Common.item_sns_people_nearby:
+                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_near");
+                    break;
+                case Common.item_sns_drift_bottle:
+                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "voice_bottle");
+                    break;
+                case Common.item_sns_shopping:
+                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "jd_market_entrance");
+                    break;
+                case Common.item_sns_games:
+                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "more_tab_game_recommend");
+                    break;
+                case Common.item_me_posts:
+                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_my_album");
+                    break;
+                case Common.item_me_favorites:
+                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_mm_favorite");
+                    break;
+                case Common.item_me_wallet:
+                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_mm_wallet");
+                    break;
+                case Common.item_me_settings:
+                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "more_setting");
+                    break;
+            }
         }
     }
 }
