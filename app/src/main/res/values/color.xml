@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="drawer_bg">#FFFFFF</color>
-    <color name="wechat_action_bar_color">#3F51B5</color>
+    <color name="item_selected_bg_color">#E0E0E0</color>
+    <color name="item_selected_fg_color">#009688</color>
+    <color name="item_text_default_color">#212121</color>
+    <color name="wechat_action_bar_color">#009688</color>
     <color name="drawer_indicator_color">#FFFFFF</color>
 </resources>

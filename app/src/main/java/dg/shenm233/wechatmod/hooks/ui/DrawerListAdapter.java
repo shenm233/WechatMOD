@@ -1,6 +1,7 @@
 package dg.shenm233.wechatmod.hooks.ui;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,8 @@ class DrawerListAdapter extends BaseAdapter implements AdapterView.OnItemClickLi
 
     private final int TYPE_ITEM = 0;
     private final int TYPE_SEPARATOR = 1;
+
+    private int mHighlightedItemPosition;
 
     public DrawerListAdapter(Context context) {
         mContext = context;
@@ -76,6 +79,21 @@ class DrawerListAdapter extends BaseAdapter implements AdapterView.OnItemClickLi
             viewHolder.icon.setImageDrawable(Common.MOD_RES.getDrawable(drawerListItem.ICON_ID));
             viewHolder.unread.setText(drawerListItem.unread);
         }
+        if (position == mHighlightedItemPosition) {
+            convertView.setBackgroundColor(Common.MOD_RES.getColor(R.color.item_selected_bg_color));
+            viewHolder.text.setTextColor(Common.MOD_RES.getColor(R.color.item_selected_fg_color));
+            if (ItemType == TYPE_ITEM) {
+                viewHolder.icon.setColorFilter(Common.MOD_RES.getColor(R.color.item_selected_fg_color));
+                viewHolder.unread.setTextColor(Common.MOD_RES.getColor(R.color.item_selected_fg_color));
+            }
+        } else {
+            convertView.setBackgroundColor(Color.TRANSPARENT);
+            viewHolder.text.setTextColor(Common.MOD_RES.getColor(R.color.item_text_default_color));
+            if (ItemType == TYPE_ITEM) {
+                viewHolder.icon.clearColorFilter();
+                viewHolder.unread.setTextColor(Common.MOD_RES.getColor(R.color.item_text_default_color));
+            }
+        }
         return convertView;
     }
 
@@ -107,7 +125,13 @@ class DrawerListAdapter extends BaseAdapter implements AdapterView.OnItemClickLi
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         int key = mDrawerListItems.keyAt(position);
+        setSingleItemHighlighted(key);
         LauncherUI.callMMFeature(key);
+    }
+
+    public void setSingleItemHighlighted(int key) {
+        mHighlightedItemPosition = mDrawerListItems.indexOfKey(key);
+        notifyDataSetChanged();
     }
 
     /*set unread message*/

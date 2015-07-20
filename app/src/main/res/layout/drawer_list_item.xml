@@ -20,7 +20,7 @@
         android:layout_marginLeft="36dp"
         android:layout_weight="2"
         android:gravity="center_vertical"
-        android:textColor="#212121"
+        android:textColor="@color/item_text_default_color"
         android:textSize="14sp" />
 
     <TextView
@@ -30,6 +30,6 @@
         android:layout_gravity="center_vertical"
         android:layout_marginRight="0dp"
         android:gravity="center_vertical"
-        android:textColor="#212121"
+        android:textColor="@color/item_text_default_color"
         android:textSize="14sp" />
 </LinearLayout>

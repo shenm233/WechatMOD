@@ -364,6 +364,23 @@ public class LauncherUI {
     }
 
     private void refreshDrawerInfo() {
+        //make listview item selected
+        int curTabNum = (int) getObjectField(LauncherUI_INSTANCE, MM_Fields.curTabNum);
+        switch (curTabNum) {
+            case 0:
+                drawerListAdapter.setSingleItemHighlighted(Common.item_main_chat);
+                break;
+            case 1:
+                drawerListAdapter.setSingleItemHighlighted(Common.item_main_contact);
+                break;
+            case 2:
+                drawerListAdapter.setSingleItemHighlighted(Common.item_main_addcontact);
+                break;
+            case 3:
+                drawerListAdapter.setSingleItemHighlighted(Common.item_main_more);
+                break;
+        }
+
         //background image
         if (mDrawerBgBitmap != null) {
             mDrawerBgBitmap.recycle();

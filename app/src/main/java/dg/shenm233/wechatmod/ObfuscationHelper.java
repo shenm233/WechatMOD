@@ -177,6 +177,7 @@ public class ObfuscationHelper {
         public static String main_tab; //this is main_tab that including customViewPager,tabView...
         public static String actionBar;
         public static String isMainTabCreated;
+        public static String curTabNum;
 
         //fields in MainAddContactFragment class;
         public static String discovery_preferenceInterface; //Type:com.tencent.mm.ui.base.preference.?
@@ -195,6 +196,7 @@ public class ObfuscationHelper {
             main_tab = new String[]{"cuW", "czt"}[idx];
             actionBar = new String[]{"iZ", "jA"}[idx];
             isMainTabCreated = new String[]{"imr", "iwv"}[idx];
+            curTabNum = new String[]{"imQ", "iwV"}[idx];
             discovery_preferenceInterface = new String[]{"bXk", "cbC"}[idx];
             me_preferenceInterface = new String[]{"bXk", "cbC"}[idx];
             moments_jj = new String[]{"gJE", "gTe"}[idx];
