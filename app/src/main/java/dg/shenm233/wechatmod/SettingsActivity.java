@@ -2,6 +2,7 @@ package dg.shenm233.wechatmod;
 
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
@@ -38,6 +40,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     private ListPreference mSetNav;
     private MultiSelectListPreference mDisabledItems;
     private Preference mPickBg;
+    private CheckBoxPreference mHideLauncherIcon;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,10 +66,12 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         mSetNav = (ListPreference) findPreference(Common.KEY_SETNAV);
         mDisabledItems = (MultiSelectListPreference) findPreference(Common.KEY_DISABLED_ITEMS);
         mPickBg = findPreference("pickup_bg");
+        mHideLauncherIcon = (CheckBoxPreference) findPreference("hide_launcher_icon");
         mLicense.setOnPreferenceClickListener(this);
         mSetNav.setOnPreferenceChangeListener(this);
         mDisabledItems.setOnPreferenceChangeListener(this);
         mPickBg.setOnPreferenceClickListener(this);
+        mHideLauncherIcon.setOnPreferenceChangeListener(this);
     }
 
     @Override
@@ -87,6 +92,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         mSetNav.setOnPreferenceChangeListener(null);
         mDisabledItems.setOnPreferenceChangeListener(null);
         mPickBg.setOnPreferenceClickListener(null);
+        mHideLauncherIcon.setOnPreferenceChangeListener(null);
     }
 
     @Override
@@ -107,6 +113,15 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
             editor.putStringSet(Common.KEY_DISABLED_ITEMS, strs);
             editor.commit();
             Toast.makeText(this, R.string.preference_reboot_note, Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (preference == mHideLauncherIcon) {
+            PackageManager packageManager = this.getPackageManager();
+            ComponentName aliasName = new ComponentName(this, Common.MOD_PACKAGENAME + ".SettingsActivityLauncher");
+            if ((boolean) newValue) {
+                packageManager.setComponentEnabledSetting(aliasName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+            } else {
+                packageManager.setComponentEnabledSetting(aliasName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+            }
             return true;
         }
         return false;
