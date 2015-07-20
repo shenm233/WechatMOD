@@ -26,8 +26,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Set;
 
-import de.robv.android.xposed.XposedBridge;
-
 import static dg.shenm233.wechatmod.Common.dipTopx;
 
 @SuppressLint("WorldReadableFiles")
@@ -180,15 +178,15 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
                 fileOutputStream.flush();
                 fileOutputStream.close();
             } catch (FileNotFoundException e) {
-                XposedBridge.log(e);
+                Log.e("WechatMOD", "FileNotFoundException");
             } catch (IOException e) {
-                XposedBridge.log(e);
+                Log.e("WechatMOD", "IOException");
             }
             if (fileInputStream != null) {
                 try {
                     fileInputStream.close();
                 } catch (IOException e) {
-                    XposedBridge.log(e);
+                    Log.e("WechatMOD", "IOException:fileInputStream.close()");
                 }
             }
         }
