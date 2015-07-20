@@ -326,41 +326,41 @@ public class LauncherUI {
         }
 
         //chatting
-        drawerListAdapter.addItem(Common.item_main_chat, R.drawable.main_chat, R.string.main_chat);
+        drawerListAdapter.addItem(Common.item_main_chat, R.drawable.main_chat, MM_Res.main_chat);
         //contact
-        drawerListAdapter.addItem(Common.item_main_contact, R.drawable.main_contact, R.string.main_contact);
+        drawerListAdapter.addItem(Common.item_main_contact, R.drawable.main_contact, MM_Res.main_contact);
         //Discovery
-        drawerListAdapter.addSectionHeaderItem(Common.item_main_addcontact, R.string.main_addcontact);
+        drawerListAdapter.addSectionHeaderItem(Common.item_main_addcontact, MM_Res.main_addcontact);
 
         //
         if (item_sns_moments_enabled) {
-            drawerListAdapter.addItem(Common.item_sns_moments, R.drawable.sns_moments, R.string.sns_moments);
+            drawerListAdapter.addItem(Common.item_sns_moments, R.drawable.sns_moments, MM_Res.sns_dyna_photo_ui_title);
         }
-        drawerListAdapter.addItem(Common.item_sns_scan, R.drawable.sns_scan, R.string.sns_scan);
+        drawerListAdapter.addItem(Common.item_sns_scan, R.drawable.sns_scan, MM_Res.find_friends_by_qrcode);
         if (item_sns_shake_enabled) {
-            drawerListAdapter.addItem(Common.item_sns_shake, R.drawable.sns_shake, R.string.sns_shake);
+            drawerListAdapter.addItem(Common.item_sns_shake, R.drawable.sns_shake, MM_Res.shake_report_title);
         }
         if (item_sns_people_nearby_enabled) {
-            drawerListAdapter.addItem(Common.item_sns_people_nearby, R.drawable.sns_people_nearby, R.string.sns_people_nearby);
+            drawerListAdapter.addItem(Common.item_sns_people_nearby, R.drawable.sns_people_nearby, MM_Res.nearby_friend_title);
         }
         if (item_sns_drift_bottle_enabled) {
-            drawerListAdapter.addItem(Common.item_sns_drift_bottle, R.drawable.sns_drift_bottle, R.string.sns_drift_bottle);
+            drawerListAdapter.addItem(Common.item_sns_drift_bottle, R.drawable.sns_drift_bottle, MM_Res.bottle_beach_title);
         }
         if (item_sns_shopping_enabled) {
             drawerListAdapter.addItem(Common.item_sns_shopping, R.drawable.sns_shopping, R.string.sns_shopping);
         }
         if (item_sns_games_enabled) {
-            drawerListAdapter.addItem(Common.item_sns_games, R.drawable.sns_games, R.string.sns_games);
+            drawerListAdapter.addItem(Common.item_sns_games, R.drawable.sns_games, MM_Res.game_recommand);
         }
 
         //Me
-        drawerListAdapter.addSectionHeaderItem(Common.item_main_more, R.string.main_more);
+        drawerListAdapter.addSectionHeaderItem(Common.item_main_more, MM_Res.main_more);
 
         //
-        drawerListAdapter.addItem(Common.item_me_posts, R.drawable.me_posts, R.string.me_posts);
-        drawerListAdapter.addItem(Common.item_me_favorites, R.drawable.me_favorites, R.string.me_favorites);
-        drawerListAdapter.addItem(Common.item_me_wallet, R.drawable.me_wallet, R.string.me_wallet);
-        drawerListAdapter.addItem(Common.item_me_settings, R.drawable.me_settings, R.string.me_settings);
+        drawerListAdapter.addItem(Common.item_me_posts, R.drawable.me_posts, MM_Res.settings_my_album_new);
+        drawerListAdapter.addItem(Common.item_me_favorites, R.drawable.me_favorites, MM_Res.settings_mm_favorite_new);
+        drawerListAdapter.addItem(Common.item_me_wallet, R.drawable.me_wallet, MM_Res.settings_mm_wallet_new);
+        drawerListAdapter.addItem(Common.item_me_settings, R.drawable.me_settings, MM_Res.settings_title);
     }
 
     private void refreshDrawerInfo() {
@@ -402,7 +402,7 @@ public class LauncherUI {
         CharSequence str = getNickname();
         if (str != null)
             username.setText(str);
-        username.append("\n" + Common.MOD_RES.getText(R.string.username) + getUsername());
+        username.append("\n" + Common.MM_Context.getResources().getText(MM_Res.settings_username) + ": " + getUsername());
 
         try {
             //set Unread message

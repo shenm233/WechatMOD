@@ -32,12 +32,12 @@ class DrawerListAdapter extends BaseAdapter implements AdapterView.OnItemClickLi
     }
 
     public void addItem(int key, int IconResid, int TextResid) {
-        mDrawerListItems.put(key, new DrawerListItem(IconResid, TextResid));
+        mDrawerListItems.put(key, new DrawerListItem(key, IconResid, TextResid));
         notifyDataSetChanged();
     }
 
     public void addSectionHeaderItem(int key, int TextResid) {
-        mDrawerListItems.put(key, new DrawerListItem(TextResid));
+        mDrawerListItems.put(key, new DrawerListItem(key, TextResid));
         sectionHeader.add(mDrawerListItems.indexOfKey(key));
         notifyDataSetChanged();
     }
@@ -74,7 +74,12 @@ class DrawerListAdapter extends BaseAdapter implements AdapterView.OnItemClickLi
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.text.setText(Common.MOD_RES.getText(drawerListItem.TEXT_ID));
+        if (drawerListItem.KEY == Common.item_sns_shopping) {
+            //get "shopping" text from module,because wechat don't have this string.
+            viewHolder.text.setText(Common.MOD_RES.getText(drawerListItem.TEXT_ID));
+        } else {
+            viewHolder.text.setText(Common.MM_Context.getResources().getText(drawerListItem.TEXT_ID));
+        }
         if (ItemType == TYPE_ITEM) {
             viewHolder.icon.setImageDrawable(Common.MOD_RES.getDrawable(drawerListItem.ICON_ID));
             viewHolder.unread.setText(drawerListItem.unread);

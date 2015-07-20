@@ -208,17 +208,52 @@ public class ObfuscationHelper {
     public static class MM_Res {
         public static int main_tab;
         public static int action_bar_color;
+        //strings
         public static int app_name;
+        public static int main_chat;
+        public static int main_contact;
+        public static int main_addcontact;
+        public static int main_more;
+        public static int sns_dyna_photo_ui_title;
+        public static int find_friends_by_qrcode;
+        public static int shake_report_title;
+        public static int nearby_friend_title;
+        public static int bottle_beach_title;
+        public static int game_recommand;
+        public static int settings_my_album_new;
+        public static int settings_mm_favorite_new;
+        public static int settings_mm_wallet_new;
+        public static int settings_mm_card_package_new;
+        public static int settings_title;
+        public static int settings_username;
 
         private static void init(int idx, LoadPackageParam lpparam) throws Throwable {
             String R = "com.tencent.mm.a";
             if (idx < 2) idx = 0;  //For 6.2.x,these name may be same
             String main_tabInClazz = new String[]{"$k"}[idx];
             String action_bar_colorInClazz = new String[]{"$f"}[idx];
-            String app_nameInClazz = new String[]{"$n"}[idx];
+            String strings = new String[]{"$n"}[idx];
             main_tab = getStaticIntField(findClass(R + main_tabInClazz, lpparam.classLoader), "main_tab");
             action_bar_color = getStaticIntField(findClass(R + action_bar_colorInClazz, lpparam.classLoader), "action_bar_color");
-            app_name = getStaticIntField(findClass(R + app_nameInClazz, lpparam.classLoader), "app_name");
+
+            //strings!!!!
+            app_name = getStaticIntField(findClass(R + strings, lpparam.classLoader), "app_name");
+            main_chat = getStaticIntField(findClass(R + strings, lpparam.classLoader), "main_chat");
+            main_contact = getStaticIntField(findClass(R + strings, lpparam.classLoader), "main_contact");
+            main_addcontact = getStaticIntField(findClass(R + strings, lpparam.classLoader), "main_addcontact");
+            main_more = getStaticIntField(findClass(R + strings, lpparam.classLoader), "main_more");
+            sns_dyna_photo_ui_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "sns_dyna_photo_ui_title");
+            find_friends_by_qrcode = getStaticIntField(findClass(R + strings, lpparam.classLoader), "find_friends_by_qrcode");
+            shake_report_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "shake_report_title");
+            nearby_friend_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "nearby_friend_title");
+            bottle_beach_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "bottle_beach_title");
+            game_recommand = getStaticIntField(findClass(R + strings, lpparam.classLoader), "game_recommand");
+            settings_my_album_new = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_my_album_new");
+            settings_mm_favorite_new = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_mm_favorite_new");
+            settings_mm_wallet_new = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_mm_wallet_new");
+            settings_mm_card_package_new = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_mm_card_package_new");
+            settings_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_title");
+            settings_username = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_username");
         }
     }
 

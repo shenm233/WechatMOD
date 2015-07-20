@@ -41,15 +41,18 @@ public class Common {
     //**************************************************************************
 
     public static class DrawerListItem {
+        public final int KEY;
         public int ICON_ID;
         public int TEXT_ID;
         public String unread = "";
 
-        public DrawerListItem(int TextResid) {
+        public DrawerListItem(int key, int TextResid) {
+            KEY = key;
             TEXT_ID = TextResid;
         }
 
-        public DrawerListItem(int IconResid, int TextResid) {
+        public DrawerListItem(int key, int IconResid, int TextResid) {
+            KEY = key;
             ICON_ID = IconResid;
             TEXT_ID = TextResid;
         }
