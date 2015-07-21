@@ -115,18 +115,18 @@ public class LauncherUI {
             }
         });
 
-        findAndHookMethod(MM_Classes.LauncherUI, "onDestroy", new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                if ("navidrawer".equals(navMode)) {
-                    onDestroyDrawer();
-                    onDestroyCustomActionBar((Activity) param.thisObject);
-                    XposedBridge.log("onDestroy,remove custom view");
-                }
-                LauncherUI_INSTANCE = null;
-                tabView = null;
-            }
-        });
+//        findAndHookMethod(MM_Classes.LauncherUI, "onDestroy", new XC_MethodHook() {
+//            @Override
+//            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+//                if ("navidrawer".equals(navMode)) {
+//                    onDestroyDrawer();
+//                    onDestroyCustomActionBar((Activity) param.thisObject);
+//                    XposedBridge.log("onDestroy,remove custom view");
+//                }
+//                LauncherUI_INSTANCE = null;
+//                tabView = null;
+//            }
+//        });
     }
 
     private void removeMMtabs(Activity activity, boolean keepCanSlide) {
