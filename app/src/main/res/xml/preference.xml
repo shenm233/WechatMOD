@@ -27,6 +27,9 @@
             android:key="dev"
             android:title="@string/preference_dev" />
         <PreferenceScreen
+            android:summary="icons provided by 萌萌的小雅酱@coolapk"
+            android:title="Thanks" />
+        <PreferenceScreen
             android:key="license"
             android:title="@string/preference_license" />
     </PreferenceCategory>
