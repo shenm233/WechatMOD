@@ -4,10 +4,26 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/drawer_indicator"
+    <FrameLayout
         android:layout_width="56dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:scaleType="centerInside" />
+        android:layout_gravity="start">
+
+        <ImageView
+            android:id="@+id/drawer_indicator"
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:scaleType="centerInside" />
+
+        <ImageView
+            android:id="@+id/drawer_indicator_poi"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="top|right"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/notify_dot"
+            android:visibility="invisible" />
+    </FrameLayout>
 </LinearLayout>

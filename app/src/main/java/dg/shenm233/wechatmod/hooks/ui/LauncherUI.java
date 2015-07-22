@@ -115,6 +115,24 @@ public class LauncherUI {
             }
         });
 
+        XC_MethodHook getUnreadHook = new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                if (drawer_indicator_poi != null) {
+                    if ((param.args[0] instanceof Integer && (int) param.args[0] > 0) ||
+                            (param.args[0] instanceof Boolean && (boolean) param.args[0])) {
+                        drawer_indicator_poi.setVisibility(View.VISIBLE);
+                    } else {
+                        drawer_indicator_poi.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        };
+//        findAndHookMethod(MM_Classes.LauncherUIBottomTabView, MM_Methods.setMainTabUnread, int.class, getUnreadHook);
+        findAndHookMethod(MM_Classes.LauncherUIBottomTabView, MM_Methods.setContactTabUnread, int.class, getUnreadHook);
+        findAndHookMethod(MM_Classes.LauncherUIBottomTabView, MM_Methods.setFriendTabUnread, int.class, getUnreadHook);
+        findAndHookMethod(MM_Classes.LauncherUIBottomTabView, MM_Methods.setShowFriendPoint, boolean.class, getUnreadHook);
+
 //        findAndHookMethod(MM_Classes.LauncherUI, "onDestroy", new XC_MethodHook() {
 //            @Override
 //            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -147,6 +165,7 @@ public class LauncherUI {
     private ImageView bg_image;
     public ImageView user_avatar;
     private TextView username;
+    private ImageView drawer_indicator_poi;
 
     private void initNewActionBar(Activity activity) throws Throwable {
         Object actionBar = getObjectField(activity, MM_Fields.actionBar);
@@ -160,6 +179,9 @@ public class LauncherUI {
         drawerArrowDrawable = new DrawerArrowDrawable((Resources) callMethod(activity, "getResources"));
         drawerArrowDrawable.setStrokeColor(Common.MOD_RES.getColor(R.color.drawer_indicator_color));
         iv.setImageDrawable(drawerArrowDrawable);
+
+        //get drawer indicator point
+        drawer_indicator_poi = (ImageView) newActionBarView.findViewById(R.id.drawer_indicator_poi);
 
         //remove original view,and then add again
         ((ViewGroup) actionBarView.getParent()).removeView(actionBarView);
@@ -255,6 +277,7 @@ public class LauncherUI {
 
         @Override
         public void onDrawerOpened(View drawerView) {
+            drawer_indicator_poi.setVisibility(View.INVISIBLE);
             refreshDrawerInfo();
         }
 

@@ -63,6 +63,7 @@ public class ObfuscationHelper {
 
     public static class MM_Classes {
         public static Class<?> LauncherUI;
+        public static Class<?> LauncherUIBottomTabView;
         //public static Class<?> MainAddContactFragment;  //discovery Fragment
         //public static Class<?> MainMoreFragment;        //me Fragment
         public static Class<?> Preference;
@@ -83,6 +84,7 @@ public class ObfuscationHelper {
 //            String mainMoreFragment = MM_UI_PACKAGENAME + new String[]{"em","en"}[idx];
 
             LauncherUI = findClass("com.tencent.mm.ui.LauncherUI", lpparam.classLoader);
+            LauncherUIBottomTabView = findClass(MM_UI_PACKAGENAME + "LauncherUIBottomTabView", lpparam.classLoader);
             Preference = findClass(MM_UI_PACKAGENAME + "base.preference.Preference", lpparam.classLoader);
             UserInfo = findClass(MM_MODEL_PACKAGENAME +
                     new String[]{"v", "v"}[idx], lpparam.classLoader);
@@ -112,6 +114,12 @@ public class ObfuscationHelper {
         public static String setCurrentPagerItem;
         public static String getFragment;
         public static String initActionBar;
+
+        //methods in LauncherUIBottomTabView class:
+//        public static String setMainTabUnread;
+        public static String setContactTabUnread;
+        public static String setFriendTabUnread;
+        public static String setShowFriendPoint;
 
         //methods in MainAddContactFragment class;
         //methods in MainMoreFragment class;
@@ -153,6 +161,10 @@ public class ObfuscationHelper {
             setCurrentPagerItem = new String[]{"nc", "nx"}[idx];
             getFragment = new String[]{"nd", "ny"}[idx];
             initActionBar = new String[]{"aKD", "aLP"}[idx];
+//            setMainTabUnread = new String[]{"mV", "np"}[idx];
+            setContactTabUnread = new String[]{"mW", "nq"}[idx];
+            setFriendTabUnread = new String[]{"mX", "nr"}[idx];
+            setShowFriendPoint = new String[]{"eR", "eV"}[idx];
             startMMActivity = new String[]{"a", "a"}[idx];
             getUsername = new String[]{"rO", "rW"}[idx];
             getOrigUsername = new String[]{"rN", "rV"}[idx];
