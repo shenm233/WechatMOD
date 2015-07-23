@@ -30,15 +30,11 @@ public class ObfuscationHelper {
     */
     public static boolean init(int versioncode, LoadPackageParam lpparam) throws Throwable {
         int versionIndex;
-        if (versioncode == MM_6_2_0_50) {
-            versionIndex = 0;
-        } else if (versioncode == MM_6_2_2_54) {
-            versionIndex = 1;
-        } else if (versioncode == MM_6_2_2_54_nonplay) {
-            versionIndex = 1;
-        } else {
+        versionIndex = isSupportedVersion(versioncode);
+        if (versionIndex < 0) {
             return false;
         }
+
         MM_Classes.init(versionIndex, lpparam);
         MM_Methods.init(versionIndex);
         MM_Fields.init(versionIndex);
@@ -59,6 +55,21 @@ public class ObfuscationHelper {
             };
         }
         return true;
+    }
+
+    /*
+    *if it is supported,return >= 0,otherwise return -1
+    */
+    public static int isSupportedVersion(int versioncode) {
+        if (versioncode == MM_6_2_0_50) {
+            return 0;
+        } else if (versioncode == MM_6_2_2_54) {
+            return 1;
+        } else if (versioncode == MM_6_2_2_54_nonplay) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 
     public static class MM_Classes {
@@ -218,8 +229,12 @@ public class ObfuscationHelper {
 
     //this class is used for get resource(such as layout,drawable..) id
     public static class MM_Res {
+        public static String strings;
+        public static String layout;
+
+        //layout id
         public static int main_tab;
-        public static int action_bar_color;
+
         //strings
         public static int app_name;
         public static int main_chat;
@@ -242,11 +257,11 @@ public class ObfuscationHelper {
         private static void init(int idx, LoadPackageParam lpparam) throws Throwable {
             String R = "com.tencent.mm.a";
             if (idx < 2) idx = 0;  //For 6.2.x,these name may be same
-            String main_tabInClazz = new String[]{"$k"}[idx];
-            String action_bar_colorInClazz = new String[]{"$f"}[idx];
-            String strings = new String[]{"$n"}[idx];
-            main_tab = getStaticIntField(findClass(R + main_tabInClazz, lpparam.classLoader), "main_tab");
-            action_bar_color = getStaticIntField(findClass(R + action_bar_colorInClazz, lpparam.classLoader), "action_bar_color");
+            layout = new String[]{"$k"}[idx];
+            strings = new String[]{"$n"}[idx];
+
+            //layout id
+            main_tab = getStaticIntField(findClass(R + layout, lpparam.classLoader), "main_tab");
 
             //strings!!!!
             app_name = getStaticIntField(findClass(R + strings, lpparam.classLoader), "app_name");
