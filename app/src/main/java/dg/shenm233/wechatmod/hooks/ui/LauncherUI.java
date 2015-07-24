@@ -211,14 +211,13 @@ public class LauncherUI {
 
     private void addNavigationDrawer(Activity activity) throws Throwable {
         drawerLayout = new DrawerLayout(activity);
-        drawerLayout.setFitsSystemWindows(true);
         drawerLayout.setFocusable(true);
         drawerLayout.setFocusableInTouchMode(true);
 
         //Create Drawer
         mDrawer = View.inflate(Common.MOD_Context, R.layout.drawer, null);
         DrawerLayout.LayoutParams lp =
-                new DrawerLayout.LayoutParams(DrawerLayout.LayoutParams.MATCH_PARENT, DrawerLayout.LayoutParams.MATCH_PARENT);
+                new DrawerLayout.LayoutParams(Common.dipTopx(Common.MOD_Context, 296L), DrawerLayout.LayoutParams.MATCH_PARENT);
         lp.gravity = Gravity.START;
         mDrawer.setLayoutParams(lp);
 
