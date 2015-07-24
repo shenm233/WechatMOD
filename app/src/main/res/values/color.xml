@@ -5,5 +5,6 @@
     <color name="item_selected_fg_color">#009688</color>
     <color name="item_text_default_color">#212121</color>
     <color name="wechat_action_bar_color">#009688</color>
+    <color name="wechat_status_bar_color">#00796B</color>
     <color name="drawer_indicator_color">#FFFFFF</color>
 </resources>

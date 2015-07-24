@@ -15,6 +15,7 @@ import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import dg.shenm233.wechatmod.hooks.ui.LauncherUI;
 import dg.shenm233.wechatmod.hooks.ui.MainFragments;
+import dg.shenm233.wechatmod.hooks.ui.ResReplacement;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
@@ -73,6 +74,7 @@ public class MainHook extends XC_MethodHook implements IXposedHookZygoteInit, IX
             }
             MainFragments mainFragments = new MainFragments();
             mainFragments.init(lpparam);
+//            MMFragmentActivity.init(lpparam);
         } catch (Throwable l) {
             XposedBridge.log(l);
         }
@@ -82,6 +84,7 @@ public class MainHook extends XC_MethodHook implements IXposedHookZygoteInit, IX
     public void handleInitPackageResources(XC_InitPackageResources.InitPackageResourcesParam resparam) throws Throwable {
         if (!resparam.packageName.equals(WECHAT_PACKAGENAME)) return;
         if (Common.MOD_RES == null)
-            Common.MOD_RES = XModuleResources.createInstance(MODULE_PATH, resparam.res);
+            Common.MOD_RES = XModuleResources.createInstance(MODULE_PATH, null);
+        ResReplacement.init(resparam);
     }
 }

@@ -75,6 +75,7 @@ public class ObfuscationHelper {
     public static class MM_Classes {
         public static Class<?> LauncherUI;
         public static Class<?> LauncherUIBottomTabView;
+        public static Class<?> MMFragmentActivity;
         //public static Class<?> MainAddContactFragment;  //discovery Fragment
         //public static Class<?> MainMoreFragment;        //me Fragment
         public static Class<?> Preference;
@@ -96,6 +97,7 @@ public class ObfuscationHelper {
 
             LauncherUI = findClass("com.tencent.mm.ui.LauncherUI", lpparam.classLoader);
             LauncherUIBottomTabView = findClass(MM_UI_PACKAGENAME + "LauncherUIBottomTabView", lpparam.classLoader);
+            MMFragmentActivity = findClass(MM_UI_PACKAGENAME + "MMFragmentActivity", lpparam.classLoader);
             Preference = findClass(MM_UI_PACKAGENAME + "base.preference.Preference", lpparam.classLoader);
             UserInfo = findClass(MM_MODEL_PACKAGENAME +
                     new String[]{"v", "v"}[idx], lpparam.classLoader);
