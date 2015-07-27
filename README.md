@@ -3,7 +3,6 @@ a xposed module for modifying Wechat
 
 License
 _________________________
-
 Copyright 2015 Shen Zhang
 
 Licensed under the Apache License, Version 2.0 (the "License");
