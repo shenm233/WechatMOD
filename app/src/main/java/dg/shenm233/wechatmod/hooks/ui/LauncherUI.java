@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import dg.shenm233.wechatmod.Common;
 import dg.shenm233.wechatmod.ObfuscationHelper;
 import dg.shenm233.wechatmod.R;
+import dg.shenm233.wechatmod.widget.CircleImageView;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
@@ -248,7 +250,11 @@ public class LauncherUI {
             }
         });
         username = (TextView) mDrawer.findViewById(R.id.username);
-        user_avatar = (ImageView) mDrawer.findViewById(R.id.user_avatar);
+
+        ViewGroup user_avatar_container = (ViewGroup) mDrawer.findViewById(R.id.user_avatar_container);
+        user_avatar = new CircleImageView(Common.MOD_Context);
+        user_avatar_container.addView(user_avatar, FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+
         user_avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -14,8 +14,8 @@
             android:layout_height="160dp"
             android:scaleType="fitXY" />
 
-        <ImageView
-            android:id="@+id/user_avatar"
+        <FrameLayout
+            android:id="@+id/user_avatar_container"
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_marginLeft="16dp"
