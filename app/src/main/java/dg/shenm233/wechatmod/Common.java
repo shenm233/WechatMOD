@@ -18,6 +18,7 @@ public class Common {
 
     public static final String KEY_SETNAV = "setnav";
     public static final String KEY_DISABLED_ITEMS = "disabled_items";
+    public static final String KEY_ACTIONBAR_COLOR = "actionbar_color";
     public static final String DRAWER_BG_PNG = "drawer_bg.jpg";
 
     //**************************************************************************

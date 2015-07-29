@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -69,9 +73,11 @@ public class LauncherUI {
                     if (DEBUG) XposedBridge.log("on maintab create");
                     if ((boolean) callStaticMethod(MM_Classes.AccountStorage, MM_Methods.isMMcoreReady)) {
                         if ("navidrawer".equals(navMode)) {
+                            fixMMlayout((Activity) param.thisObject);
                             removeMMtabs((Activity) param.thisObject, false);
                             addNavigationDrawer((Activity) param.thisObject);
                         } else if ("notabs".equals(navMode)) {
+                            fixMMlayout((Activity) param.thisObject);
                             removeMMtabs((Activity) param.thisObject, true);
                         }
                     } else {
@@ -104,10 +110,24 @@ public class LauncherUI {
             }
         });
 
+        findAndHookMethod(MM_Classes.LauncherUI, MM_Methods.getActionBarColor, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                param.setResult(MMFragmentActivity.getActionBarColorFromPrefs());
+            }
+        });
+
         findAndHookMethod(MM_Classes.LauncherUI, "onResume", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 try {
+                    int actionbar_color;
+                    actionbar_color = MMFragmentActivity.getActionBarColorFromPrefs();
+                    Activity activity = (Activity) param.thisObject;
+                    Object actionbar = callMethod(activity, "getActionBar");
+                    if (actionbar != null) {
+                        callMethod(actionbar, "setBackgroundDrawable", new ColorDrawable(actionbar_color));
+                    }
                     if ("navidrawer".equals(navMode) && drawerLayout != null) {
                         refreshDrawerInfo();
                     }
@@ -147,6 +167,18 @@ public class LauncherUI {
 //                tabView = null;
 //            }
 //        });
+    }
+
+    private void fixMMlayout(Activity activity) {
+        Window window = activity.getWindow();
+        /*
+        * enabling status bar color will cause THE CHATTING TEXTVIEW
+        * show below the Navigation Bar,so it just disable status bar color
+        * for LauncherUI to fix.
+        */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        }
     }
 
     private void removeMMtabs(Activity activity, boolean keepCanSlide) {

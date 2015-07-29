@@ -31,6 +31,16 @@
         <item>No any tabs(keep Swiping)</item>
         <item>Navigation Drawer</item>
     </string-array>
+    <string name="preference_actionbar_color">Action bar color</string>
+    <string-array name="preference_actionbar_color_entries">
+        <item>Black</item>
+        <item>Teal</item>
+        <item>Blue</item>
+        <item>Red</item>
+        <item>Orange</item>
+        <item>Purple</item>
+        <item>Blue Grey</item>
+    </string-array>
     <string name="preference_navidrawer_disable_items">Disable items in drawer</string>
     <string name="preference_navidrawer_disable_items_note">Select to disable</string>
     <string name="preference_navidrawer_pickup_background">Pick up a pic for background in drawer</string>

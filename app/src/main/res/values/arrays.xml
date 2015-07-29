@@ -21,4 +21,13 @@
         <item>item_sns_shopping</item>
         <item>item_sns_games</item>
     </string-array>
+    <string-array name="preference_actionbar_color_values" translatable="false">
+        <item>#000000</item>
+        <item>#009688</item>
+        <item>#2196F3</item>
+        <item>#F44336</item>
+        <item>#FF5722</item>
+        <item>#9C27B0</item>
+        <item>#263238</item>
+    </string-array>
 </resources>

@@ -127,6 +127,7 @@ public class ObfuscationHelper {
         public static String setCurrentPagerItem;
         public static String getFragment;
         public static String initActionBar;
+        public static String getActionBarColor;
 
         //methods in LauncherUIBottomTabView class:
 //        public static String setMainTabUnread;
@@ -174,6 +175,7 @@ public class ObfuscationHelper {
             setCurrentPagerItem = new String[]{"nc", "nx"}[idx];
             getFragment = new String[]{"nd", "ny"}[idx];
             initActionBar = new String[]{"aKD", "aLP"}[idx];
+            getActionBarColor = new String[]{"aKG", "aLS"}[idx];
 //            setMainTabUnread = new String[]{"mV", "np"}[idx];
             setContactTabUnread = new String[]{"mW", "nq"}[idx];
             setFriendTabUnread = new String[]{"mX", "nr"}[idx];

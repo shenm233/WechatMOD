@@ -27,6 +27,16 @@
         <item>无tabs(保留左右滑动)</item>
         <item>导航抽屉</item>
     </string-array>
+    <string name="preference_actionbar_color">ActionBar颜色</string>
+    <string-array name="preference_actionbar_color_entries">
+        <item>蠢黑</item>
+        <item>鸭绿</item>
+        <item>蓝蓝路</item>
+        <item>骚x红</item>
+        <item>Play橙</item>
+        <item>基佬紫</item>
+        <item>灰蓝</item>
+    </string-array>
     <string name="preference_navidrawer_disable_items">关闭抽屉里的部分功能</string>
     <string name="preference_navidrawer_disable_items_note">勾选以关闭功能</string>
     <string name="preference_title">微信_模块设置</string>

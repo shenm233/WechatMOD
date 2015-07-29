@@ -39,6 +39,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     private Preference mLicense;
     private ListPreference mSetNav;
     private MultiSelectListPreference mDisabledItems;
+    private ListPreference mActionBarColor;
     private Preference mPickBg;
     private CheckBoxPreference mHideLauncherIcon;
 
@@ -65,11 +66,13 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         mLicense = findPreference("license");
         mSetNav = (ListPreference) findPreference(Common.KEY_SETNAV);
         mDisabledItems = (MultiSelectListPreference) findPreference(Common.KEY_DISABLED_ITEMS);
+        mActionBarColor = (ListPreference) findPreference(Common.KEY_ACTIONBAR_COLOR);
         mPickBg = findPreference("pickup_bg");
         mHideLauncherIcon = (CheckBoxPreference) findPreference("hide_launcher_icon");
         mLicense.setOnPreferenceClickListener(this);
         mSetNav.setOnPreferenceChangeListener(this);
         mDisabledItems.setOnPreferenceChangeListener(this);
+        mActionBarColor.setOnPreferenceChangeListener(this);
         mPickBg.setOnPreferenceClickListener(this);
         mHideLauncherIcon.setOnPreferenceChangeListener(this);
     }
@@ -82,6 +85,12 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         CharSequence[] entries = mSetNav.getEntries();
         mSetNav.setValueIndex(index);
         mSetNav.setSummary(entries[index]);
+
+        String actionBarColor = prefs.getString(Common.KEY_ACTIONBAR_COLOR, "#263238");
+        index = mActionBarColor.findIndexOfValue(actionBarColor);
+        entries = mActionBarColor.getEntries();
+        mActionBarColor.setValueIndex(index);
+        mActionBarColor.setSummary(entries[index]);
     }
 
     @Override
@@ -91,6 +100,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         mLicense.setOnPreferenceClickListener(null);
         mSetNav.setOnPreferenceChangeListener(null);
         mDisabledItems.setOnPreferenceChangeListener(null);
+        mActionBarColor.setOnPreferenceChangeListener(null);
         mPickBg.setOnPreferenceClickListener(null);
         mHideLauncherIcon.setOnPreferenceChangeListener(null);
     }
@@ -113,6 +123,15 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
             editor.putStringSet(Common.KEY_DISABLED_ITEMS, strs);
             editor.commit();
             Toast.makeText(this, R.string.preference_reboot_note, Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (preference == mActionBarColor) {
+            CharSequence[] entries = mActionBarColor.getEntries();
+            String key = (String) newValue;
+            int index = mActionBarColor.findIndexOfValue(key);
+            mActionBarColor.setSummary(entries[index]);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(Common.KEY_ACTIONBAR_COLOR, key);
+            editor.commit();
             return true;
         } else if (preference == mHideLauncherIcon) {
             PackageManager packageManager = this.getPackageManager();
