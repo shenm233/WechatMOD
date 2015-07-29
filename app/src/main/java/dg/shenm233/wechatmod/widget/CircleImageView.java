@@ -11,11 +11,11 @@ import android.util.Log;
 import android.widget.ImageView;
 
 public class CircleImageView extends ImageView {
-    private Bitmap mBitmap;
-    private Canvas mCanvas;
+    private static Bitmap mBitmap;
+    private static Canvas mCanvas;
     private final Paint mBitmapPaint = new Paint();
     private BitmapShader mBitmapShader;
-    private float radius;
+    private static float radius;
 
     public CircleImageView(Context context) {
         super(context);
