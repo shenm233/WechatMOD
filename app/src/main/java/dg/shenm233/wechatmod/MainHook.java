@@ -55,7 +55,7 @@ public class MainHook extends XC_MethodHook implements IXposedHookZygoteInit, IX
                 XposedBridge.log("Wechat versionName: " + versionName + " versionCode: " + Integer.toString(versionCode));
 
             //If it's not supported,goodbye!
-            if (!ObfuscationHelper.init(versionCode, lpparam)) return;
+            if (!ObfuscationHelper.init(versionCode, versionName, lpparam)) return;
 
             //Let do it!
             findAndHookMethod(MM_Classes.LauncherUI, "onCreate", Bundle.class, new XC_MethodHook() {

@@ -21,6 +21,8 @@ public class ObfuscationHelper {
     public static final int MM_6_2_0_50 = 524;
     public static final int MM_6_2_2_54 = 563;
     public static final int MM_6_2_2_54_nonplay = 581; //6.2.2.54_rec1912d 国内版
+    public static final int MM_6_2_4_49 = 581;
+    public static final int MM_6_2_4_49_nonplay = 600; //6.2.4.49_r8d971a2国内版
 
     //a helper for analyzing StackTrace,I want to know who called method.
     public static XC_MethodHook getStackTraceHelper;
@@ -28,9 +30,9 @@ public class ObfuscationHelper {
     /*init ObfuscationHelper according to versionname and versioncode
     * if it is supported,return true,otherwise return false
     */
-    public static boolean init(int versioncode, LoadPackageParam lpparam) throws Throwable {
+    public static boolean init(int versioncode, String versionName, LoadPackageParam lpparam) throws Throwable {
         int versionIndex;
-        versionIndex = isSupportedVersion(versioncode);
+        versionIndex = isSupportedVersion(versioncode, versionName);
         if (versionIndex < 0) {
             return false;
         }
@@ -60,13 +62,17 @@ public class ObfuscationHelper {
     /*
     *if it is supported,return >= 0,otherwise return -1
     */
-    public static int isSupportedVersion(int versioncode) {
+    public static int isSupportedVersion(int versioncode, String versionName) {
         if (versioncode == MM_6_2_0_50) {
             return 0;
-        } else if (versioncode == MM_6_2_2_54) {
+        } else if (versionName.contains("6.2.2.54") && versioncode == MM_6_2_2_54) {
             return 1;
-        } else if (versioncode == MM_6_2_2_54_nonplay) {
+        } else if (versionName.contains("6.2.2.54") && versioncode == MM_6_2_2_54_nonplay) {
             return 1;
+        } else if (versionName.contains("6.2.4.49") && versioncode == MM_6_2_4_49) {
+            return 2;
+        } else if (versionName.contains("6.2.4.49") && versioncode == MM_6_2_4_49_nonplay) {
+            return 2;
         } else {
             return -1;
         }
@@ -92,29 +98,29 @@ public class ObfuscationHelper {
             String MM_UI_PACKAGENAME = "com.tencent.mm.ui.";
             String MM_PLUGINSDK_UI_PACKNAME = "com.tencent.mm.pluginsdk.ui.";
             String MM_MODEL_PACKAGENAME = "com.tencent.mm.model.";
-//            String mainAddContactFragment = MM_UI_PACKAGENAME + new String[]{"v","v"}[idx];
-//            String mainMoreFragment = MM_UI_PACKAGENAME + new String[]{"em","en"}[idx];
+//            String mainAddContactFragment = MM_UI_PACKAGENAME + new String[]{"v","v","f"}[idx];
+//            String mainMoreFragment = MM_UI_PACKAGENAME + new String[]{"em","en","p"}[idx];
 
             LauncherUI = findClass("com.tencent.mm.ui.LauncherUI", lpparam.classLoader);
             LauncherUIBottomTabView = findClass(MM_UI_PACKAGENAME + "LauncherUIBottomTabView", lpparam.classLoader);
             MMFragmentActivity = findClass(MM_UI_PACKAGENAME + "MMFragmentActivity", lpparam.classLoader);
             Preference = findClass(MM_UI_PACKAGENAME + "base.preference.Preference", lpparam.classLoader);
             UserInfo = findClass(MM_MODEL_PACKAGENAME +
-                    new String[]{"v", "v"}[idx], lpparam.classLoader);
+                    new String[]{"v", "v", "g"}[idx], lpparam.classLoader);
             UserNickName = findClass(MM_PLUGINSDK_UI_PACKNAME +
-                    new String[]{"d.i", "d.e"}[idx], lpparam.classLoader);
+                    new String[]{"d.i", "d.e", "d.e"}[idx], lpparam.classLoader);
             Avatar = findClass(MM_PLUGINSDK_UI_PACKNAME +
-                    new String[]{"a$b", "a$b"}[idx], lpparam.classLoader);
+                    new String[]{"a$b", "a$b", "a$b"}[idx], lpparam.classLoader);
             AccountStorage = findClass(MM_MODEL_PACKAGENAME +
-                    new String[]{"ax", "ax"}[idx], lpparam.classLoader);
+                    new String[]{"ax", "ax", "ag"}[idx], lpparam.classLoader);
             NewFriendMessage = findClass("com.tencent.mm." +
-                    new String[]{"ag.m", "ag.m"}[idx], lpparam.classLoader);
+                    new String[]{"ag.m", "ag.m", "ah.l"}[idx], lpparam.classLoader);
             Bottle = findClass(MM_MODEL_PACKAGENAME +
-                    new String[]{"x", "x"}[idx], lpparam.classLoader);
+                    new String[]{"x", "x", "i"}[idx], lpparam.classLoader);
             WTFClazz = findClass("com.tencent.mm.pluginsdk." +
-                    new String[]{"l$ag", "l$ag"}[idx], lpparam.classLoader);
+                    new String[]{"l$ag", "l$ag", "h$ah"}[idx], lpparam.classLoader);
             PluginToolClazz = findClass("com.tencent.mm." +
-                    new String[]{"aj.c", "aj.c"}[idx], lpparam.classLoader);
+                    new String[]{"aj.c", "aj.c", "am.c"}[idx], lpparam.classLoader);
 //            MainAddContactFragment = findClass(mainAddContactFragment, lpparam.classLoader);
 //            MainMoreFragment = findClass(mainMoreFragment, lpparam.classLoader);
         }
@@ -170,30 +176,30 @@ public class ObfuscationHelper {
         public static String startPluginActivity;
 
         private static void init(int idx) throws Throwable {
-            startMainUI = new String[]{"aKw", "aLJ"}[idx];
+            startMainUI = new String[]{"aKw", "aLJ", "aNp"}[idx]; /**/
             createTabView = new String[]{"aKC"}[0]; //above 6.2.2 never has this method :(
-            setCurrentPagerItem = new String[]{"nc", "nx"}[idx];
-            getFragment = new String[]{"nd", "ny"}[idx];
-            initActionBar = new String[]{"aKD", "aLP"}[idx];
-            getActionBarColor = new String[]{"aKG", "aLS"}[idx];
-//            setMainTabUnread = new String[]{"mV", "np"}[idx];
-            setContactTabUnread = new String[]{"mW", "nq"}[idx];
-            setFriendTabUnread = new String[]{"mX", "nr"}[idx];
-            setShowFriendPoint = new String[]{"eR", "eV"}[idx];
-            startMMActivity = new String[]{"a", "a"}[idx];
-            getUsername = new String[]{"rO", "rW"}[idx];
-            getOrigUsername = new String[]{"rN", "rV"}[idx];
-            getNickname = new String[]{"a", "a"}[idx];
-            setAvatarByOrigUsername = new String[]{"b", "b"}[idx];
-            getAccStg = new String[]{"tg", "to"}[idx];
-            isMMcoreReady = new String[]{"qU", "rc"}[idx];
-            getUserInfoFromDB = new String[]{"ra", "ri"}[idx];
-            getLBSVerifyMessage = new String[]{"BH", "Cl"}[idx];
-            getShakeVerifyMessage = new String[]{"BI", "Cm"}[idx];
-            getVerifyMessageCount = new String[]{"BA", "Ce"}[idx];
-            getBottleUnreadCount = new String[]{"sA", "sI"}[idx];
-            getMomentsUnreadCount = new String[]{"BA", "Ce"}[idx];
-            startPluginActivity = new String[]{"c", "c"}[idx];
+            setCurrentPagerItem = new String[]{"nc", "nx", "nU"}[idx]; /*change tab to %d, cur tab %d, (in LauncherUI.java)*/
+            getFragment = new String[]{"nd", "ny", "nV"}[idx]; /*createFragment index:%d (in LauncherUI.java)*/
+            initActionBar = new String[]{"aKD", "aLP", "aNv"}[idx]; /*setLogo(new ColorDrawable(getResources().getColor (in LauncherUI.java)*/
+            getActionBarColor = new String[]{"aKG", "aLS", "aNy"}[idx]; /*return getResources().getColor(com.tencent.mm.a.f.action_bar_color) (in LauncherUI.java)*/
+//            setMainTabUnread = new String[]{"mV", "np", "nN"}[idx]; /*updateMainTabUnread*/
+            setContactTabUnread = new String[]{"mW", "nq", "nO"}[idx];
+            setFriendTabUnread = new String[]{"mX", "nr", "nP"}[idx];
+            setShowFriendPoint = new String[]{"eR", "eV", "fv"}[idx];
+            startMMActivity = new String[]{"a", "a", "a"}[idx];
+            getUsername = new String[]{"rO", "rW", "sc"}[idx]; /* one line below "more_tab_setting_personal_info" (called by (MainMoreFragment).java)*/
+            getOrigUsername = new String[]{"rN", "rV", "sb"}[idx]; /* (called by (MainMoreFragment).java)*/
+            getNickname = new String[]{"a", "a", "a"}[idx]; /* (called by (MainMoreFragment).java)*/
+            setAvatarByOrigUsername = new String[]{"b", "b", "b"}[idx]; /* (called by (com.tencent.mm.pluginsdk.ui.preference/AccountInfoPreference).java)*/
+            getAccStg = new String[]{"tg", "to", "tu"}[idx]; /*onResume*/
+            isMMcoreReady = new String[]{"qU", "rc", "ri"}[idx]; /*mmcore has not ready (in LauncherUI.java)*/
+            getUserInfoFromDB = new String[]{"ra", "ri", "ro"}[idx]; /*onResume*/
+            getLBSVerifyMessage = new String[]{"BH", "Cl", "CB"}[idx];
+            getShakeVerifyMessage = new String[]{"BI", "Cm", "CC"}[idx];
+            getVerifyMessageCount = new String[]{"BA", "Ce", "Ct"}[idx];
+            getBottleUnreadCount = new String[]{"sA", "sI", "sO"}[idx];
+            getMomentsUnreadCount = new String[]{"BA", "Ce", "Ct"}[idx];
+            startPluginActivity = new String[]{"c", "c", "c"}[idx];
         }
     }
 
@@ -218,16 +224,16 @@ public class ObfuscationHelper {
         public static String preferenceKey;
 
         private static void init(int idx) throws Throwable {
-            customViewPager = new String[]{"imA", "iwF"}[idx];
-            tabView = new String[]{"imz", "iwE"}[idx];
-            main_tab = new String[]{"cuW", "czt"}[idx];
-            actionBar = new String[]{"iZ", "jA"}[idx];
-            isMainTabCreated = new String[]{"imr", "iwv"}[idx];
-            curTabNum = new String[]{"imQ", "iwV"}[idx];
-            discovery_preferenceInterface = new String[]{"bXk", "cbC"}[idx];
-            me_preferenceInterface = new String[]{"bXk", "cbC"}[idx];
-            moments_jj = new String[]{"gJE", "gTe"}[idx];
-            preferenceKey = new String[]{"bTL", "bXW"}[idx];
+            customViewPager = new String[]{"imA", "iwF", "iHl"}[idx]; /*CustomViewPager*/
+            tabView = new String[]{"imz", "iwE", "iHk"}[idx]; /*= launcheruibottomtabview*/
+            main_tab = new String[]{"cuW", "czt", "cAI"}[idx]; /*inflate(com.tencent.mm.a.k.main_tab, null)*/
+            actionBar = new String[]{"iZ", "jA", "jz"}[idx]; /*ActionBar*/
+            isMainTabCreated = new String[]{"imr", "iwv", "iHb"}[idx]; /*on main tab create*/
+            curTabNum = new String[]{"imQ", "iwV", "iHB"}[idx]; /*change tab to %d, cur tab %d, has init tab %B,*/
+            discovery_preferenceInterface = new String[]{"bXk", "cbC", "ccQ"}[idx];
+            me_preferenceInterface = new String[]{"bXk", "cbC", "ccQ"}[idx];
+            moments_jj = new String[]{"gJE", "gTe", "hey"}[idx];
+            preferenceKey = new String[]{"bTL", "bXW", "bZi"}[idx]; /*you can get preference.? from method startMMActivity*/
         }
     }
 
@@ -260,7 +266,7 @@ public class ObfuscationHelper {
 
         private static void init(int idx, LoadPackageParam lpparam) throws Throwable {
             String R = "com.tencent.mm.a";
-            if (idx < 2) idx = 0;  //For 6.2.x,these name may be same
+            if (idx < 3) idx = 0;  //For 6.2.x,these name may be same
             layout = new String[]{"$k"}[idx];
             strings = new String[]{"$n"}[idx];
 

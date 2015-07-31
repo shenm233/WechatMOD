@@ -18,8 +18,9 @@ public class ResReplacement {
         Object activityThread = callStaticMethod(findClass("android.app.ActivityThread", null), "currentActivityThread");
         Context context = (Context) callMethod(activityThread, "getSystemContext");
         try {
+            String versionName = context.getPackageManager().getPackageInfo(WECHAT_PACKAGENAME, 0).versionName;
             int versionCode = context.getPackageManager().getPackageInfo(WECHAT_PACKAGENAME, 0).versionCode;
-            int versionIndex = ObfuscationHelper.isSupportedVersion(versionCode);
+            int versionIndex = ObfuscationHelper.isSupportedVersion(versionCode, versionName);
             if (versionIndex < 0) return;
             String action_bar_color = new String[]{"b6", "bp"}[versionIndex];
 
