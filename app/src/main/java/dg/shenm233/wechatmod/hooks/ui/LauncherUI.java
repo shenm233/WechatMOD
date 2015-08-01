@@ -155,19 +155,6 @@ public class LauncherUI {
         findAndHookMethod(MM_Classes.LauncherUIBottomTabView, MM_Methods.setContactTabUnread, int.class, getUnreadHook);
         findAndHookMethod(MM_Classes.LauncherUIBottomTabView, MM_Methods.setFriendTabUnread, int.class, getUnreadHook);
         findAndHookMethod(MM_Classes.LauncherUIBottomTabView, MM_Methods.setShowFriendPoint, boolean.class, getUnreadHook);
-
-//        findAndHookMethod(MM_Classes.LauncherUI, "onDestroy", new XC_MethodHook() {
-//            @Override
-//            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-//                if ("navidrawer".equals(navMode)) {
-//                    onDestroyDrawer();
-//                    onDestroyCustomActionBar((Activity) param.thisObject);
-//                    XposedBridge.log("onDestroy,remove custom view");
-//                }
-//                LauncherUI_INSTANCE = null;
-//                tabViewWeakRef = null;
-//            }
-//        });
     }
 
     private void fixMMlayout(Activity activity) {
@@ -187,7 +174,7 @@ public class LauncherUI {
         View tabView = (View) getObjectField(activity, MM_Fields.tabView);
         tabViewWeakRef = new WeakReference<Object>(tabView);
         ((ViewGroup) customViewPager.getParent()).removeView(tabView);
-        if (DEBUG) ObfuscationHelper.getRawXml(MM_Res.main_tab, Common.MM_Context);
+//        if (DEBUG) ObfuscationHelper.getRawXml(MM_Res.main_tab, Common.MM_Context);
         callMethod(customViewPager, "setCanSlide", keepCanSlide);
     }
 
