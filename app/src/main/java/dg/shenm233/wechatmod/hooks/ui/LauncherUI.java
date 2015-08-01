@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,8 +47,8 @@ import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Res;
 
 public class LauncherUI {
     //save tabview instance for getting unread message
-    private Object tabView;
-    private static Activity LauncherUI_INSTANCE;
+    private WeakReference<Object> tabViewWeakRef;
+    private static WeakReference<Activity> LauncherUI_INSTANCE_WeakRef;
     private boolean isMainTabCreated;
 
     private String navMode;
@@ -58,7 +59,7 @@ public class LauncherUI {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 isMainTabCreated = (boolean) getObjectField(param.thisObject, MM_Fields.isMainTabCreated);
-                LauncherUI_INSTANCE = (Activity) param.thisObject;
+                LauncherUI_INSTANCE_WeakRef = new WeakReference<Activity>((Activity) param.thisObject);
                 Common.XMOD_PREFS.reload();
                 if (Common.XMOD_PREFS.getAll().size() > 0) {
                     navMode = Common.XMOD_PREFS.getString(Common.KEY_SETNAV, "default");
@@ -164,7 +165,7 @@ public class LauncherUI {
 //                    XposedBridge.log("onDestroy,remove custom view");
 //                }
 //                LauncherUI_INSTANCE = null;
-//                tabView = null;
+//                tabViewWeakRef = null;
 //            }
 //        });
     }
@@ -183,8 +184,9 @@ public class LauncherUI {
 
     private void removeMMtabs(Activity activity, boolean keepCanSlide) {
         ViewGroup customViewPager = (ViewGroup) getObjectField(activity, MM_Fields.customViewPager);
-        tabView = getObjectField(activity, MM_Fields.tabView);
-        ((ViewGroup) customViewPager.getParent()).removeView((View) tabView);
+        View tabView = (View) getObjectField(activity, MM_Fields.tabView);
+        tabViewWeakRef = new WeakReference<Object>(tabView);
+        ((ViewGroup) customViewPager.getParent()).removeView(tabView);
         if (DEBUG) ObfuscationHelper.getRawXml(MM_Res.main_tab, Common.MM_Context);
         callMethod(customViewPager, "setCanSlide", keepCanSlide);
     }
@@ -244,7 +246,7 @@ public class LauncherUI {
     }
 
     private void addNavigationDrawer(Activity activity) throws Throwable {
-        drawerLayout = new DrawerLayout(activity);
+        drawerLayout = new DrawerLayout(Common.MOD_Context);
         drawerLayout.setFocusable(true);
         drawerLayout.setFocusableInTouchMode(true);
 
@@ -290,7 +292,10 @@ public class LauncherUI {
         user_avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "more_tab_setting_personal_info");
+                Activity LauncherUI_INSTANCE = LauncherUI_INSTANCE_WeakRef.get();
+                if (LauncherUI_INSTANCE != null) {
+                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "more_tab_setting_personal_info");
+                }
             }
         });
 
@@ -425,20 +430,23 @@ public class LauncherUI {
 
     private void refreshDrawerInfo() {
         //make listview item selected
-        int curTabNum = (int) getObjectField(LauncherUI_INSTANCE, MM_Fields.curTabNum);
-        switch (curTabNum) {
-            case 0:
-                drawerListAdapter.setSingleItemHighlighted(Common.item_main_chat);
-                break;
-            case 1:
-                drawerListAdapter.setSingleItemHighlighted(Common.item_main_contact);
-                break;
-            case 2:
-                drawerListAdapter.setSingleItemHighlighted(Common.item_main_addcontact);
-                break;
-            case 3:
-                drawerListAdapter.setSingleItemHighlighted(Common.item_main_more);
-                break;
+        Activity LauncherUI_INSTANCE = LauncherUI_INSTANCE_WeakRef.get();
+        if (LauncherUI_INSTANCE != null) {
+            int curTabNum = (int) getObjectField(LauncherUI_INSTANCE, MM_Fields.curTabNum);
+            switch (curTabNum) {
+                case 0:
+                    drawerListAdapter.setSingleItemHighlighted(Common.item_main_chat);
+                    break;
+                case 1:
+                    drawerListAdapter.setSingleItemHighlighted(Common.item_main_contact);
+                    break;
+                case 2:
+                    drawerListAdapter.setSingleItemHighlighted(Common.item_main_addcontact);
+                    break;
+                case 3:
+                    drawerListAdapter.setSingleItemHighlighted(Common.item_main_more);
+                    break;
+            }
         }
 
         //background image
@@ -464,36 +472,39 @@ public class LauncherUI {
             username.setText(str);
         username.append("\n" + Common.MM_Context.getResources().getText(MM_Res.settings_username) + ": " + getUsername());
 
-        try {
-            //set Unread message
-            int i;
-            i = (int) callMethod(tabView, "getMainTabUnread");
-            drawerListAdapter.setMainChattingUnread(i);
-            i = (int) callMethod(tabView, "getContactTabUnread");
-            drawerListAdapter.setContactUnread(i);
-            if (item_sns_moments_enabled) {
-                Object object = getStaticObjectField(MM_Classes.WTFClazz, MM_Fields.moments_jj);
-                i = object != null ? (int) callMethod(object, MM_Methods.getMomentsUnreadCount) : 0;
-                drawerListAdapter.setMomentsUnread(i);
-                if (i == 0) {
-                    boolean showPoint = (boolean) callMethod(tabView, "getShowFriendPoint");
-                    drawerListAdapter.setMomentsPoint(showPoint);
+        Object tabView = tabViewWeakRef.get();
+        if (tabView != null) {
+            try {
+                //set Unread message
+                int i;
+                i = (int) callMethod(tabView, "getMainTabUnread");
+                drawerListAdapter.setMainChattingUnread(i);
+                i = (int) callMethod(tabView, "getContactTabUnread");
+                drawerListAdapter.setContactUnread(i);
+                if (item_sns_moments_enabled) {
+                    Object object = getStaticObjectField(MM_Classes.WTFClazz, MM_Fields.moments_jj);
+                    i = object != null ? (int) callMethod(object, MM_Methods.getMomentsUnreadCount) : 0;
+                    drawerListAdapter.setMomentsUnread(i);
+                    if (i == 0) {
+                        boolean showPoint = (boolean) callMethod(tabView, "getShowFriendPoint");
+                        drawerListAdapter.setMomentsPoint(showPoint);
+                    }
                 }
+                if (item_sns_shake_enabled) {
+                    i = (int) callMethod(callStaticMethod(MM_Classes.NewFriendMessage, MM_Methods.getShakeVerifyMessage), MM_Methods.getVerifyMessageCount);
+                    drawerListAdapter.setShakeUnread(i);
+                }
+                if (item_sns_people_nearby_enabled) {
+                    i = (int) callMethod(callStaticMethod(MM_Classes.NewFriendMessage, MM_Methods.getLBSVerifyMessage), MM_Methods.getVerifyMessageCount);
+                    drawerListAdapter.setNearbyPeopleUnread(i);
+                }
+                if (item_sns_drift_bottle_enabled) {
+                    i = (int) callStaticMethod(MM_Classes.Bottle, MM_Methods.getBottleUnreadCount);
+                    drawerListAdapter.setDriftBottleUnread(i);
+                }
+            } catch (Throwable l) {
+                if (DEBUG) XposedBridge.log(l);
             }
-            if (item_sns_shake_enabled) {
-                i = (int) callMethod(callStaticMethod(MM_Classes.NewFriendMessage, MM_Methods.getShakeVerifyMessage), MM_Methods.getVerifyMessageCount);
-                drawerListAdapter.setShakeUnread(i);
-            }
-            if (item_sns_people_nearby_enabled) {
-                i = (int) callMethod(callStaticMethod(MM_Classes.NewFriendMessage, MM_Methods.getLBSVerifyMessage), MM_Methods.getVerifyMessageCount);
-                drawerListAdapter.setNearbyPeopleUnread(i);
-            }
-            if (item_sns_drift_bottle_enabled) {
-                i = (int) callStaticMethod(MM_Classes.Bottle, MM_Methods.getBottleUnreadCount);
-                drawerListAdapter.setDriftBottleUnread(i);
-            }
-        } catch (Throwable l) {
-            if (DEBUG) XposedBridge.log(l);
         }
     }
 
@@ -519,7 +530,7 @@ public class LauncherUI {
     }
 
     protected static void callMMFeature(int key) {
-        if (drawerLayout == null || LauncherUI_INSTANCE == null) return;
+        if (drawerLayout == null || LauncherUI_INSTANCE_WeakRef == null) return;
         myDrawerListener.runOnIdle(new callMMFragmentFeatureRunnable(key));
         drawerLayout.closeDrawers();
     }
@@ -533,52 +544,55 @@ public class LauncherUI {
 
         @Override
         public void run() {
-            switch (key) {
-                case Common.item_main_chat:
-                    MainFragments.switchMMFragment(LauncherUI_INSTANCE, 0);
-                    break;
-                case Common.item_main_contact:
-                    MainFragments.switchMMFragment(LauncherUI_INSTANCE, 1);
-                    break;
-                case Common.item_main_addcontact:
-                    MainFragments.switchMMFragment(LauncherUI_INSTANCE, 2);
-                    break;
-                case Common.item_main_more:
-                    MainFragments.switchMMFragment(LauncherUI_INSTANCE, 3);
-                    break;
-                case Common.item_sns_moments:
-                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "album_dyna_photo_ui_title");
-                    break;
-                case Common.item_sns_scan:
-                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_qrcode");
-                    break;
-                case Common.item_sns_shake:
-                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_shake");
-                    break;
-                case Common.item_sns_people_nearby:
-                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_near");
-                    break;
-                case Common.item_sns_drift_bottle:
-                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "voice_bottle");
-                    break;
-                case Common.item_sns_shopping:
-                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "jd_market_entrance");
-                    break;
-                case Common.item_sns_games:
-                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "more_tab_game_recommend");
-                    break;
-                case Common.item_me_posts:
-                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_my_album");
-                    break;
-                case Common.item_me_favorites:
-                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_mm_favorite");
-                    break;
-                case Common.item_me_wallet:
-                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_mm_wallet");
-                    break;
-                case Common.item_me_settings:
-                    MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "more_setting");
-                    break;
+            Activity LauncherUI_INSTANCE = LauncherUI_INSTANCE_WeakRef.get();
+            if (LauncherUI_INSTANCE != null) {
+                switch (key) {
+                    case Common.item_main_chat:
+                        MainFragments.switchMMFragment(LauncherUI_INSTANCE, 0);
+                        break;
+                    case Common.item_main_contact:
+                        MainFragments.switchMMFragment(LauncherUI_INSTANCE, 1);
+                        break;
+                    case Common.item_main_addcontact:
+                        MainFragments.switchMMFragment(LauncherUI_INSTANCE, 2);
+                        break;
+                    case Common.item_main_more:
+                        MainFragments.switchMMFragment(LauncherUI_INSTANCE, 3);
+                        break;
+                    case Common.item_sns_moments:
+                        MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "album_dyna_photo_ui_title");
+                        break;
+                    case Common.item_sns_scan:
+                        MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_qrcode");
+                        break;
+                    case Common.item_sns_shake:
+                        MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_shake");
+                        break;
+                    case Common.item_sns_people_nearby:
+                        MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "find_friends_by_near");
+                        break;
+                    case Common.item_sns_drift_bottle:
+                        MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "voice_bottle");
+                        break;
+                    case Common.item_sns_shopping:
+                        MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "jd_market_entrance");
+                        break;
+                    case Common.item_sns_games:
+                        MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 2, "more_tab_game_recommend");
+                        break;
+                    case Common.item_me_posts:
+                        MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_my_album");
+                        break;
+                    case Common.item_me_favorites:
+                        MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_mm_favorite");
+                        break;
+                    case Common.item_me_wallet:
+                        MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_mm_wallet");
+                        break;
+                    case Common.item_me_settings:
+                        MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "more_setting");
+                        break;
+                }
             }
         }
     }
