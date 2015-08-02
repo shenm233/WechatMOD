@@ -136,7 +136,7 @@ public class ObfuscationHelper {
         public static String getActionBarColor;
 
         //methods in LauncherUIBottomTabView class:
-//        public static String setMainTabUnread;
+        public static String setMainTabUnread;
         public static String setContactTabUnread;
         public static String setFriendTabUnread;
         public static String setShowFriendPoint;
@@ -182,7 +182,7 @@ public class ObfuscationHelper {
             getFragment = new String[]{"nd", "ny", "nV"}[idx]; /*createFragment index:%d (in LauncherUI.java)*/
             initActionBar = new String[]{"aKD", "aLP", "aNv"}[idx]; /*setLogo(new ColorDrawable(getResources().getColor (in LauncherUI.java)*/
             getActionBarColor = new String[]{"aKG", "aLS", "aNy"}[idx]; /*return getResources().getColor(com.tencent.mm.a.f.action_bar_color) (in LauncherUI.java)*/
-//            setMainTabUnread = new String[]{"mV", "np", "nN"}[idx]; /*updateMainTabUnread*/
+            setMainTabUnread = new String[]{"mV", "np", "nN"}[idx]; /*updateMainTabUnread*/
             setContactTabUnread = new String[]{"mW", "nq", "nO"}[idx];
             setFriendTabUnread = new String[]{"mX", "nr", "nP"}[idx];
             setShowFriendPoint = new String[]{"eR", "eV", "fv"}[idx];

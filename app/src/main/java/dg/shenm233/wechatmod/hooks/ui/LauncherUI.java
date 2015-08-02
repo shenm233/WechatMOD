@@ -129,32 +129,45 @@ public class LauncherUI {
                     if (actionbar != null) {
                         callMethod(actionbar, "setBackgroundDrawable", new ColorDrawable(actionbar_color));
                     }
-                    if ("navidrawer".equals(navMode) && drawerLayout != null) {
-                        refreshDrawerInfo();
-                    }
                 } catch (Throwable l) {
 
                 }
             }
         });
 
-        XC_MethodHook getUnreadHook = new XC_MethodHook() {
+        findAndHookMethod(MM_Classes.LauncherUIBottomTabView, MM_Methods.setMainTabUnread, int.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                if (drawer_indicator_poi != null) {
-                    if ((param.args[0] instanceof Integer && (int) param.args[0] > 0) ||
-                            (param.args[0] instanceof Boolean && (boolean) param.args[0])) {
+                int i = (int) param.args[0];
+                drawerListAdapter.setMainChattingUnread(i);
+            }
+        });
+        findAndHookMethod(MM_Classes.LauncherUIBottomTabView, MM_Methods.setContactTabUnread, int.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                int i = (int) param.args[0];
+                drawerListAdapter.setContactUnread(i);
+            }
+        });
+        findAndHookMethod(MM_Classes.LauncherUIBottomTabView, MM_Methods.setFriendTabUnread, int.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                if (item_sns_moments_enabled || item_sns_drift_bottle_enabled || item_sns_people_nearby_enabled || item_sns_shake_enabled) {
+                    if ((int) param.args[0] > 0) {
                         drawer_indicator_poi.setVisibility(View.VISIBLE);
-                    } else {
-                        drawer_indicator_poi.setVisibility(View.INVISIBLE);
                     }
                 }
             }
-        };
-//        findAndHookMethod(MM_Classes.LauncherUIBottomTabView, MM_Methods.setMainTabUnread, int.class, getUnreadHook);
-        findAndHookMethod(MM_Classes.LauncherUIBottomTabView, MM_Methods.setContactTabUnread, int.class, getUnreadHook);
-        findAndHookMethod(MM_Classes.LauncherUIBottomTabView, MM_Methods.setFriendTabUnread, int.class, getUnreadHook);
-        findAndHookMethod(MM_Classes.LauncherUIBottomTabView, MM_Methods.setShowFriendPoint, boolean.class, getUnreadHook);
+        });
+        findAndHookMethod(MM_Classes.LauncherUIBottomTabView, MM_Methods.setShowFriendPoint, boolean.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                if (item_sns_moments_enabled && (boolean) param.args[0]) {
+                    drawer_indicator_poi.setVisibility(View.VISIBLE);
+                    drawerListAdapter.setMomentsPoint(true);
+                }
+            }
+        });
     }
 
     private void fixMMlayout(Activity activity) {
@@ -312,7 +325,7 @@ public class LauncherUI {
 
         @Override
         public void onDrawerClosed(View drawerView) {
-
+            drawer_indicator_poi.setVisibility(View.INVISIBLE);
         }
 
         @Override
@@ -464,10 +477,6 @@ public class LauncherUI {
             try {
                 //set Unread message
                 int i;
-                i = (int) callMethod(tabView, "getMainTabUnread");
-                drawerListAdapter.setMainChattingUnread(i);
-                i = (int) callMethod(tabView, "getContactTabUnread");
-                drawerListAdapter.setContactUnread(i);
                 if (item_sns_moments_enabled) {
                     Object object = getStaticObjectField(MM_Classes.WTFClazz, MM_Fields.moments_jj);
                     i = object != null ? (int) callMethod(object, MM_Methods.getMomentsUnreadCount) : 0;
