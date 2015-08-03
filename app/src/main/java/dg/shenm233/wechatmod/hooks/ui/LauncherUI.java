@@ -118,23 +118,6 @@ public class LauncherUI {
             }
         });
 
-        findAndHookMethod(MM_Classes.LauncherUI, "onResume", new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                try {
-                    int actionbar_color;
-                    actionbar_color = MMFragmentActivity.getActionBarColorFromPrefs();
-                    Activity activity = (Activity) param.thisObject;
-                    Object actionbar = callMethod(activity, "getActionBar");
-                    if (actionbar != null) {
-                        callMethod(actionbar, "setBackgroundDrawable", new ColorDrawable(actionbar_color));
-                    }
-                } catch (Throwable l) {
-
-                }
-            }
-        });
-
         findAndHookMethod(MM_Classes.LauncherUIBottomTabView, MM_Methods.setMainTabUnread, int.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {

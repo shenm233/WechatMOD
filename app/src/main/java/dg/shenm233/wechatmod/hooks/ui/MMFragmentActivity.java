@@ -33,7 +33,7 @@ public class MMFragmentActivity {
 
         findAndHookMethod(MM_Classes.MMFragmentActivity, "onResume", new XC_MethodHook() {
             @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 int actionbar_color;
                 actionbar_color = getActionBarColorFromPrefs();
                 Activity activity = (Activity) param.thisObject;
