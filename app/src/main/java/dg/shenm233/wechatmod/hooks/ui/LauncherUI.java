@@ -160,7 +160,8 @@ public class LauncherUI {
         * show below the Navigation Bar,so it just disable status bar color
         * for LauncherUI to fix.
         */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
+                !Common.XMOD_PREFS.getBoolean(Common.KEY_FORCE_STATUSBAR_COLOR, false)) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         }
     }

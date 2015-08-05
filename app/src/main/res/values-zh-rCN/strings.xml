@@ -37,6 +37,8 @@
         <item>基佬紫</item>
         <item>灰蓝</item>
     </string-array>
+    <string name="preference_force_statusbar_color">强制开启状态栏变色</string>
+    <string name="preference_force_statusbar_color_summary">虚拟导航键的机型不建议启用</string>
     <string name="preference_navidrawer_disable_items">关闭抽屉里的部分功能</string>
     <string name="preference_navidrawer_disable_items_note">勾选以关闭功能</string>
     <string name="preference_title">微信_模块设置</string>

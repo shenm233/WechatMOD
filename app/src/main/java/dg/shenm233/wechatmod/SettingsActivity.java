@@ -40,6 +40,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     private ListPreference mSetNav;
     private MultiSelectListPreference mDisabledItems;
     private ListPreference mActionBarColor;
+    private CheckBoxPreference mForceStatusBarColor;
     private Preference mPickBg;
     private CheckBoxPreference mHideLauncherIcon;
 
@@ -67,12 +68,14 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         mSetNav = (ListPreference) findPreference(Common.KEY_SETNAV);
         mDisabledItems = (MultiSelectListPreference) findPreference(Common.KEY_DISABLED_ITEMS);
         mActionBarColor = (ListPreference) findPreference(Common.KEY_ACTIONBAR_COLOR);
+        mForceStatusBarColor = (CheckBoxPreference) findPreference(Common.KEY_FORCE_STATUSBAR_COLOR);
         mPickBg = findPreference("pickup_bg");
         mHideLauncherIcon = (CheckBoxPreference) findPreference("hide_launcher_icon");
         mLicense.setOnPreferenceClickListener(this);
         mSetNav.setOnPreferenceChangeListener(this);
         mDisabledItems.setOnPreferenceChangeListener(this);
         mActionBarColor.setOnPreferenceChangeListener(this);
+        mForceStatusBarColor.setOnPreferenceChangeListener(this);
         mPickBg.setOnPreferenceClickListener(this);
         mHideLauncherIcon.setOnPreferenceChangeListener(this);
     }
@@ -91,6 +94,9 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         entries = mActionBarColor.getEntries();
         mActionBarColor.setValueIndex(index);
         mActionBarColor.setSummary(entries[index]);
+
+        boolean forceStatusbarColor = prefs.getBoolean(Common.KEY_FORCE_STATUSBAR_COLOR, false);
+        mForceStatusBarColor.setChecked(forceStatusbarColor);
     }
 
     @Override
@@ -101,6 +107,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         mSetNav.setOnPreferenceChangeListener(null);
         mDisabledItems.setOnPreferenceChangeListener(null);
         mActionBarColor.setOnPreferenceChangeListener(null);
+        mForceStatusBarColor.setOnPreferenceChangeListener(null);
         mPickBg.setOnPreferenceClickListener(null);
         mHideLauncherIcon.setOnPreferenceChangeListener(null);
     }
@@ -132,6 +139,12 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(Common.KEY_ACTIONBAR_COLOR, key);
             editor.commit();
+            return true;
+        } else if (preference == mForceStatusBarColor) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean(Common.KEY_FORCE_STATUSBAR_COLOR, (boolean) newValue);
+            editor.commit();
+            Toast.makeText(this, R.string.preference_reboot_note, Toast.LENGTH_SHORT).show();
             return true;
         } else if (preference == mHideLauncherIcon) {
             PackageManager packageManager = this.getPackageManager();

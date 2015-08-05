@@ -41,6 +41,8 @@
         <item>Purple</item>
         <item>Blue Grey</item>
     </string-array>
+    <string name="preference_force_statusbar_color">Force enable status bar color</string>
+    <string name="preference_force_statusbar_color_summary">not compatible with Navigation Bar</string>
     <string name="preference_navidrawer_disable_items">Disable items in drawer</string>
     <string name="preference_navidrawer_disable_items_note">Select to disable</string>
     <string name="preference_navidrawer_pickup_background">Pick up a pic for background in drawer</string>
