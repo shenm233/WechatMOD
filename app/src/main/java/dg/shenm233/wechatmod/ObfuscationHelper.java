@@ -82,6 +82,7 @@ public class ObfuscationHelper {
         public static Class<?> LauncherUI;
         public static Class<?> LauncherUIBottomTabView;
         public static Class<?> MMFragmentActivity;
+        public static Class<?> ChattingUInonActivity;
         //public static Class<?> MainAddContactFragment;  //discovery Fragment
         //public static Class<?> MainMoreFragment;        //me Fragment
         public static Class<?> Preference;
@@ -104,6 +105,7 @@ public class ObfuscationHelper {
             LauncherUI = findClass("com.tencent.mm.ui.LauncherUI", lpparam.classLoader);
             LauncherUIBottomTabView = findClass(MM_UI_PACKAGENAME + "LauncherUIBottomTabView", lpparam.classLoader);
             MMFragmentActivity = findClass(MM_UI_PACKAGENAME + "MMFragmentActivity", lpparam.classLoader);
+            ChattingUInonActivity = findClass(MM_UI_PACKAGENAME + "chatting.ChattingUI$a", lpparam.classLoader);
             Preference = findClass(MM_UI_PACKAGENAME + "base.preference.Preference", lpparam.classLoader);
             UserInfo = findClass(MM_MODEL_PACKAGENAME +
                     new String[]{"v", "v", "g"}[idx], lpparam.classLoader);
@@ -134,6 +136,9 @@ public class ObfuscationHelper {
         public static String getFragment;
         public static String initActionBar;
         public static String getActionBarColor;
+
+        //methods in ChattingUInonActivity class:
+        public static String setActionBarView;
 
         //methods in LauncherUIBottomTabView class:
         public static String setMainTabUnread;
@@ -182,6 +187,7 @@ public class ObfuscationHelper {
             getFragment = new String[]{"nd", "ny", "nV"}[idx]; /*createFragment index:%d (in LauncherUI.java)*/
             initActionBar = new String[]{"aKD", "aLP", "aNv"}[idx]; /*setLogo(new ColorDrawable(getResources().getColor (in LauncherUI.java)*/
             getActionBarColor = new String[]{"aKG", "aLS", "aNy"}[idx]; /*return getResources().getColor(com.tencent.mm.a.f.action_bar_color) (in LauncherUI.java)*/
+            setActionBarView = new String[]{"aON", "aQb", "aRE"}[idx]; /*mActionBarContainer*/
             setMainTabUnread = new String[]{"mV", "np", "nN"}[idx]; /*updateMainTabUnread*/
             setContactTabUnread = new String[]{"mW", "nq", "nO"}[idx];
             setFriendTabUnread = new String[]{"mX", "nr", "nP"}[idx];
@@ -212,6 +218,9 @@ public class ObfuscationHelper {
         public static String isMainTabCreated;
         public static String curTabNum;
 
+        //fields in ChattingUInonActivity class:
+        public static String actionBarContainer;
+
         //fields in MainAddContactFragment class;
         public static String discovery_preferenceInterface; //Type:com.tencent.mm.ui.base.preference.?
         //fields in MainMoreFragment class;
@@ -230,6 +239,7 @@ public class ObfuscationHelper {
             actionBar = new String[]{"iZ", "jA", "jz"}[idx]; /*ActionBar*/
             isMainTabCreated = new String[]{"imr", "iwv", "iHb"}[idx]; /*on main tab create*/
             curTabNum = new String[]{"imQ", "iwV", "iHB"}[idx]; /*change tab to %d, cur tab %d, has init tab %B,*/
+            actionBarContainer = new String[]{"iZk", "jjs", "jul"}[idx]; /*ActionBarContainer*/
             discovery_preferenceInterface = new String[]{"bXk", "cbC", "ccQ"}[idx];
             me_preferenceInterface = new String[]{"bXk", "cbC", "ccQ"}[idx];
             moments_jj = new String[]{"gJE", "gTe", "hey"}[idx];
@@ -241,6 +251,7 @@ public class ObfuscationHelper {
     public static class MM_Res {
         public static String strings;
         public static String layout;
+        public static String id;
 
         //layout id
         public static int main_tab;
@@ -264,11 +275,15 @@ public class ObfuscationHelper {
         public static int settings_title;
         public static int settings_username;
 
+        //id
+        public static int custom_action_bar;
+
         private static void init(int idx, LoadPackageParam lpparam) throws Throwable {
             String R = "com.tencent.mm.a";
             if (idx < 3) idx = 0;  //For 6.2.x,these name may be same
             layout = new String[]{"$k"}[idx];
             strings = new String[]{"$n"}[idx];
+            id = new String[]{"$i"}[idx];
 
             //layout id
             main_tab = getStaticIntField(findClass(R + layout, lpparam.classLoader), "main_tab");
@@ -291,6 +306,9 @@ public class ObfuscationHelper {
             settings_mm_card_package_new = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_mm_card_package_new");
             settings_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_title");
             settings_username = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_username");
+
+            //id
+            custom_action_bar = getStaticIntField(findClass(R + id, lpparam.classLoader), "custom_action_bar");
         }
     }
 
