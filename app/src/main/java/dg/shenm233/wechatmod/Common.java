@@ -2,6 +2,7 @@ package dg.shenm233.wechatmod;
 
 import android.content.Context;
 import android.content.res.XModuleResources;
+import android.graphics.Color;
 
 import de.robv.android.xposed.XSharedPreferences;
 
@@ -64,4 +65,15 @@ public class Common {
         float density = context.getResources().getDisplayMetrics().density;
         return (int) (dip * density + 0.5f);
     }
+
+    ////////////////////////////////////////////////////
+    // thanks to Lolistat for the following snippet:
+    // https://github.com/PeterCxy/Lolistat/blob/aide/app/src/main/java/info/papdt/lolistat/support/Utility.java#L19
+    public static int getDarkerColor(int color, float factor) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        hsv[2] *= factor; //value
+        return Color.HSVToColor(hsv);
+    }
+    ////////////////////////////////////////////////////
 }

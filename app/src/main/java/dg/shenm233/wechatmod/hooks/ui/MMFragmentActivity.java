@@ -14,16 +14,15 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import dg.shenm233.wechatmod.Common;
-import dg.shenm233.wechatmod.ObfuscationHelper;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
+import static dg.shenm233.wechatmod.BuildConfig.DEBUG;
 import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Classes;
 import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Fields;
 import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Methods;
 import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Res;
-import static dg.shenm233.wechatmod.BuildConfig.DEBUG;
 
 public class MMFragmentActivity {
     private static ColorDrawable actionBarColorDrawable = new ColorDrawable();
@@ -53,7 +52,7 @@ public class MMFragmentActivity {
                     callMethod(actionbar, "setBackgroundDrawable", actionBarColorDrawable);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         Window window = activity.getWindow();
-                        window.setStatusBarColor(actionbar_color);
+                        window.setStatusBarColor(Common.getDarkerColor(actionbar_color, 0.85f));
                     }
                 }
             }
