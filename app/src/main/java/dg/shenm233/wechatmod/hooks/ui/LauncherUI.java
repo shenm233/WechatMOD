@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,7 +29,6 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import dg.shenm233.wechatmod.Common;
-import dg.shenm233.wechatmod.ObfuscationHelper;
 import dg.shenm233.wechatmod.R;
 import dg.shenm233.wechatmod.widget.CircleImageView;
 
@@ -434,17 +433,7 @@ public class LauncherUI {
         }
 
         //background image
-        if (mDrawerBgBitmap != null) {
-            mDrawerBgBitmap.recycle();
-        }
-        try {
-            InputStream inputStream = Common.MOD_Context.openFileInput(Common.DRAWER_BG_PNG);
-            mDrawerBgBitmap = BitmapFactory.decodeStream(inputStream);
-            bg_image.setImageBitmap(mDrawerBgBitmap);
-            inputStream.close();
-        } catch (IOException e) {
-            bg_image.setImageDrawable(Common.MOD_RES.getDrawable(R.drawable.bg_test));
-        }
+        updateBackgroundImage();
 
         //avatar image
 //        user_avatar.setImageDrawable(Common.MOD_RES.getDrawable(R.drawable.avatar_test));
@@ -485,6 +474,26 @@ public class LauncherUI {
             } catch (Throwable l) {
                 if (DEBUG) XposedBridge.log(l);
             }
+        }
+    }
+
+    private void updateBackgroundImage() {
+        Bitmap bitmap;
+        bitmap = mDrawerBgBitmap;
+        mDrawerBgBitmap = null;
+
+        try {
+            InputStream inputStream = Common.MOD_Context.openFileInput(Common.DRAWER_BG_PNG);
+            mDrawerBgBitmap = BitmapFactory.decodeStream(inputStream);
+            bg_image.setImageBitmap(mDrawerBgBitmap);
+            inputStream.close();
+        } catch (IOException e) {
+            bg_image.setImageDrawable(Common.MOD_RES.getDrawable(R.drawable.bg_test));
+        }
+
+        if (bitmap != null && !bitmap.isRecycled()) {
+            Log.i("WechatMOD", "recycle old BackgroundImage!");
+            bitmap.recycle();
         }
     }
 
