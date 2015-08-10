@@ -35,7 +35,10 @@ public class MMFragmentActivity {
                 Activity activity = (Activity) param.thisObject;
                 Window window = activity.getWindow();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    //fix for com.tencent.mm.plugin.gallery.ui.ImagePreviewUI
+                    if (!"com.tencent.mm.plugin.gallery.ui.ImagePreviewUI".equals(activity.getClass().getName())) {
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    }
                 }
             }
         });
