@@ -69,6 +69,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         findPreference("version").setSummary(ver);
 
         findPreference("dev").setSummary("shenm233 (darkgenlotus@gmail.com)");
+        findPreference("donate").setSummary(getText(R.string.alipay) + " darkgentry@hotmail.com");
 
         mLicense = findPreference("license");
         mSetNav = (ListPreference) findPreference(Common.KEY_SETNAV);

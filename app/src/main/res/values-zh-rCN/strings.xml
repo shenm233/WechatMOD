@@ -19,6 +19,8 @@
     <string name="username">微信号： </string>
     <string name="preference_about">关于</string>
     <string name="preference_dev">作者</string>
+    <string name="preference_donate">捐赠</string>
+    <string name="alipay">支付宝：</string>
     <string name="preference_license">开源协议</string>
     <string name="preference_note">注意</string>
     <string name="preference_ui_settings">界面设置</string>

@@ -53,6 +53,8 @@
     <string name="supported">(supported Wechat version)</string>
     <string name="unsupported">(unsupported Wechat version)</string>
     <string name="preference_dev">Dev</string>
+    <string name="preference_donate">Donate</string>
+    <string name="alipay">alipay:</string>
     <string name="preference_license">Open source licenses</string>
     <string name="preference_hide_launcher_icon">Hide launcher icon</string>
     <string name="preference_hide_launcher_icon_summary">you can access this settings from Xposed Installer</string>
