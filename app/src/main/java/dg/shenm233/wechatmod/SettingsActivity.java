@@ -92,8 +92,10 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         String actionBarColor = prefs.getString(Common.KEY_ACTIONBAR_COLOR, "#263238");
         index = mActionBarColor.findIndexOfValue(actionBarColor);
         entries = mActionBarColor.getEntries();
-        mActionBarColor.setValueIndex(index);
-        mActionBarColor.setSummary(entries[index]);
+        if (index >= 0) {
+            mActionBarColor.setValueIndex(index);
+            mActionBarColor.setSummary(entries[index]);
+        }
 
         boolean forceStatusbarColor = prefs.getBoolean(Common.KEY_FORCE_STATUSBAR_COLOR, false);
         mForceStatusBarColor.setChecked(forceStatusbarColor);
