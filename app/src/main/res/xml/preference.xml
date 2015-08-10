@@ -4,31 +4,34 @@
     <PreferenceScreen
         android:summary="@string/preference_note_summary"
         android:title="@string/preference_note" />
-    <ListPreference
-        android:dialogTitle="@string/preference_setnav"
-        android:entries="@array/preference_setnav_entries"
-        android:entryValues="@array/preference_setnav_entries_values"
-        android:key="setnav"
-        android:title="@string/preference_setnav" />
-    <MultiSelectListPreference
-        android:dialogTitle="@string/preference_navidrawer_disable_items_note"
-        android:entries="@array/preference_navidrawer_disabled_entries"
-        android:entryValues="@array/preference_navidrawer_disabled_entries_values"
-        android:key="disabled_items"
-        android:title="@string/preference_navidrawer_disable_items" />
-    <ListPreference
-        android:dialogTitle="@string/preference_actionbar_color"
-        android:entries="@array/preference_actionbar_color_entries"
-        android:entryValues="@array/preference_actionbar_color_values"
-        android:key="actionbar_color"
-        android:title="@string/preference_actionbar_color" />
-    <CheckBoxPreference
-        android:key="force_statusbar_color"
-        android:summary="@string/preference_force_statusbar_color_summary"
-        android:title="@string/preference_force_statusbar_color" />
-    <Preference
-        android:key="pickup_bg"
-        android:title="@string/preference_navidrawer_pickup_background" />
+    <PreferenceCategory android:title="@string/preference_ui_settings">
+        <ListPreference
+            android:dialogTitle="@string/preference_setnav"
+            android:entries="@array/preference_setnav_entries"
+            android:entryValues="@array/preference_setnav_entries_values"
+            android:key="setnav"
+            android:title="@string/preference_setnav" />
+        <MultiSelectListPreference
+            android:dialogTitle="@string/preference_navidrawer_disable_items_note"
+            android:entries="@array/preference_navidrawer_disabled_entries"
+            android:entryValues="@array/preference_navidrawer_disabled_entries_values"
+            android:key="disabled_items"
+            android:title="@string/preference_navidrawer_disable_items" />
+        <ListPreference
+            android:dialogTitle="@string/preference_actionbar_color"
+            android:entries="@array/preference_actionbar_color_entries"
+            android:entryValues="@array/preference_actionbar_color_values"
+            android:key="actionbar_color"
+            android:title="@string/preference_actionbar_color" />
+        <CheckBoxPreference
+            android:key="force_statusbar_color"
+            android:summary="@string/preference_force_statusbar_color_summary"
+            android:title="@string/preference_force_statusbar_color" />
+        <Preference
+            android:key="pickup_bg"
+            android:title="@string/preference_navidrawer_pickup_background" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/preference_about">
         <PreferenceScreen
             android:key="version"

@@ -21,6 +21,7 @@
     <string name="preference_dev">作者</string>
     <string name="preference_license">开源协议</string>
     <string name="preference_note">注意</string>
+    <string name="preference_ui_settings">界面设置</string>
     <string name="preference_setnav">选择微信导航方式</string>
     <string-array name="preference_setnav_entries">
         <item>默认(iOS tabs)</item>
@@ -46,7 +47,8 @@
     <string name="supported">(支持该微信版本)</string>
     <string name="unsupported">(未支持该微信版本)</string>
     <string name="preference_note_summary">使用本修改模块代表你要承担一切后果，如隐私泄露、财产损失等，与本模块无关！
-        \n推荐从酷安市场下载并安装本模块。（本作者只在该市场发布并更新）</string>
+        \n推荐从酷安市场下载并安装本模块。
+        \n（本作者只在该市场发布并更新）</string>
     <string name="preference_reboot_note">请重新启动微信使设置生效\n（提示：可以将微信从最近任务列表删除来重启微信）</string>
     <string name="preference_navidrawer_pickup_background">设置抽屉的头像背景</string>
     <string name="preference_hide_launcher_icon">隐藏启动图标</string>

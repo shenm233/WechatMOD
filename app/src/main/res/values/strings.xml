@@ -25,6 +25,7 @@
     <string name="preference_note">Note</string>
     <string name="preference_note_summary">Use this mod at your risk!</string>
 
+    <string name="preference_ui_settings">UI Settings</string>
     <string name="preference_setnav">Select Wechat Navigation</string>
     <string-array name="preference_setnav_entries">
         <item>Default(iOS tabs)</item>
