@@ -235,8 +235,9 @@ public class LauncherUI {
 
         //Create Drawer
         mDrawer = View.inflate(Common.MOD_Context, R.layout.drawer, null);
+        long drawerWidthdip = Common.getDrawerWidthdip(Common.MOD_Context);
         DrawerLayout.LayoutParams lp =
-                new DrawerLayout.LayoutParams(Common.dipTopx(Common.MOD_Context, 296L), DrawerLayout.LayoutParams.MATCH_PARENT);
+                new DrawerLayout.LayoutParams(Common.dipTopx(Common.MOD_Context, drawerWidthdip), DrawerLayout.LayoutParams.MATCH_PARENT);
         lp.gravity = Gravity.START;
         mDrawer.setLayoutParams(lp);
 

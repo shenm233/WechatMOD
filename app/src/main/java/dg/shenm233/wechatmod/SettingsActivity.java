@@ -177,10 +177,11 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
             return true;
         } else if (preference == mPickBg) {
             Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            long drawerWidthdip = Common.getDrawerWidthdip(this);
             intent.setType("image/*")
                     .putExtra("crop", "true")
                     .putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString())
-                    .putExtra("outputX", dipTopx(this, 296L)).putExtra("outputY", dipTopx(this, 160L))
+                    .putExtra("outputX", dipTopx(this, drawerWidthdip)).putExtra("outputY", dipTopx(this, 160L))
                     .putExtra("aspectX", 2).putExtra("aspectY", 1)
                     .putExtra("scale", 1)
                     .putExtra(MediaStore.EXTRA_OUTPUT, getUriFromFile(getFile(Common.DRAWER_BG_PNG)));

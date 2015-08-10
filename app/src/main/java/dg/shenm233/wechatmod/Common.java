@@ -66,6 +66,15 @@ public class Common {
         return (int) (dip * density + 0.5f);
     }
 
+    public static long getDrawerWidthdip(Context context) {
+        final int widthPixels = context.getResources().getDisplayMetrics().widthPixels;
+        if (widthPixels <= 480) {
+            return 280L;
+        } else {
+            return 296L;
+        }
+    }
+
     ////////////////////////////////////////////////////
     // thanks to Lolistat for the following snippet:
     // https://github.com/PeterCxy/Lolistat/blob/aide/app/src/main/java/info/papdt/lolistat/support/Utility.java#L19
