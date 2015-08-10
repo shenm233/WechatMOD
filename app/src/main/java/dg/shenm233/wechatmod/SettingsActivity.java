@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import static dg.shenm233.wechatmod.Common.dipTopx;
+import static dg.shenm233.wechatmod.ObfuscationHelper.isSupportedVersion;
 
 @SuppressLint("WorldReadableFiles")
 public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
@@ -57,6 +58,11 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
             int versionCode = pm.getPackageInfo(Common.WECHAT_PACKAGENAME, 0).versionCode;
             String versionName = pm.getPackageInfo(Common.WECHAT_PACKAGENAME, 0).versionName;
             ver.append(versionName).append("(").append(versionCode).append(")");
+            if (isSupportedVersion(versionCode, versionName) < 0) {
+                ver.append("\n").append(getString(R.string.unsupported));
+            } else {
+                ver.append("\n").append(getString(R.string.supported));
+            }
         } catch (PackageManager.NameNotFoundException e) {
             ver.append("not installed.");
         }

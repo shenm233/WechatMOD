@@ -49,6 +49,8 @@
 
     <string name="preference_about">About</string>
     <string name="preference_version">Version</string>
+    <string name="supported">(supported Wechat version)</string>
+    <string name="unsupported">(unsupported Wechat version)</string>
     <string name="preference_dev">Dev</string>
     <string name="preference_license">Open source licenses</string>
     <string name="preference_hide_launcher_icon">Hide launcher icon</string>
