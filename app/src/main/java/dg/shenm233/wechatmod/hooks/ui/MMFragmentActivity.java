@@ -34,10 +34,25 @@ public class MMFragmentActivity {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Activity activity = (Activity) param.thisObject;
                 Window window = activity.getWindow();
+                String activityName = activity.getClass().getName();
+                Common.XMOD_PREFS.reload();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     //fix for com.tencent.mm.plugin.gallery.ui.ImagePreviewUI
-                    if (!"com.tencent.mm.plugin.gallery.ui.ImagePreviewUI".equals(activity.getClass().getName())) {
-                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    if (!"com.tencent.mm.plugin.gallery.ui.ImagePreviewUI".equals(activityName)) {
+                        if ("com.tencent.mm.ui.LauncherUI".equals(activityName)) {
+                            /*
+                             * enabling status bar color will cause THE CHATTING TEXTVIEW
+                             * show below the Navigation Bar,so it just disable status bar color
+                             * for LauncherUI to fix.
+                             */
+                            if (Common.XMOD_PREFS.getBoolean(Common.KEY_FORCE_STATUSBAR_COLOR, false)) {
+                                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            } else {
+                                window.clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            }
+                        } else {
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        }
                     }
                 }
             }

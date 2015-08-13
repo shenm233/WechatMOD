@@ -11,8 +11,6 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -73,11 +71,9 @@ public class LauncherUI {
                     if (DEBUG) XposedBridge.log("on maintab create");
                     if ((boolean) callStaticMethod(MM_Classes.AccountStorage, MM_Methods.isMMcoreReady)) {
                         if ("navidrawer".equals(navMode)) {
-                            fixMMlayout((Activity) param.thisObject);
                             removeMMtabs((Activity) param.thisObject, false);
                             addNavigationDrawer((Activity) param.thisObject);
                         } else if ("notabs".equals(navMode)) {
-                            fixMMlayout((Activity) param.thisObject);
                             removeMMtabs((Activity) param.thisObject, true);
                         }
                     } else {
@@ -152,24 +148,19 @@ public class LauncherUI {
         });
     }
 
-    private void fixMMlayout(Activity activity) {
-        Window window = activity.getWindow();
-        /*
-        * enabling status bar color will cause THE CHATTING TEXTVIEW
-        * show below the Navigation Bar,so it just disable status bar color
-        * for LauncherUI to fix.
-        */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
-                !Common.XMOD_PREFS.getBoolean(Common.KEY_FORCE_STATUSBAR_COLOR, false)) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        }
-    }
-
     private void removeMMtabs(Activity activity, boolean keepCanSlide) {
         ViewGroup customViewPager = (ViewGroup) getObjectField(activity, MM_Fields.customViewPager);
         View tabView = (View) getObjectField(activity, MM_Fields.tabView);
         tabViewWeakRef = new WeakReference<Object>(tabView);
-        ((ViewGroup) customViewPager.getParent()).removeView(tabView);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
+                Common.XMOD_PREFS.getBoolean(Common.KEY_FORCE_STATUSBAR_COLOR, false)) {
+            //we set tabView's height = 1 to fix ChattingUI$a layout issue if tinted statusBar enabled
+            ViewGroup.LayoutParams layoutParams = tabView.getLayoutParams();
+            layoutParams.height = 1;
+            tabView.setLayoutParams(layoutParams);
+        } else {
+            ((ViewGroup) customViewPager.getParent()).removeView(tabView);
+        }
 //        if (DEBUG) ObfuscationHelper.getRawXml(MM_Res.main_tab, Common.MM_Context);
         callMethod(customViewPager, "setCanSlide", keepCanSlide);
     }
