@@ -1,4 +1,4 @@
-package dg.shenm233.wechatmod.hooks.ui;
+package dg.shenm233.wechatmod.hooks;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
