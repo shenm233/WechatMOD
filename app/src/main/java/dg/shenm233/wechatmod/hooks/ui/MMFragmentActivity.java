@@ -64,13 +64,17 @@ public class MMFragmentActivity {
                 int actionbar_color;
                 actionbar_color = getActionBarColorFromPrefs();
                 Activity activity = (Activity) param.thisObject;
-                Object actionbar = callMethod(activity, "getActionBar");
-                actionBarColorDrawable.setColor(actionbar_color);
-                if (actionbar != null) {
-                    callMethod(actionbar, "setBackgroundDrawable", actionBarColorDrawable);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Window window = activity.getWindow();
-                        window.setStatusBarColor(Common.getDarkerColor(actionbar_color, 0.85f));
+                String activityName = activity.getClass().getName();
+                if (!"com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyIndexUI".equals(activityName) &&
+                        !"com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyPrepareUI".equals(activityName)) {
+                    Object actionbar = callMethod(activity, "getActionBar");
+                    actionBarColorDrawable.setColor(actionbar_color);
+                    if (actionbar != null) {
+                        callMethod(actionbar, "setBackgroundDrawable", actionBarColorDrawable);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            Window window = activity.getWindow();
+                            window.setStatusBarColor(Common.getDarkerColor(actionbar_color, 0.85f));
+                        }
                     }
                 }
             }
