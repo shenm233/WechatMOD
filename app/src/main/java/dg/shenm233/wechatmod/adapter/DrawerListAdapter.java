@@ -1,4 +1,4 @@
-package dg.shenm233.wechatmod.hooks.ui;
+package dg.shenm233.wechatmod.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -16,8 +16,9 @@ import java.util.TreeSet;
 import dg.shenm233.wechatmod.Common;
 import dg.shenm233.wechatmod.Common.DrawerListItem;
 import dg.shenm233.wechatmod.R;
+import dg.shenm233.wechatmod.hooks.ui.LauncherUI;
 
-class DrawerListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
+public class DrawerListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
     private Context mContext;
     private SparseArray<DrawerListItem> mDrawerListItems = new SparseArray<DrawerListItem>(15);
     private TreeSet<Integer> sectionHeader = new TreeSet<Integer>();

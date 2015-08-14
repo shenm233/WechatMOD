@@ -28,6 +28,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import dg.shenm233.wechatmod.Common;
 import dg.shenm233.wechatmod.R;
+import dg.shenm233.wechatmod.adapter.DrawerListAdapter;
 import dg.shenm233.wechatmod.widget.CircleImageView;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
@@ -510,7 +511,7 @@ public class LauncherUI {
         callStaticMethod(MM_Classes.Avatar, MM_Methods.setAvatarByOrigUsername, imageView, str);
     }
 
-    protected static void callMMFeature(int key) {
+    public static void callMMFeature(int key) {
         if (drawerLayout == null || LauncherUI_INSTANCE_WeakRef == null) return;
         myDrawerListener.runOnIdle(new callMMFragmentFeatureRunnable(key));
         drawerLayout.closeDrawers();
