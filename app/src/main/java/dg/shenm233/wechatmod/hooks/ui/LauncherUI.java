@@ -110,7 +110,7 @@ public class LauncherUI {
         findAndHookMethod(MM_Classes.LauncherUI, MM_Methods.getActionBarColor, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                param.setResult(MMFragmentActivity.getActionBarColorFromPrefs());
+                param.setResult(MMFragmentActivity.actionBarColor);
             }
         });
 
