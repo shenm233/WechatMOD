@@ -132,7 +132,10 @@ public class DrawerListAdapter extends BaseAdapter implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         int key = mDrawerListItems.keyAt(position);
-        setSingleItemHighlighted(key);
+        if (key == Common.item_main_chat || key == Common.item_main_contact
+                || key == Common.item_main_addcontact || key == Common.item_main_more) {
+            setSingleItemHighlighted(key);
+        }
         LauncherUI.callMMFeature(key);
     }
 
