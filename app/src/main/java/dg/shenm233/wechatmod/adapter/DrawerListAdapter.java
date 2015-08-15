@@ -17,6 +17,7 @@ import dg.shenm233.wechatmod.Common;
 import dg.shenm233.wechatmod.Common.DrawerListItem;
 import dg.shenm233.wechatmod.R;
 import dg.shenm233.wechatmod.hooks.ui.LauncherUI;
+import dg.shenm233.wechatmod.hooks.ui.MMFragmentActivity;
 
 public class DrawerListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
     private Context mContext;
@@ -87,10 +88,10 @@ public class DrawerListAdapter extends BaseAdapter implements AdapterView.OnItem
         }
         if (position == mHighlightedItemPosition) {
             convertView.setBackgroundColor(Common.MOD_RES.getColor(R.color.item_selected_bg_color));
-            viewHolder.text.setTextColor(Common.MOD_RES.getColor(R.color.item_selected_fg_color));
+            viewHolder.text.setTextColor(MMFragmentActivity.actionBarColor);
             if (ItemType == TYPE_ITEM) {
-                viewHolder.icon.setColorFilter(Common.MOD_RES.getColor(R.color.item_selected_fg_color));
-                viewHolder.unread.setTextColor(Common.MOD_RES.getColor(R.color.item_selected_fg_color));
+                viewHolder.icon.setColorFilter(MMFragmentActivity.actionBarColor);
+                viewHolder.unread.setTextColor(MMFragmentActivity.actionBarColor);
             }
         } else {
             convertView.setBackgroundColor(Color.TRANSPARENT);
