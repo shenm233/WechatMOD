@@ -1,7 +1,6 @@
 package dg.shenm233.wechatmod.hooks.ui;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -187,7 +186,7 @@ public class LauncherUI {
         ImageView iv = (ImageView) newActionBarView.findViewById(R.id.drawer_indicator);
 
         //create DrawerArrowDrawable
-        drawerArrowDrawable = new DrawerArrowDrawable((Resources) callMethod(activity, "getResources"));
+        drawerArrowDrawable = new DrawerArrowDrawable(activity.getResources());
         drawerArrowDrawable.setStrokeColor(Common.MOD_RES.getColor(R.color.drawer_indicator_color));
         iv.setImageDrawable(drawerArrowDrawable);
 
