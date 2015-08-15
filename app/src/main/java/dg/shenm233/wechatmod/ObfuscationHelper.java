@@ -283,6 +283,7 @@ public class ObfuscationHelper {
 
         //id
         public static int custom_action_bar;
+        public static int divider;
 
         private static void init(int idx, LoadPackageParam lpparam) throws Throwable {
             String R = "com.tencent.mm.a";
@@ -315,6 +316,7 @@ public class ObfuscationHelper {
 
             //id
             custom_action_bar = getStaticIntField(findClass(R + id, lpparam.classLoader), "custom_action_bar");
+            divider = getStaticIntField(findClass(R + id, lpparam.classLoader), "divider");
         }
     }
 

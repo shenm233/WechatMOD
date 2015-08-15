@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -79,16 +80,28 @@ public class MMFragmentActivity {
                     }
                 }
             }
+
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                Activity activity = (Activity) param.thisObject;
+                Object actionbar = callMethod(activity, "getActionBar");
+                if (actionbar != null) {
+                    ViewGroup customView = (ViewGroup) callMethod(actionbar, "getCustomView");
+                    ((View) customView.findViewById(MM_Res.divider)).setVisibility(View.INVISIBLE);
+                }
+            }
         });
 
         findAndHookMethod(MM_Classes.ChattingUInonActivity, MM_Methods.setActionBarView, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 if (DEBUG) XposedBridge.log("changing ChattingUInonActivity ActionBar color!");
-                Object actionBarContainer = getObjectField(param.thisObject, MM_Fields.actionBarContainer);
+                ViewGroup actionBarContainer = (ViewGroup) getObjectField(param.thisObject, MM_Fields.actionBarContainer);
                 if (actionBarContainer != null) {
-                    ViewGroup actionbarview = (ViewGroup) callMethod(actionBarContainer, "findViewById", MM_Res.custom_action_bar);
+                    ViewGroup actionbarview = (ViewGroup) actionBarContainer.findViewById(MM_Res.custom_action_bar);
                     actionbarview.setBackgroundColor(actionBarColor);
+                    View divider = (View) actionbarview.findViewById(MM_Res.divider);
+                    divider.setVisibility(View.INVISIBLE);
                 }
             }
         });
