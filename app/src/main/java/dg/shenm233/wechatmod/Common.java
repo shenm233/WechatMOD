@@ -71,7 +71,7 @@ public class Common {
     public static long getDrawerWidthdip(Context context) {
         final int widthPixels = context.getResources().getDisplayMetrics().widthPixels;
         if (widthPixels <= 480) {
-            return 280L;
+            return 260L;
         } else {
             return 296L;
         }
