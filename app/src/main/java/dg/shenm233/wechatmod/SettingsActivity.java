@@ -2,6 +2,8 @@ package dg.shenm233.wechatmod;
 
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -70,6 +72,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
         findPreference("dev").setSummary("shenm233 (darkgenlotus@gmail.com)");
         findPreference("donate").setSummary(getText(R.string.alipay) + " darkgentry@hotmail.com");
+        findPreference("donate").setOnPreferenceClickListener(this);
 
         mLicense = findPreference("license");
         mSetNav = (ListPreference) findPreference(Common.KEY_SETNAV);
@@ -119,6 +122,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         mForceStatusBarColor.setOnPreferenceChangeListener(null);
         mPickBg.setOnPreferenceClickListener(null);
         mHideLauncherIcon.setOnPreferenceChangeListener(null);
+        findPreference("donate").setOnPreferenceClickListener(null);
     }
 
     @Override
@@ -192,6 +196,12 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
             } catch (ActivityNotFoundException e) {
                 Log.e("WechatMOD", "can not pick pic");
             }
+        } else if (preference.getKey().equals("donate")) {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("donate", "darkgentry@hotmail.com");
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(this, getText(R.string.copy_to_clipboard), Toast.LENGTH_LONG).show();
+            return true;
         }
         return false;
     }

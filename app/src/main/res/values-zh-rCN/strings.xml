@@ -23,6 +23,7 @@
     <string name="preference_dev">作者</string>
     <string name="preference_donate">捐赠</string>
     <string name="alipay">支付宝：</string>
+    <string name="copy_to_clipboard">内容已复制到剪切板</string>
     <string name="preference_license">开源协议</string>
     <string name="preference_note">注意</string>
     <string name="preference_ui_settings">界面设置</string>
