@@ -40,7 +40,9 @@ public class Common {
     public static final int item_me_posts = 31;
     public static final int item_me_favorites = 32;
     public static final int item_me_wallet = 33;
-    public static final int item_me_settings = 34;
+    public static final int item_me_card_package = 34;
+    public static final int item_me_emoji_store = 35;
+    public static final int item_me_settings = 36;
     //**************************************************************************
 
     public static class DrawerListItem {

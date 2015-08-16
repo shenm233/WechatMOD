@@ -12,6 +12,8 @@
         <item>@string/sns_drift_bottle</item>
         <item>@string/sns_shopping</item>
         <item>@string/sns_games</item>
+        <item>@string/me_card_package</item>
+        <item>@string/me_emoji_store</item>
     </string-array>
     <string-array name="preference_navidrawer_disabled_entries_values" translatable="false">
         <item>item_sns_moments</item>
@@ -20,6 +22,8 @@
         <item>item_sns_drift_bottle</item>
         <item>item_sns_shopping</item>
         <item>item_sns_games</item>
+        <item>item_me_card_package</item>
+        <item>item_me_emoji_store</item>
     </string-array>
     <string-array name="preference_actionbar_color_values" translatable="false">
         <item>#000000</item>

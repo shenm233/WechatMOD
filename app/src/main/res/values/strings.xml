@@ -18,6 +18,8 @@
     <string name="me_favorites">Favorites</string>
     <string name="me_wallet">Wallet</string>
     <string name="me_settings">Settings</string>
+    <string name="me_card_package">Card Pack</string>
+    <string name="me_emoji_store">Sticker Gallery</string>
 
     <string name="username">ID: </string>
 

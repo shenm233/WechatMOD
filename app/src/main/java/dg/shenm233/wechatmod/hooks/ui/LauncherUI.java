@@ -337,6 +337,8 @@ public class LauncherUI {
     private boolean item_sns_drift_bottle_enabled;
     private boolean item_sns_shopping_enabled;
     private boolean item_sns_games_enabled;
+    private boolean item_me_card_package_enabled;
+    private boolean item_me_emoji_store_enabled;
 
     private void initDrawerList(DrawerListAdapter drawerListAdapter) {
         item_sns_moments_enabled = true;
@@ -345,6 +347,8 @@ public class LauncherUI {
         item_sns_drift_bottle_enabled = true;
         item_sns_shopping_enabled = true;
         item_sns_games_enabled = true;
+        item_me_card_package_enabled = true;
+        item_me_emoji_store_enabled = true;
         Set<String> defstrs = new HashSet<String>();
         Set<String> strs = Common.XMOD_PREFS.getStringSet(Common.KEY_DISABLED_ITEMS, defstrs);
         if (strs != null) {
@@ -361,6 +365,10 @@ public class LauncherUI {
                     item_sns_shopping_enabled = false;
                 } else if ("item_sns_games".equals(str)) {
                     item_sns_games_enabled = false;
+                } else if ("item_me_card_package".equals(str)) {
+                    item_me_card_package_enabled = false;
+                } else if ("item_me_emoji_store".equals(str)) {
+                    item_me_emoji_store_enabled = false;
                 }
             }
         }
@@ -400,6 +408,12 @@ public class LauncherUI {
         drawerListAdapter.addItem(Common.item_me_posts, R.drawable.me_posts, MM_Res.settings_my_album_new);
         drawerListAdapter.addItem(Common.item_me_favorites, R.drawable.me_favorites, MM_Res.settings_mm_favorite_new);
         drawerListAdapter.addItem(Common.item_me_wallet, R.drawable.me_wallet, MM_Res.settings_mm_wallet_new);
+        if (item_me_card_package_enabled) {
+            drawerListAdapter.addItem(Common.item_me_card_package, R.drawable.me_card_package, MM_Res.settings_mm_card_package_new);
+        }
+        if (item_me_emoji_store_enabled) {
+            drawerListAdapter.addItem(Common.item_me_emoji_store, R.drawable.me_emoji_store, MM_Res.settings_emoji_store);
+        }
         drawerListAdapter.addItem(Common.item_me_settings, R.drawable.me_settings, MM_Res.settings_title);
     }
 
@@ -572,6 +586,12 @@ public class LauncherUI {
                         break;
                     case Common.item_me_settings:
                         MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "more_setting");
+                        break;
+                    case Common.item_me_card_package:
+                        MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_mm_cardpackage");
+                        break;
+                    case Common.item_me_emoji_store:
+                        MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_emoji_store");
                         break;
                 }
             }

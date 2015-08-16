@@ -9,6 +9,8 @@
     <string name="me_posts">相册</string>
     <string name="me_settings">设置</string>
     <string name="me_wallet">钱包</string>
+    <string name="me_card_package">卡包</string>
+    <string name="me_emoji_store">表情</string>
     <string name="sns_drift_bottle">漂流瓶</string>
     <string name="sns_games">游戏 </string>
     <string name="sns_moments">朋友圈</string>

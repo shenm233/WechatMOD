@@ -278,6 +278,7 @@ public class ObfuscationHelper {
         public static int settings_mm_favorite_new;
         public static int settings_mm_wallet_new;
         public static int settings_mm_card_package_new;
+        public static int settings_emoji_store;
         public static int settings_title;
         public static int settings_username;
 
@@ -311,6 +312,7 @@ public class ObfuscationHelper {
             settings_mm_favorite_new = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_mm_favorite_new");
             settings_mm_wallet_new = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_mm_wallet_new");
             settings_mm_card_package_new = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_mm_card_package_new");
+            settings_emoji_store = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_emoji_store");
             settings_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_title");
             settings_username = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_username");
 
