@@ -1,7 +1,6 @@
 package dg.shenm233.wechatmod.hooks.ui;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -11,8 +10,6 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -30,6 +27,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import dg.shenm233.wechatmod.Common;
 import dg.shenm233.wechatmod.R;
+import dg.shenm233.wechatmod.adapter.DrawerListAdapter;
 import dg.shenm233.wechatmod.widget.CircleImageView;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
@@ -73,11 +71,9 @@ public class LauncherUI {
                     if (DEBUG) XposedBridge.log("on maintab create");
                     if ((boolean) callStaticMethod(MM_Classes.AccountStorage, MM_Methods.isMMcoreReady)) {
                         if ("navidrawer".equals(navMode)) {
-                            fixMMlayout((Activity) param.thisObject);
                             removeMMtabs((Activity) param.thisObject, false);
                             addNavigationDrawer((Activity) param.thisObject);
                         } else if ("notabs".equals(navMode)) {
-                            fixMMlayout((Activity) param.thisObject);
                             removeMMtabs((Activity) param.thisObject, true);
                         }
                     } else {
@@ -113,7 +109,7 @@ public class LauncherUI {
         findAndHookMethod(MM_Classes.LauncherUI, MM_Methods.getActionBarColor, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                param.setResult(MMFragmentActivity.getActionBarColorFromPrefs());
+                param.setResult(MMFragmentActivity.actionBarColor);
             }
         });
 
@@ -152,24 +148,19 @@ public class LauncherUI {
         });
     }
 
-    private void fixMMlayout(Activity activity) {
-        Window window = activity.getWindow();
-        /*
-        * enabling status bar color will cause THE CHATTING TEXTVIEW
-        * show below the Navigation Bar,so it just disable status bar color
-        * for LauncherUI to fix.
-        */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
-                !Common.XMOD_PREFS.getBoolean(Common.KEY_FORCE_STATUSBAR_COLOR, false)) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        }
-    }
-
     private void removeMMtabs(Activity activity, boolean keepCanSlide) {
         ViewGroup customViewPager = (ViewGroup) getObjectField(activity, MM_Fields.customViewPager);
         View tabView = (View) getObjectField(activity, MM_Fields.tabView);
         tabViewWeakRef = new WeakReference<Object>(tabView);
-        ((ViewGroup) customViewPager.getParent()).removeView(tabView);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
+                Common.XMOD_PREFS.getBoolean(Common.KEY_FORCE_STATUSBAR_COLOR, false)) {
+            //we set tabView's height = 1 to fix ChattingUI$a layout issue if tinted statusBar enabled
+            ViewGroup.LayoutParams layoutParams = tabView.getLayoutParams();
+            layoutParams.height = 1;
+            tabView.setLayoutParams(layoutParams);
+        } else {
+            ((ViewGroup) customViewPager.getParent()).removeView(tabView);
+        }
 //        if (DEBUG) ObfuscationHelper.getRawXml(MM_Res.main_tab, Common.MM_Context);
         callMethod(customViewPager, "setCanSlide", keepCanSlide);
     }
@@ -195,7 +186,7 @@ public class LauncherUI {
         ImageView iv = (ImageView) newActionBarView.findViewById(R.id.drawer_indicator);
 
         //create DrawerArrowDrawable
-        drawerArrowDrawable = new DrawerArrowDrawable((Resources) callMethod(activity, "getResources"));
+        drawerArrowDrawable = new DrawerArrowDrawable(activity.getResources());
         drawerArrowDrawable.setStrokeColor(Common.MOD_RES.getColor(R.color.drawer_indicator_color));
         iv.setImageDrawable(drawerArrowDrawable);
 
@@ -346,6 +337,8 @@ public class LauncherUI {
     private boolean item_sns_drift_bottle_enabled;
     private boolean item_sns_shopping_enabled;
     private boolean item_sns_games_enabled;
+    private boolean item_me_card_package_enabled;
+    private boolean item_me_emoji_store_enabled;
 
     private void initDrawerList(DrawerListAdapter drawerListAdapter) {
         item_sns_moments_enabled = true;
@@ -354,6 +347,8 @@ public class LauncherUI {
         item_sns_drift_bottle_enabled = true;
         item_sns_shopping_enabled = true;
         item_sns_games_enabled = true;
+        item_me_card_package_enabled = true;
+        item_me_emoji_store_enabled = true;
         Set<String> defstrs = new HashSet<String>();
         Set<String> strs = Common.XMOD_PREFS.getStringSet(Common.KEY_DISABLED_ITEMS, defstrs);
         if (strs != null) {
@@ -370,6 +365,10 @@ public class LauncherUI {
                     item_sns_shopping_enabled = false;
                 } else if ("item_sns_games".equals(str)) {
                     item_sns_games_enabled = false;
+                } else if ("item_me_card_package".equals(str)) {
+                    item_me_card_package_enabled = false;
+                } else if ("item_me_emoji_store".equals(str)) {
+                    item_me_emoji_store_enabled = false;
                 }
             }
         }
@@ -409,6 +408,12 @@ public class LauncherUI {
         drawerListAdapter.addItem(Common.item_me_posts, R.drawable.me_posts, MM_Res.settings_my_album_new);
         drawerListAdapter.addItem(Common.item_me_favorites, R.drawable.me_favorites, MM_Res.settings_mm_favorite_new);
         drawerListAdapter.addItem(Common.item_me_wallet, R.drawable.me_wallet, MM_Res.settings_mm_wallet_new);
+        if (item_me_card_package_enabled) {
+            drawerListAdapter.addItem(Common.item_me_card_package, R.drawable.me_card_package, MM_Res.settings_mm_card_package_new);
+        }
+        if (item_me_emoji_store_enabled) {
+            drawerListAdapter.addItem(Common.item_me_emoji_store, R.drawable.me_emoji_store, MM_Res.settings_emoji_store);
+        }
         drawerListAdapter.addItem(Common.item_me_settings, R.drawable.me_settings, MM_Res.settings_title);
     }
 
@@ -519,7 +524,7 @@ public class LauncherUI {
         callStaticMethod(MM_Classes.Avatar, MM_Methods.setAvatarByOrigUsername, imageView, str);
     }
 
-    protected static void callMMFeature(int key) {
+    public static void callMMFeature(int key) {
         if (drawerLayout == null || LauncherUI_INSTANCE_WeakRef == null) return;
         myDrawerListener.runOnIdle(new callMMFragmentFeatureRunnable(key));
         drawerLayout.closeDrawers();
@@ -581,6 +586,12 @@ public class LauncherUI {
                         break;
                     case Common.item_me_settings:
                         MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "more_setting");
+                        break;
+                    case Common.item_me_card_package:
+                        MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_mm_cardpackage");
+                        break;
+                    case Common.item_me_emoji_store:
+                        MainFragments.callMMFragmentFeature(LauncherUI_INSTANCE, 3, "settings_emoji_store");
                         break;
                 }
             }

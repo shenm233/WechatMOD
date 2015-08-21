@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -25,6 +26,7 @@ import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Methods;
 import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Res;
 
 public class MMFragmentActivity {
+    public static int actionBarColor = Color.parseColor("#263238");
     private static ColorDrawable actionBarColorDrawable = new ColorDrawable();
 
     public static void init(final XC_LoadPackage.LoadPackageParam lpparam) {
@@ -34,10 +36,26 @@ public class MMFragmentActivity {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Activity activity = (Activity) param.thisObject;
                 Window window = activity.getWindow();
+                String activityName = activity.getClass().getName();
+                Common.XMOD_PREFS.reload();
+                actionBarColor = getActionBarColorFromPrefs();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     //fix for com.tencent.mm.plugin.gallery.ui.ImagePreviewUI
-                    if (!"com.tencent.mm.plugin.gallery.ui.ImagePreviewUI".equals(activity.getClass().getName())) {
-                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    if (!"com.tencent.mm.plugin.gallery.ui.ImagePreviewUI".equals(activityName)) {
+                        if ("com.tencent.mm.ui.LauncherUI".equals(activityName)) {
+                            /*
+                             * enabling status bar color will cause THE CHATTING TEXTVIEW
+                             * show below the Navigation Bar,so it just disable status bar color
+                             * for LauncherUI to fix.
+                             */
+                            if (Common.XMOD_PREFS.getBoolean(Common.KEY_FORCE_STATUSBAR_COLOR, false)) {
+                                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            } else {
+                                window.clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            }
+                        } else {
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        }
                     }
                 }
             }
@@ -46,17 +64,30 @@ public class MMFragmentActivity {
         findAndHookMethod(MM_Classes.MMFragmentActivity, "onResume", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                int actionbar_color;
-                actionbar_color = getActionBarColorFromPrefs();
+                Activity activity = (Activity) param.thisObject;
+                String activityName = activity.getClass().getName();
+                if (!"com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyIndexUI".equals(activityName) &&
+                        !"com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyPrepareUI".equals(activityName)) {
+                    actionBarColor = getActionBarColorFromPrefs();
+                    Object actionbar = callMethod(activity, "getActionBar");
+                    actionBarColorDrawable.setColor(actionBarColor);
+                    if (actionbar != null) {
+                        callMethod(actionbar, "setBackgroundDrawable", actionBarColorDrawable);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            Window window = activity.getWindow();
+                            window.setStatusBarColor(Common.getDarkerColor(actionBarColor, 0.85f));
+                        }
+                    }
+                }
+            }
+
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Activity activity = (Activity) param.thisObject;
                 Object actionbar = callMethod(activity, "getActionBar");
-                actionBarColorDrawable.setColor(actionbar_color);
                 if (actionbar != null) {
-                    callMethod(actionbar, "setBackgroundDrawable", actionBarColorDrawable);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Window window = activity.getWindow();
-                        window.setStatusBarColor(Common.getDarkerColor(actionbar_color, 0.85f));
-                    }
+                    ViewGroup customView = (ViewGroup) callMethod(actionbar, "getCustomView");
+                    ((View) customView.findViewById(MM_Res.divider)).setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -65,12 +96,12 @@ public class MMFragmentActivity {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 if (DEBUG) XposedBridge.log("changing ChattingUInonActivity ActionBar color!");
-                int actionbar_color;
-                Object actionBarContainer = getObjectField(param.thisObject, MM_Fields.actionBarContainer);
+                ViewGroup actionBarContainer = (ViewGroup) getObjectField(param.thisObject, MM_Fields.actionBarContainer);
                 if (actionBarContainer != null) {
-                    actionbar_color = getActionBarColorFromPrefs();
-                    ViewGroup actionbarview = (ViewGroup) callMethod(actionBarContainer, "findViewById", MM_Res.custom_action_bar);
-                    actionbarview.setBackgroundColor(actionbar_color);
+                    ViewGroup actionbarview = (ViewGroup) actionBarContainer.findViewById(MM_Res.custom_action_bar);
+                    actionbarview.setBackgroundColor(actionBarColor);
+                    View divider = (View) actionbarview.findViewById(MM_Res.divider);
+                    divider.setVisibility(View.INVISIBLE);
                 }
             }
         });
