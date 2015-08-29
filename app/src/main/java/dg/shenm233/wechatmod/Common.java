@@ -45,6 +45,17 @@ public class Common {
     public static final int item_me_settings = 36;
     //**************************************************************************
 
+    //**************************************************************************
+    public static boolean item_sns_moments_enabled;
+    public static boolean item_sns_shake_enabled;
+    public static boolean item_sns_people_nearby_enabled;
+    public static boolean item_sns_drift_bottle_enabled;
+    public static boolean item_sns_shopping_enabled;
+    public static boolean item_sns_games_enabled;
+    public static boolean item_me_card_package_enabled;
+    public static boolean item_me_emoji_store_enabled;
+    //**************************************************************************
+
     public static class DrawerListItem {
         public final int KEY;
         public int ICON_ID;

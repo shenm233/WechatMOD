@@ -18,7 +18,7 @@ import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Fields;
 import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Methods;
 
 public class MainFragments {
-    public void init(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
+    public static void init(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
 //        if (DEBUG) {
 //            if (ObfuscationHelper.getStackTraceHelper != null) {
 //                findAndHookMethod(MM_Classes.MainAddContactFragment, MM_Methods.startMMActivity,
