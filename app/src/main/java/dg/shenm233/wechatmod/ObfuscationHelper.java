@@ -293,32 +293,36 @@ public class ObfuscationHelper {
             strings = new String[]{"$n"}[idx];
             id = new String[]{"$i"}[idx];
 
+            Class<?> Layout = findClass(R + layout, lpparam.classLoader);
+            Class<?> Strings = findClass(R + strings, lpparam.classLoader);
+            Class<?> Id = findClass(R + id, lpparam.classLoader);
+
             //layout id
-            main_tab = getStaticIntField(findClass(R + layout, lpparam.classLoader), "main_tab");
+            main_tab = getStaticIntField(Layout, "main_tab");
 
             //strings!!!!
-            app_name = getStaticIntField(findClass(R + strings, lpparam.classLoader), "app_name");
-            main_chat = getStaticIntField(findClass(R + strings, lpparam.classLoader), "main_chat");
-            main_contact = getStaticIntField(findClass(R + strings, lpparam.classLoader), "main_contact");
-            main_addcontact = getStaticIntField(findClass(R + strings, lpparam.classLoader), "main_addcontact");
-            main_more = getStaticIntField(findClass(R + strings, lpparam.classLoader), "main_more");
-            sns_dyna_photo_ui_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "sns_dyna_photo_ui_title");
-            find_friends_by_qrcode = getStaticIntField(findClass(R + strings, lpparam.classLoader), "find_friends_by_qrcode");
-            shake_report_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "shake_report_title");
-            nearby_friend_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "nearby_friend_title");
-            bottle_beach_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "bottle_beach_title");
-            game_recommand = getStaticIntField(findClass(R + strings, lpparam.classLoader), "game_recommand");
-            settings_my_album_new = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_my_album_new");
-            settings_mm_favorite_new = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_mm_favorite_new");
-            settings_mm_wallet_new = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_mm_wallet_new");
-            settings_mm_card_package_new = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_mm_card_package_new");
-            settings_emoji_store = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_emoji_store");
-            settings_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_title");
-            settings_username = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_username");
+            app_name = getStaticIntField(Strings, "app_name");
+            main_chat = getStaticIntField(Strings, "main_chat");
+            main_contact = getStaticIntField(Strings, "main_contact");
+            main_addcontact = getStaticIntField(Strings, "main_addcontact");
+            main_more = getStaticIntField(Strings, "main_more");
+            sns_dyna_photo_ui_title = getStaticIntField(Strings, "sns_dyna_photo_ui_title");
+            find_friends_by_qrcode = getStaticIntField(Strings, "find_friends_by_qrcode");
+            shake_report_title = getStaticIntField(Strings, "shake_report_title");
+            nearby_friend_title = getStaticIntField(Strings, "nearby_friend_title");
+            bottle_beach_title = getStaticIntField(Strings, "bottle_beach_title");
+            game_recommand = getStaticIntField(Strings, "game_recommand");
+            settings_my_album_new = getStaticIntField(Strings, "settings_my_album_new");
+            settings_mm_favorite_new = getStaticIntField(Strings, "settings_mm_favorite_new");
+            settings_mm_wallet_new = getStaticIntField(Strings, "settings_mm_wallet_new");
+            settings_mm_card_package_new = getStaticIntField(Strings, "settings_mm_card_package_new");
+            settings_emoji_store = getStaticIntField(Strings, "settings_emoji_store");
+            settings_title = getStaticIntField(Strings, "settings_title");
+            settings_username = getStaticIntField(Strings, "settings_username");
 
             //id
-            custom_action_bar = getStaticIntField(findClass(R + id, lpparam.classLoader), "custom_action_bar");
-            divider = getStaticIntField(findClass(R + id, lpparam.classLoader), "divider");
+            custom_action_bar = getStaticIntField(Id, "custom_action_bar");
+            divider = getStaticIntField(Id, "divider");
         }
     }
 
