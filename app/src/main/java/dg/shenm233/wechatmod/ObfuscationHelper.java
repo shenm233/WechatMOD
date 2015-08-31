@@ -26,6 +26,7 @@ public class ObfuscationHelper {
     public static final int MM_6_2_4_51 = 582;
     public static final int MM_6_2_4_51_nonplay = 600; //6.2.4.51_rdf8da56国内版
     public static final int MM_6_2_5_49_nonplay = 620; //6.2.5.49_r7ead8bf国内版
+    public static final int MM_6_2_5_50_nonplay = 621; //6.2.5.50_rbb77fd6国内版
 
     //a helper for analyzing StackTrace,I want to know who called method.
     public static XC_MethodHook getStackTraceHelper;
@@ -81,6 +82,8 @@ public class ObfuscationHelper {
         } else if (versionName.contains("6.2.4.51") && versioncode == MM_6_2_4_51_nonplay) {
             return 3;
         } else if (versionName.contains("6.2.5.49") && versioncode == MM_6_2_5_49_nonplay) {
+            return 4;
+        }  else if (versionName.contains("6.2.5.50") && versioncode == MM_6_2_5_50_nonplay) {
             return 4;
         } else {
             return -1;
