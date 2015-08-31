@@ -1,9 +1,7 @@
 package dg.shenm233.wechatmod;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.XModuleResources;
-import android.os.Bundle;
 
 import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -14,21 +12,17 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import dg.shenm233.wechatmod.hooks.ui.LauncherUI;
+import dg.shenm233.wechatmod.hooks.ui.LauncherUIBottomTabView;
 import dg.shenm233.wechatmod.hooks.ui.MMFragmentActivity;
-import dg.shenm233.wechatmod.hooks.ui.MainFragments;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import static dg.shenm233.wechatmod.BuildConfig.DEBUG;
-import static dg.shenm233.wechatmod.Common.MOD_PACKAGENAME;
 import static dg.shenm233.wechatmod.Common.WECHAT_PACKAGENAME;
-import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Classes;
 
 public class MainHook extends XC_MethodHook implements IXposedHookZygoteInit, IXposedHookLoadPackage, IXposedHookInitPackageResources {
     private static String MODULE_PATH = null;
-    private LauncherUI launcherUI;
 
     @Override
     public void initZygote(IXposedHookZygoteInit.StartupParam startupParam) throws Throwable {
@@ -58,22 +52,8 @@ public class MainHook extends XC_MethodHook implements IXposedHookZygoteInit, IX
             if (!ObfuscationHelper.init(versionCode, versionName, lpparam)) return;
 
             //Let do it!
-            findAndHookMethod(MM_Classes.LauncherUI, "onCreate", Bundle.class, new XC_MethodHook() {
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    if (DEBUG) XposedBridge.log("wechat onCreate hook!");
-                    Activity LauncherUI_INSTANCE = (Activity) param.thisObject;
-                    Common.MM_Context = (Context) callMethod(LauncherUI_INSTANCE, "getApplicationContext");
-                    Common.MOD_Context = LauncherUI_INSTANCE.createPackageContext(MOD_PACKAGENAME, Context.CONTEXT_IGNORE_SECURITY);
-                }
-            });
-
-            if (launcherUI == null) {
-                launcherUI = new LauncherUI();
-                launcherUI.init(lpparam);
-            }
-            MainFragments mainFragments = new MainFragments();
-            mainFragments.init(lpparam);
+            LauncherUI.init(lpparam);
+            LauncherUIBottomTabView.init(lpparam);
             MMFragmentActivity.init(lpparam);
         } catch (Throwable l) {
             XposedBridge.log(l);

@@ -21,6 +21,7 @@ import dg.shenm233.wechatmod.hooks.ui.MMFragmentActivity;
 
 public class DrawerListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
     private Context mContext;
+    private LauncherUI mLauncherUI;
     private SparseArray<DrawerListItem> mDrawerListItems = new SparseArray<DrawerListItem>(15);
     private TreeSet<Integer> sectionHeader = new TreeSet<Integer>();
 
@@ -29,8 +30,9 @@ public class DrawerListAdapter extends BaseAdapter implements AdapterView.OnItem
 
     private int mHighlightedItemPosition;
 
-    public DrawerListAdapter(Context context) {
+    public DrawerListAdapter(Context context, LauncherUI launcherUI) {
         mContext = context;
+        mLauncherUI = launcherUI;
     }
 
     public void addItem(int key, int IconResid, int TextResid) {
@@ -136,7 +138,7 @@ public class DrawerListAdapter extends BaseAdapter implements AdapterView.OnItem
                 || key == Common.item_main_addcontact || key == Common.item_main_more) {
             setSingleItemHighlighted(key);
         }
-        LauncherUI.callMMFeature(key);
+        mLauncherUI.callMMFeature(key);
     }
 
     public void setSingleItemHighlighted(int key) {

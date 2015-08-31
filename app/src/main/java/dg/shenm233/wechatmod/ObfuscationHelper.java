@@ -25,6 +25,7 @@ public class ObfuscationHelper {
     public static final int MM_6_2_4_49_nonplay = 600; //6.2.4.49_r8d971a2国内版
     public static final int MM_6_2_4_51 = 582;
     public static final int MM_6_2_4_51_nonplay = 600; //6.2.4.51_rdf8da56国内版
+    public static final int MM_6_2_5_49_nonplay = 620; //6.2.5.49_r7ead8bf国内版
 
     //a helper for analyzing StackTrace,I want to know who called method.
     public static XC_MethodHook getStackTraceHelper;
@@ -79,6 +80,8 @@ public class ObfuscationHelper {
             return 3;
         } else if (versionName.contains("6.2.4.51") && versioncode == MM_6_2_4_51_nonplay) {
             return 3;
+        } else if (versionName.contains("6.2.5.49") && versioncode == MM_6_2_5_49_nonplay) {
+            return 4;
         } else {
             return -1;
         }
@@ -105,8 +108,8 @@ public class ObfuscationHelper {
             String MM_UI_PACKAGENAME = "com.tencent.mm.ui.";
             String MM_PLUGINSDK_UI_PACKNAME = "com.tencent.mm.pluginsdk.ui.";
             String MM_MODEL_PACKAGENAME = "com.tencent.mm.model.";
-//            String mainAddContactFragment = MM_UI_PACKAGENAME + new String[]{"v","v","f","f"}[idx];
-//            String mainMoreFragment = MM_UI_PACKAGENAME + new String[]{"em","en","p","p"}[idx];
+//            String mainAddContactFragment = MM_UI_PACKAGENAME + new String[]{"v","v","f","f","f"}[idx];
+//            String mainMoreFragment = MM_UI_PACKAGENAME + new String[]{"em","en","p","p","p"}[idx];
 
             LauncherUI = findClass("com.tencent.mm.ui.LauncherUI", lpparam.classLoader);
             LauncherUIBottomTabView = findClass(MM_UI_PACKAGENAME + "LauncherUIBottomTabView", lpparam.classLoader);
@@ -114,21 +117,21 @@ public class ObfuscationHelper {
             ChattingUInonActivity = findClass(MM_UI_PACKAGENAME + "chatting.ChattingUI$a", lpparam.classLoader);
             Preference = findClass(MM_UI_PACKAGENAME + "base.preference.Preference", lpparam.classLoader);
             UserInfo = findClass(MM_MODEL_PACKAGENAME +
-                    new String[]{"v", "v", "g", "g"}[idx], lpparam.classLoader);
+                    new String[]{"v", "v", "g", "g", "g"}[idx], lpparam.classLoader);
             UserNickName = findClass(MM_PLUGINSDK_UI_PACKNAME +
-                    new String[]{"d.i", "d.e", "d.e", "d.e"}[idx], lpparam.classLoader);
+                    new String[]{"d.i", "d.e", "d.e", "d.e", "d.e"}[idx], lpparam.classLoader);
             Avatar = findClass(MM_PLUGINSDK_UI_PACKNAME +
-                    new String[]{"a$b", "a$b", "a$b", "a$b"}[idx], lpparam.classLoader);
+                    new String[]{"a$b", "a$b", "a$b", "a$b", "a$b"}[idx], lpparam.classLoader);
             AccountStorage = findClass(MM_MODEL_PACKAGENAME +
-                    new String[]{"ax", "ax", "ag", "ag"}[idx], lpparam.classLoader);
+                    new String[]{"ax", "ax", "ag", "ag", "ah"}[idx], lpparam.classLoader);
             NewFriendMessage = findClass("com.tencent.mm." +
-                    new String[]{"ag.m", "ag.m", "ah.l", "ah.l"}[idx], lpparam.classLoader);
+                    new String[]{"ag.m", "ag.m", "ah.l", "ah.l", "ai.l"}[idx], lpparam.classLoader);
             Bottle = findClass(MM_MODEL_PACKAGENAME +
-                    new String[]{"x", "x", "i", "i"}[idx], lpparam.classLoader);
+                    new String[]{"x", "x", "i", "i", "i"}[idx], lpparam.classLoader);
             WTFClazz = findClass("com.tencent.mm.pluginsdk." +
-                    new String[]{"l$ag", "l$ag", "h$ah", "h$ah"}[idx], lpparam.classLoader);
+                    new String[]{"l$ag", "l$ag", "h$ah", "h$ah", "h$ah"}[idx], lpparam.classLoader);
             PluginToolClazz = findClass("com.tencent.mm." +
-                    new String[]{"aj.c", "aj.c", "am.c", "am.c"}[idx], lpparam.classLoader);
+                    new String[]{"aj.c", "aj.c", "am.c", "am.c", "an.c"}[idx], lpparam.classLoader);
 //            MainAddContactFragment = findClass(mainAddContactFragment, lpparam.classLoader);
 //            MainMoreFragment = findClass(mainMoreFragment, lpparam.classLoader);
         }
@@ -187,31 +190,55 @@ public class ObfuscationHelper {
         public static String startPluginActivity;
 
         private static void init(int idx) throws Throwable {
-            startMainUI = new String[]{"aKw", "aLJ", "aNp", "aNr"}[idx]; /**/
+            /*com.tencent.mm.ui.LauncherUI*/
+            startMainUI = new String[]{"aKw", "aLJ", "aNp", "aNr", "aPu"}[idx]; /*"on main tab create"*/
             createTabView = new String[]{"aKC"}[0]; //above 6.2.2 never has this method :(
-            setCurrentPagerItem = new String[]{"nc", "nx", "nU", "nU"}[idx]; /*change tab to %d, cur tab %d, (in LauncherUI.java)*/
-            getFragment = new String[]{"nd", "ny", "nV", "nV"}[idx]; /*createFragment index:%d (in LauncherUI.java)*/
-            initActionBar = new String[]{"aKD", "aLP", "aNv", "aNx"}[idx]; /*setLogo(new ColorDrawable(getResources().getColor (in LauncherUI.java)*/
-            getActionBarColor = new String[]{"aKG", "aLS", "aNy", "aNA"}[idx]; /*return getResources().getColor(com.tencent.mm.a.f.action_bar_color) (in LauncherUI.java)*/
-            setActionBarView = new String[]{"aON", "aQb", "aRE", "aRG"}[idx]; /*mActionBarContainer*/
-            setMainTabUnread = new String[]{"mV", "np", "nN", "nN"}[idx]; /*updateMainTabUnread*/
-            setContactTabUnread = new String[]{"mW", "nq", "nO", "nO"}[idx];
-            setFriendTabUnread = new String[]{"mX", "nr", "nP", "nP"}[idx];
-            setShowFriendPoint = new String[]{"eR", "eV", "fv", "fv"}[idx];
-            startMMActivity = new String[]{"a", "a", "a", "a"}[idx];
-            getUsername = new String[]{"rO", "rW", "sc", "sc"}[idx]; /* one line below "more_tab_setting_personal_info" (called by (MainMoreFragment).java)*/
-            getOrigUsername = new String[]{"rN", "rV", "sb", "sb"}[idx]; /* (called by (MainMoreFragment).java)*/
-            getNickname = new String[]{"a", "a", "a", "a"}[idx]; /* (called by (MainMoreFragment).java)*/
-            setAvatarByOrigUsername = new String[]{"b", "b", "b", "b"}[idx]; /* (called by (com.tencent.mm.pluginsdk.ui.preference/AccountInfoPreference).java)*/
-            getAccStg = new String[]{"tg", "to", "tu", "tu"}[idx]; /*onResume (in SettingsPersonalInfoUI).java*/
-            isMMcoreReady = new String[]{"qU", "rc", "ri", "ri"}[idx]; /*mmcore has not ready (in LauncherUI.java)*/
-            getUserInfoFromDB = new String[]{"ra", "ri", "ro", "ro"}[idx]; /*onResume (in SettingsPersonalInfoUI).java*/
-            getLBSVerifyMessage = new String[]{"BH", "Cl", "CB", "CB"}[idx];
-            getShakeVerifyMessage = new String[]{"BI", "Cm", "CC", "CC"}[idx];
-            getVerifyMessageCount = new String[]{"BA", "Ce", "Ct", "Ct"}[idx];
-            getBottleUnreadCount = new String[]{"sA", "sI", "sO", "sO"}[idx];
-            getMomentsUnreadCount = new String[]{"BA", "Ce", "Ct", "Ct"}[idx];
-            startPluginActivity = new String[]{"c", "c", "c", "c"}[idx];
+            setCurrentPagerItem = new String[]{"nc", "nx", "nU", "nU", "oh"}[idx]; /*change tab to %d, cur tab %d*/
+            getFragment = new String[]{"nd", "ny", "nV", "nV", "oi"}[idx]; /*createFragment index:%d*/
+            initActionBar = new String[]{"aKD", "aLP", "aNv", "aNx", "aPA"}[idx]; /*setLogo((Drawable)new ColorDrawable*/
+            getActionBarColor = new String[]{"aKG", "aLS", "aNy", "aNA", "aPD"}[idx]; /*return this.getResources().getColor(com.tencent.mm.a.f.action_bar_color)*/
+            /*******************************************************/
+            /*com.tencent.mm.ui.chatting.ChattingUI$a*/
+            setActionBarView = new String[]{"aON", "aQb", "aRE", "aRG", "aTD"}[idx]; /*mActionBarContainer*/
+            /******************************************************/
+            /*com.tencent.mm.ui.LauncherUIBottomTabView*/
+            setMainTabUnread = new String[]{"mV", "np", "nN", "nN", "oa"}[idx]; /*updateMainTabUnread*/
+            setContactTabUnread = new String[]{"mW", "nq", "nO", "nO", "ob"}[idx]; /*方法getContactTabUnread()访问的成员变量，有其他的方法修改该成员变量*/
+            setFriendTabUnread = new String[]{"mX", "nr", "nP", "nP", "oc"}[idx]; /*方法getFriendTabUnread()访问的成员变量，有其他的方法修改该成员变量*/
+            setShowFriendPoint = new String[]{"eR", "eV", "fv", "fv", "fF"}[idx]; /*方法getShowFriendPoint()访问的成员变量，有其他的方法修改该成员变量*/
+            /*****************************************************/
+            /*com.tencent.mm.ui.(MainAddContactFragment)*/
+            startMMActivity = new String[]{"a", "a", "a", "a", "a"}[idx]; /*"sns", ".ui.SnsTimeLineUI"*/
+            /*****************************************************/
+            /*com.tencent.mm.ui.(MainMoreFragment)*/
+            getUsername = new String[]{"rO", "rW", "sc", "sc", "sp"}[idx]; /*final AccountInfoPreference accountInfoPreference = 的下第一行*/
+            getOrigUsername = new String[]{"rN", "rV", "sb", "sb", "so"}[idx]; /*final AccountInfoPreference accountInfoPreference = 的下第三行*/
+            /****************************************************/
+            /*com.tencent.mm.ui.(MainMoreFragment)*/
+            getNickname = new String[]{"a", "a", "a", "a", "a"}[idx]; /*("settings_my_address"); 的上面第二行(即含有accountInfoPreference)*/
+            /****************************************************/
+            /*com.tencent.mm.pluginsdk.ui.preference.AccountInfoPreference)*/
+            setAvatarByOrigUsername = new String[]{"b", "b", "b", "b", "b"}[idx]; /*imageView != null) { 的下一行*/
+            /****************************************************/
+            /*com.tencent.mm.plugin.setting.ui.setting.SettingsPersonalInfoUI*/
+            getAccStg = new String[]{"tg", "to", "tu", "tu", "tI"}[idx]; /*onResume()里形如final String s = (String)ah.tI().rB().get(4, (Object)null);*/
+            /*com.tencent.mm.ui.LauncherUI*/
+            isMMcoreReady = new String[]{"qU", "rc", "ri", "ri", "rv"}[idx]; /*mmcore has not ready 的上面第三行if(...) break Label...*/
+            /****************************************************/
+            /*com.tencent.mm.plugin.setting.ui.setting.SettingsPersonalInfoUI*/
+            getUserInfoFromDB = new String[]{"ra", "ri", "ro", "ro", "rB"}[idx]; /*onResume()里形如final String s = (String)ah.tI().rB().get(4, (Object)null);*/
+            /****************************************************/
+            getLBSVerifyMessage = new String[]{"BH", "Cl", "CB", "CB", "Dc"}[idx];
+            getShakeVerifyMessage = new String[]{"BI", "Cm", "CC", "CC", "Dd"}[idx];
+            /****************************************************/
+            getVerifyMessageCount = new String[]{"BA", "Ce", "Ct", "Ct", "CU"}[idx];
+            /****************************************************/
+            getBottleUnreadCount = new String[]{"sA", "sI", "sO", "sO", "tb"}[idx];
+            /****************************************************/
+            getMomentsUnreadCount = new String[]{"BA", "Ce", "Ct", "Ct", "CU"}[idx]; /*toString()*/
+            /****************************************************/
+            startPluginActivity = new String[]{"c", "c", "c", "c", "c"}[idx];
+            /****************************************************/
         }
     }
 
@@ -239,17 +266,24 @@ public class ObfuscationHelper {
         public static String preferenceKey;
 
         private static void init(int idx) throws Throwable {
-            customViewPager = new String[]{"imA", "iwF", "iHl", "iHn"}[idx]; /*CustomViewPager*/
-            tabView = new String[]{"imz", "iwE", "iHk", "iHm"}[idx]; /*= launcheruibottomtabview*/
-            main_tab = new String[]{"cuW", "czt", "cAI", "cAI"}[idx]; /*inflate(com.tencent.mm.a.k.main_tab, null)*/
-            actionBar = new String[]{"iZ", "jA", "jz", "jz"}[idx]; /*ActionBar*/
-            isMainTabCreated = new String[]{"imr", "iwv", "iHb", "iHd"}[idx]; /*on main tab create*/
-            curTabNum = new String[]{"imQ", "iwV", "iHB", "iHD"}[idx]; /*change tab to %d, cur tab %d, has init tab %B,*/
-            actionBarContainer = new String[]{"iZk", "jjs", "jul", "jun"}[idx]; /*ActionBarContainer*/
-            discovery_preferenceInterface = new String[]{"bXk", "cbC", "ccQ", "ccQ"}[idx];
-            me_preferenceInterface = new String[]{"bXk", "cbC", "ccQ", "ccQ"}[idx];
-            moments_jj = new String[]{"gJE", "gTe", "hey", "heA"}[idx];
-            preferenceKey = new String[]{"bTL", "bXW", "bZi", "bZi"}[idx]; /*you can get preference.? from method startMMActivity*/
+            /*com.tencent.mm.ui.LauncherUI*/
+            customViewPager = new String[]{"imA", "iwF", "iHl", "iHn", "iUy"}[idx]; /*CustomViewPager*/
+            tabView = new String[]{"imz", "iwE", "iHk", "iHm", "iUx"}[idx]; /*= launcheruibottomtabview*/
+            main_tab = new String[]{"cuW", "czt", "cAI", "cAI", "cDq"}[idx]; /*inflate(com.tencent.mm.a.k.main_tab*/
+            actionBar = new String[]{"iZ", "jA", "jz", "jz", "jz"}[idx]; /*ActionBar*/
+            isMainTabCreated = new String[]{"imr", "iwv", "iHb", "iHd", "iUo"}[idx]; /*on main tab create*/
+            curTabNum = new String[]{"imQ", "iwV", "iHB", "iHD", "iUO"}[idx]; /*change tab to %d, cur tab %d, has init tab %B,*/
+            /****************************************************/
+            actionBarContainer = new String[]{"iZk", "jjs", "jul", "jun", "jHs"}[idx]; /*ActionBarContainer*/
+            /****************************************************/
+            discovery_preferenceInterface = new String[]{"bXk", "cbC", "ccQ", "ccQ", "cfq"}[idx]; /*类型为com.tencent.mm.ui.base.preference.?的成员变量*/
+            /****************************************************/
+            me_preferenceInterface = new String[]{"bXk", "cbC", "ccQ", "ccQ", "cfq"}[idx]; /*类型为com.tencent.mm.ui.base.preference.?的成员变量*/
+            /****************************************************/
+            moments_jj = new String[]{"gJE", "gTe", "hey", "heA", "hos"}[idx];
+            /****************************************************/
+            preferenceKey = new String[]{"bTL", "bXW", "bZi", "bZi", "cbG"}[idx]; /*you can get preference.? from method startMMActivity*/
+            /****************************************************/
         }
     }
 
@@ -288,37 +322,41 @@ public class ObfuscationHelper {
 
         private static void init(int idx, LoadPackageParam lpparam) throws Throwable {
             String R = "com.tencent.mm.a";
-            if (idx < 4) idx = 0;  //For 6.2.x,these name may be same
+            if (idx < 5) idx = 0;  //For 6.2.x,these name may be same
             layout = new String[]{"$k"}[idx];
             strings = new String[]{"$n"}[idx];
             id = new String[]{"$i"}[idx];
 
+            Class<?> Layout = findClass(R + layout, lpparam.classLoader);
+            Class<?> Strings = findClass(R + strings, lpparam.classLoader);
+            Class<?> Id = findClass(R + id, lpparam.classLoader);
+
             //layout id
-            main_tab = getStaticIntField(findClass(R + layout, lpparam.classLoader), "main_tab");
+            main_tab = getStaticIntField(Layout, "main_tab");
 
             //strings!!!!
-            app_name = getStaticIntField(findClass(R + strings, lpparam.classLoader), "app_name");
-            main_chat = getStaticIntField(findClass(R + strings, lpparam.classLoader), "main_chat");
-            main_contact = getStaticIntField(findClass(R + strings, lpparam.classLoader), "main_contact");
-            main_addcontact = getStaticIntField(findClass(R + strings, lpparam.classLoader), "main_addcontact");
-            main_more = getStaticIntField(findClass(R + strings, lpparam.classLoader), "main_more");
-            sns_dyna_photo_ui_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "sns_dyna_photo_ui_title");
-            find_friends_by_qrcode = getStaticIntField(findClass(R + strings, lpparam.classLoader), "find_friends_by_qrcode");
-            shake_report_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "shake_report_title");
-            nearby_friend_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "nearby_friend_title");
-            bottle_beach_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "bottle_beach_title");
-            game_recommand = getStaticIntField(findClass(R + strings, lpparam.classLoader), "game_recommand");
-            settings_my_album_new = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_my_album_new");
-            settings_mm_favorite_new = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_mm_favorite_new");
-            settings_mm_wallet_new = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_mm_wallet_new");
-            settings_mm_card_package_new = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_mm_card_package_new");
-            settings_emoji_store = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_emoji_store");
-            settings_title = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_title");
-            settings_username = getStaticIntField(findClass(R + strings, lpparam.classLoader), "settings_username");
+            app_name = getStaticIntField(Strings, "app_name");
+            main_chat = getStaticIntField(Strings, "main_chat");
+            main_contact = getStaticIntField(Strings, "main_contact");
+            main_addcontact = getStaticIntField(Strings, "main_addcontact");
+            main_more = getStaticIntField(Strings, "main_more");
+            sns_dyna_photo_ui_title = getStaticIntField(Strings, "sns_dyna_photo_ui_title");
+            find_friends_by_qrcode = getStaticIntField(Strings, "find_friends_by_qrcode");
+            shake_report_title = getStaticIntField(Strings, "shake_report_title");
+            nearby_friend_title = getStaticIntField(Strings, "nearby_friend_title");
+            bottle_beach_title = getStaticIntField(Strings, "bottle_beach_title");
+            game_recommand = getStaticIntField(Strings, "game_recommand");
+            settings_my_album_new = getStaticIntField(Strings, "settings_my_album_new");
+            settings_mm_favorite_new = getStaticIntField(Strings, "settings_mm_favorite_new");
+            settings_mm_wallet_new = getStaticIntField(Strings, "settings_mm_wallet_new");
+            settings_mm_card_package_new = getStaticIntField(Strings, "settings_mm_card_package_new");
+            settings_emoji_store = getStaticIntField(Strings, "settings_emoji_store");
+            settings_title = getStaticIntField(Strings, "settings_title");
+            settings_username = getStaticIntField(Strings, "settings_username");
 
             //id
-            custom_action_bar = getStaticIntField(findClass(R + id, lpparam.classLoader), "custom_action_bar");
-            divider = getStaticIntField(findClass(R + id, lpparam.classLoader), "divider");
+            custom_action_bar = getStaticIntField(Id, "custom_action_bar");
+            divider = getStaticIntField(Id, "divider");
         }
     }
 
