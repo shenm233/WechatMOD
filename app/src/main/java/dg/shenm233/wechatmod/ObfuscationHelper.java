@@ -66,21 +66,15 @@ public class ObfuscationHelper {
     *if it is supported,return >= 0,otherwise return -1
     */
     public static int isSupportedVersion(int versioncode, String versionName) {
-        if (versioncode == MM_6_2_0_50) {
+        if (versionName.contains("6.2.0.50")) {
             return 0;
-        } else if (versionName.contains("6.2.2.54") && versioncode == MM_6_2_2_54) {
+        } else if (versionName.contains("6.2.2.54")) {
             return 1;
-        } else if (versionName.contains("6.2.2.54") && versioncode == MM_6_2_2_54_nonplay) {
-            return 1;
-        } else if (versionName.contains("6.2.4.49") && versioncode == MM_6_2_4_49) {
+        } else if (versionName.contains("6.2.4.49")) {
             return 2;
-        } else if (versionName.contains("6.2.4.49") && versioncode == MM_6_2_4_49_nonplay) {
-            return 2;
-        } else if (versionName.contains("6.2.4.51") && versioncode == MM_6_2_4_51) {
+        } else if (versionName.contains("6.2.4.51")) {
             return 3;
-        } else if (versionName.contains("6.2.4.51") && versioncode == MM_6_2_4_51_nonplay) {
-            return 3;
-        } else if (versionName.contains("6.2.5.49") && versioncode == MM_6_2_5_49_nonplay) {
+        } else if (versionName.contains("6.2.5.49")) {
             return 4;
         } else {
             return -1;
