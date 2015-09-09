@@ -78,6 +78,8 @@ public class ObfuscationHelper {
             return 4;
         } else if (versionName.contains("6.2.5.51")) {
             return 4;
+        } else if (versionName.contains("6.2.5.52")) {
+            return 4;
         } else {
             return -1;
         }
