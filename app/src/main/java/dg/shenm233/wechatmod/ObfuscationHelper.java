@@ -17,7 +17,6 @@ import static de.robv.android.xposed.XposedHelpers.findClass;
 import static dg.shenm233.wechatmod.BuildConfig.DEBUG;
 
 public class ObfuscationHelper {
-    public static final int MM_6_3_16_49 = 780; // 国内版
 
     //a helper for analyzing StackTrace,I want to know who called method.
     public static XC_MethodHook getStackTraceHelper;
@@ -62,6 +61,8 @@ public class ObfuscationHelper {
     public static int isSupportedVersion(int versioncode, String versionName) {
         if (versionName.contains("6.3.16.49")) {
             return 0;
+        } else if (versionName.contains("6.3.15.65")) {
+            return 1;
         } else {
             return -1;
         }
@@ -82,9 +83,9 @@ public class ObfuscationHelper {
             LauncherUI = findClass("com.tencent.mm.ui.LauncherUI", lpparam.classLoader);
             LauncherUIBottomTabView = findClass(MM_UI_PACKAGENAME + "LauncherUIBottomTabView", lpparam.classLoader);
             LauncherUIBottomTabView$Tab = findClass(MM_UI_PACKAGENAME + "LauncherUIBottomTabView" +
-                    new String[]{"$a"}[idx], lpparam.classLoader);
+                    new String[]{"$a", "$a"}[idx], lpparam.classLoader);
             AccountStorage = findClass(MM_MODEL_PACKAGENAME +
-                    new String[]{"ah"}[idx], lpparam.classLoader);
+                    new String[]{"ah", "ah"}[idx], lpparam.classLoader);
         }
     }
 
@@ -107,13 +108,13 @@ public class ObfuscationHelper {
 
         private static void init(int idx) throws Throwable {
             /*com.tencent.mm.ui.LauncherUI*/
-            LauncherUI.startMainUI = new String[]{"bbu"}[idx]; /*"on main tab create"*/
+            LauncherUI.startMainUI = new String[]{"bbu", "ban"}[idx]; /*"on main tab create"*/
 
             /*com.tencent.mm.ui.LauncherUIBottomTabView*/
-            LauncherUIBottomTabView.initSingleTab = new String[]{"a"}[idx];
+            LauncherUIBottomTabView.initSingleTab = new String[]{"a", "a"}[idx];
 
             /*com.tencent.mm.ui.LauncherUI*/
-            AccountStorage.isMMcoreReady = new String[]{"qy"}[idx]; /*mmcore has not ready 的上面第三行if(...) break Label...*/
+            AccountStorage.isMMcoreReady = new String[]{"qy", "qw"}[idx]; /*mmcore has not ready 的上面第三行if(...) break Label...*/
         }
     }
 
@@ -134,13 +135,13 @@ public class ObfuscationHelper {
 
         private static void init(int idx) throws Throwable {
             /*com.tencent.mm.ui.LauncherUI*/
-            LauncherUI.customViewPager = new String[]{"koj"}[idx]; /*CustomViewPager*/
-            LauncherUI.tabView = new String[]{"koi"}[idx]; /*= launcheruibottomtabview*/
-            LauncherUI.isMainTabCreated = new String[]{"knZ"}[idx]; /*on main tab create*/
+            LauncherUI.customViewPager = new String[]{"koj", "kfj"}[idx]; /*CustomViewPager*/
+            LauncherUI.tabView = new String[]{"koi", "kfi"}[idx]; /*= launcheruibottomtabview*/
+            LauncherUI.isMainTabCreated = new String[]{"knZ", "keZ"}[idx]; /*on main tab create*/
 
             /*com.tencent.mm.ui.LauncherUIBottomTabView$Tab*/
-            LauncherUIBottomTabView$Tab.tabName = new String[]{"kqx"}[idx];
-            LauncherUIBottomTabView$Tab.tabBackground = new String[]{"kqv"}[idx];
+            LauncherUIBottomTabView$Tab.tabName = new String[]{"kqx", "khx"}[idx];
+            LauncherUIBottomTabView$Tab.tabBackground = new String[]{"kqv", "khv"}[idx];
         }
     }
 
@@ -152,7 +153,7 @@ public class ObfuscationHelper {
         }
 
         private static void init(int idx, LoadPackageParam lpparam) throws Throwable {
-            color.action_bar_color = new int[]{2131231144}[idx];
+            color.action_bar_color = new int[]{2131231144, 2131231131}[idx];
         }
     }
 
