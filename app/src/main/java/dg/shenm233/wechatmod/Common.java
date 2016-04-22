@@ -11,7 +11,7 @@ public class Common {
     public static final String WECHAT_PACKAGENAME = "com.tencent.mm";
     public static final String MOD_PREFS = "mod_settings";
 
-    public static Context MM_Context;
+    public static Context MM_AppContext;
     public static Context MOD_Context;
 
     public static XModuleResources MOD_RES;
@@ -55,24 +55,6 @@ public class Common {
     public static boolean item_me_card_package_enabled;
     public static boolean item_me_emoji_store_enabled;
     //**************************************************************************
-
-    public static class DrawerListItem {
-        public final int KEY;
-        public int ICON_ID;
-        public int TEXT_ID;
-        public String unread = "";
-
-        public DrawerListItem(int key, int TextResid) {
-            KEY = key;
-            TEXT_ID = TextResid;
-        }
-
-        public DrawerListItem(int key, int IconResid, int TextResid) {
-            KEY = key;
-            ICON_ID = IconResid;
-            TEXT_ID = TextResid;
-        }
-    }
 
     public static int dipTopx(Context context, long dip) {
         float density = context.getResources().getDisplayMetrics().density;

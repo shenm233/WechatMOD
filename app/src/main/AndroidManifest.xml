@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
@@ -21,6 +22,7 @@
 
         <activity
             android:name=".SettingsActivity"
+            android:enabled="false"
             android:label="@string/preference_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +32,7 @@
 
         <activity-alias
             android:name=".SettingsActivityLauncher"
-            android:enabled="true"
+            android:enabled="false"
             android:targetActivity=".SettingsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
