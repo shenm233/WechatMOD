@@ -22,5 +22,6 @@ android {
 
 dependencies {
     compile 'com.android.support:support-v4:23.2.1'
-    provided files('libs/XposedBridgeApi-42.jar')
+    provided 'de.robv.android.xposed:api:53'
+    provided 'de.robv.android.xposed:api:53:sources'
 }

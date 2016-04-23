@@ -18,7 +18,7 @@
             android:value="MOD your Wechat" />
         <meta-data
             android:name="xposedminversion"
-            android:value="42" />
+            android:value="53" />
 
         <activity
             android:name=".SettingsActivity"
