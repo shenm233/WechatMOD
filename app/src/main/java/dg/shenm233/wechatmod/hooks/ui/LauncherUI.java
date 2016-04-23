@@ -15,6 +15,7 @@ import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.getAdditionalInstanceField;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
+import static de.robv.android.xposed.XposedHelpers.removeAdditionalInstanceField;
 import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 import static dg.shenm233.wechatmod.BuildConfig.DEBUG;
 import static dg.shenm233.wechatmod.ObfuscationHelper.MM_Classes;
@@ -65,13 +66,23 @@ public class LauncherUI {
             }
         };
         findAndHookMethod(MM_Classes.LauncherUI, MM_Methods.LauncherUI.startMainUI, methodHook);
+
+        methodHook = new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                LauncherUI launcherUIMod = (LauncherUI) getAdditionalInstanceField(param.thisObject, TAG);
+                launcherUIMod.onDestroy();
+                removeAdditionalInstanceField(param.thisObject, TAG);
+            }
+        };
+        findAndHookMethod(MM_Classes.LauncherUI, "onDestroy", methodHook); // fix activity leak
     }
 
     /***********************************
      * Let's do magic!
      ***********************************/
     private boolean isMainTabCreated;
-    private final Activity mLauncherUI;
+    private Activity mLauncherUI;
 
     public LauncherUI(Activity launcherUI) {
         mLauncherUI = launcherUI;
@@ -84,5 +95,9 @@ public class LauncherUI {
         LinearLayout parent = (LinearLayout) customViewPager.getParent();
         parent.removeView(tabView);
         parent.addView(tabView, 0);
+    }
+
+    private void onDestroy() {
+        mLauncherUI = null;
     }
 }
